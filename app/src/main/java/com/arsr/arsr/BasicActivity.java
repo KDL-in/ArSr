@@ -8,6 +8,9 @@ import com.arsr.arsr.util.LogUtil;
 
 /**
  * Created by KundaLin on 17/12/20.
+ * 所有活动的父类
+ * 1. 统一打印活动
+ * 2. 统一调用ActivityCollector进行管理
  */
 
 public class BasicActivity extends AppCompatActivity {
@@ -21,7 +24,7 @@ public class BasicActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtil.v("CurrentActivity",getClass().getSimpleName());
-        ActivityCollector.addActivitiy(this);
+        ActivityCollector.addActivity(this);
     }
 
 }

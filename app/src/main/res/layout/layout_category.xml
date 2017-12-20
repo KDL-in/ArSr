@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="0dp"
-    android:layout_marginBottom="0.01dp"
+    android:elevation="100dp"
     app:cardCornerRadius="1dp">
 
     <LinearLayout
@@ -27,7 +26,7 @@
 
         <ImageView
             android:id="@+id/img_expand"
-            android:background="@drawable/icon_expand"
+            android:background="@drawable/selector_expand"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:clickable="true"

@@ -13,27 +13,23 @@ import com.arsr.arsr.R;
 
 /**
  * Created by KundaLin on 17/12/20.
+ * 类别的自定义控件
  */
 
-public class CategoryLayout extends CardView implements View.OnClickListener {
+public class CategoryLayout extends CardView {
 
-    private boolean isSelected = false;
     private ImageView imageView;
 
     public CategoryLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.layout_category, this);
         init();
-        imageView.setOnClickListener(this);
+//        imageView.setOnClickListener(this);
     }
 
     private void init() {
         imageView = findViewById(R.id.img_expand);
     }
 
-    @Override
-    public void onClick(View view) {
-        isSelected = !isSelected;
-        imageView.setSelected(isSelected);
-    }
+
 }
