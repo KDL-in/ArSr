@@ -20,11 +20,10 @@
             android:layout_weight="1"
             android:src="@drawable/entry1" />
         <TextView
-
+            android:id="@+id/text_task_name"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:layout_weight="7"
-            android:text="List 1"
             android:layout_width="0dp"
             android:textSize="20sp" />
 

@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import com.arsr.arsr.R;
+import com.arsr.arsr.entity.Task;
 
 /**
  * Created by KundaLin on 17/12/20.
@@ -14,9 +16,18 @@ import com.arsr.arsr.R;
  */
 
 public class TaskLayout extends CardView {
+    private TextView nameTextView;//任务信息：任务名
     public TaskLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.layout_task, this);
+        nameTextView = findViewById(R.id.text_task_name);
     }
 
+    /**
+     * 设置task的属性
+     * @param task
+     */
+    public void setTaskProperties(Task task) {
+        nameTextView.setText(task.getName());//任务名设置
+    }
 }
