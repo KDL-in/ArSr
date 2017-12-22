@@ -19,7 +19,7 @@ public class TaskLayout extends CardView {
     private TextView nameTextView;//任务信息：任务名
     public TaskLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.layout_task, this);
+        LayoutInflater.from(context).inflate(R.layout.customview_task, this);
         nameTextView = findViewById(R.id.text_task_name);
     }
 

@@ -1,13 +1,10 @@
 package com.arsr.arsr.costumview;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arsr.arsr.R;
@@ -24,7 +21,7 @@ public class CategoryLayout extends CardView {
     private TextView categoryTextView;//类别的名字view
     public CategoryLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.layout_category, this);
+        LayoutInflater.from(context).inflate(R.layout.customview_category, this);
         init();
 //        imageView.setOnClickListener(this);
     }
