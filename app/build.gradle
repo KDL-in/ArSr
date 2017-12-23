@@ -30,5 +30,5 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.drawthink:expandable-recyclerview:0.0.3'
-
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
 }

@@ -1,5 +1,6 @@
 package com.arsr.arsr;
 
+import android.content.Intent;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -9,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,19 @@ public class MainActivity extends BasicActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         viewTaskList.setAdapter(adapter);
         viewTaskList.setLayoutManager(layoutManager);
+        // 启动任务界面
+        Button button = findViewById(R.id.button_task);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TaskActivity.actionStart(MainActivity.this);
+                //测试活动
+//                Intent intent = new Intent(MainActivity.this, CalendarDemoActivity.class);
+//                startActivity(intent);
+            }
+        });
+
+
     }
 
     /**
