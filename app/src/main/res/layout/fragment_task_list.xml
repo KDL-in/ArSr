@@ -4,7 +4,9 @@
     android:id="@+id/recycler_task_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp" />
+    android:paddingTop="10dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp" />
 
 
 
