@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.arsr.arsr.CalendarTaskActivity;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
 import com.arsr.arsr.fragment.CreateTaskFragment;
@@ -84,6 +85,13 @@ public class MainActivity extends BasicActivity {
                 //测试活动
 //                Intent intent = new Intent(MainActivity.this, CalendarDemoActivity.class);
 //                startActivity(intent);
+            }
+        });
+        Button button1 = findViewById(R.id.button_calendar);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CalendarTaskActivity.startAction(MainActivity.this);
             }
         });
         //

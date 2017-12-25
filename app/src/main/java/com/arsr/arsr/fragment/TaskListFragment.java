@@ -41,7 +41,7 @@ public class TaskListFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static TaskListFragment newInstance(String[] groupNames,String[][] childNames) {
         TaskListFragment fragment = new TaskListFragment();
-        initTaskListData(groupNames,childNames);
+        taskListData=initExListData(groupNames,childNames);
         return fragment;
     }
 
@@ -66,12 +66,13 @@ public class TaskListFragment extends Fragment {
 
     /**
      * 封装初始化数据(任务列表)
-     * todo 之后这里应该要改，数据不只是名字
+     * todo 之后这里应该要改，数据不只是名字,可能要封装成工具
+     *
      * @param groupNames
      * @param childNames
      */
-    private static void initTaskListData(String[] groupNames, String[][] childNames) {
-        taskListData = new ArrayList<>();
+    public static List<RecyclerViewData> initExListData(String[] groupNames, String[][] childNames) {
+        List<RecyclerViewData> taskListData = new ArrayList<>();
         int groupLength = groupNames.length;
         int childLength = childNames.length;
 
@@ -82,6 +83,7 @@ public class TaskListFragment extends Fragment {
             }
             taskListData.add(new RecyclerViewData(groupNames[i], childData, true));
         }
+        return taskListData;
     }
    /*  监听方面的框架
    private OnFragmentInteractionListener mListener;
