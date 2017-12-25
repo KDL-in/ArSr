@@ -1,17 +1,12 @@
 package com.arsr.arsr.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.arsr.arsr.R;
 
@@ -26,7 +21,7 @@ import java.util.List;
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> views;
     private final static int COUNT = 2;
-    private final int tags[] = {R.drawable.ico_today_task, R.drawable.ico_create_at};
+    private final int tags[] = {R.drawable.ic_today_task, R.drawable.ic_create_at};
     private Context mContext;
 
     public MainFragmentPagerAdapter(FragmentManager fm, Context context) {

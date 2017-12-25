@@ -1,33 +1,45 @@
 package com.arsr.arsr.activity;
 
+import android.graphics.Color;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arsr.arsr.CalendarTaskActivity;
 import com.arsr.arsr.R;
+import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
 import com.arsr.arsr.fragment.CreateTaskFragment;
 import com.arsr.arsr.fragment.TaskListFragment;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
     //临时数据
-    public String[] groupStrings = {"西游记", "水浒传", "三国演义", "红楼梦"};
+    public String[] groupStrings = {"CET-6", "考研", "Math", "PcNet"};
     public String[][] childStrings = {
-            {"唐三藏", "孙悟空", "猪八戒", "沙和尚"},
-            {"宋江", "林冲", "李逵", "鲁智深"},
-            {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
-            {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
+            {"List 1", "List 2", "List 3", "List 3"},
+            {"L 1", "L 2", "L 3", "L 4"},
+            {"Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"},
+            {"c1", "c2", "c3", "c4"}
     };
+
     private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
 
     @Override
@@ -76,27 +88,31 @@ public class MainActivity extends BasicActivity {
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
-        // 启动任务界面
-        Button button = findViewById(R.id.button_task);
-        button.setOnClickListener(new View.OnClickListener() {
+        //navigationView上面的监听
+        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setCheckedItem(R.id.nav_today);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                TaskActivity.actionStart(MainActivity.this);
-                //测试活动
-//                Intent intent = new Intent(MainActivity.this, CalendarDemoActivity.class);
-//                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_today:
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_calendar:
+                        CalendarTaskActivity.startAction(MainActivity.this);
+                        break;
+                }
+
+                return true;
             }
         });
-        Button button1 = findViewById(R.id.button_calendar);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CalendarTaskActivity.startAction(MainActivity.this);
-            }
-        });
-        //
-
-
+        //navigationView上的列表
+        RecyclerView recyclerView = findViewById(R.id.recycler_category_list);
+        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(Arrays.asList(groupStrings));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initPaperAdapter() {

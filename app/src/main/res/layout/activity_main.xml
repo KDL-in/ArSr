@@ -27,37 +27,82 @@
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
-                app:tabMode="fixed"
                 style="@style/MyCustomTabLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent" />
+                app:tabMode="fixed" />
+
 
         </android.support.design.widget.AppBarLayout>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
-
+    <!--以下是滑动菜单-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:background="@color/background"
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button_task"
-            android:layout_width="wrap_content"
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="任务页面" />
-        <Button
-            android:id="@+id/button_calendar"
-            android:layout_width="wrap_content"
+            android:background="@color/white"
+            app:elevation="0dp"
+            app:headerLayout="@layout/nav_header"
+            app:itemBackground="@color/white"
+            app:menu="@menu/nav_menu" />
+        <View
+            android:background="@color/background"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_category_list"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="按日历查看"/>
+            android:background="@color/white"
+            android:maxHeight="48dp"
+            android:minHeight="48dp">
+            <ImageView
+                android:id="@+id/img_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_add"
+                android:tint="@color/colorPrimary"
+                android:layout_marginLeft="16dp" />
+
+            <TextView
+                android:id="@+id/text_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="72dp"
+                android:text="列表"
+                android:textSize="14sp"
+                android:textColor="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="72dp" />
+        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
+
 </android.support.v4.widget.DrawerLayout>
 
 
