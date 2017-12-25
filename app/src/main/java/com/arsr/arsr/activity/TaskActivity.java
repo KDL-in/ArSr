@@ -1,15 +1,14 @@
-package com.arsr.arsr;
+package com.arsr.arsr.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.arsr.arsr.R;
 import com.bumptech.glide.Glide;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -34,7 +33,7 @@ public class TaskActivity extends BasicActivity {
         collapsingToolbarLayout.setTitle("List 1");
         //设置图片
         ImageView imageView = findViewById(R.id.img_task_background);
-        Glide.with(this).load(R.drawable.bg_3).into(imageView);
+        Glide.with(this).load(R.drawable.task_background).into(imageView);
         //日历相关
         MaterialCalendarView calendarView = findViewById(R.id.calendar_month);
 

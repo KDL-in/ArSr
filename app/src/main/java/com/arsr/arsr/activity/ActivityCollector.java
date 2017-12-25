@@ -1,4 +1,4 @@
-package com.arsr.arsr;
+package com.arsr.arsr.activity;
 
 import android.app.Activity;
 

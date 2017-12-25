@@ -1,11 +1,11 @@
-package com.arsr.arsr;
+package com.arsr.arsr.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.arsr.arsr.util.LogUtil;
+import com.arsr.arsr.R;
 
 import java.util.List;
 
@@ -23,11 +23,11 @@ import drawthink.expandablerecyclerview.bean.RecyclerViewData;
  * VH :ViewHolder
  */
 
-public class TaskListAdapter extends BaseRecyclerViewAdapter<String, String, TaskListViewHolder> {
+public class TaskListRecycleViewAdapter extends BaseRecyclerViewAdapter<String, String, TaskListViewHolder> {
     private Context mContext;
     private List datas;
     private LayoutInflater mInflater;
-    public TaskListAdapter(Context ctx, List<RecyclerViewData> datas) {
+    public TaskListRecycleViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         this.datas = datas;

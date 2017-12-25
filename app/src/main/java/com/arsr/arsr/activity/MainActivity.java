@@ -1,22 +1,21 @@
-package com.arsr.arsr;
+package com.arsr.arsr.activity;
 
-import android.content.Intent;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import drawthink.expandablerecyclerview.bean.RecyclerViewData;
+import com.arsr.arsr.R;
+import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
+import com.arsr.arsr.fragment.CreateTaskFragment;
+import com.arsr.arsr.fragment.TaskListFragment;
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
@@ -28,7 +27,7 @@ public class MainActivity extends BasicActivity {
             {"曹操", "刘备", "孙权", "诸葛亮", "周瑜"},
             {"贾宝玉", "林黛玉", "薛宝钗", "王熙凤"}
     };
-    private List<RecyclerViewData> mData;
+    private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +62,19 @@ public class MainActivity extends BasicActivity {
             }
         });
 */
-        //任务列表（基于recyclerView）
-        initmData();
-        RecyclerView viewTaskList = findViewById(R.id.recycler_task_list);
-        TaskListAdapter adapter = new TaskListAdapter(MainActivity.this, mData);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        viewTaskList.setAdapter(adapter);
-        viewTaskList.setLayoutManager(layoutManager);
+
+        //主界面两个子页面初始化
+        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),this);
+        initPaperAdapter();
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(pagerAdapter);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {//自定义tab
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            tab.setCustomView(pagerAdapter.getTabView(i));
+        }
+
         // 启动任务界面
         Button button = findViewById(R.id.button_task);
         button.setOnClickListener(new View.OnClickListener() {
@@ -81,28 +86,21 @@ public class MainActivity extends BasicActivity {
 //                startActivity(intent);
             }
         });
+        //
 
 
     }
 
-    /**
-     * 封装初始化数据
-     */
-    private void initmData() {
-        mData = new ArrayList<>();
-        int groupLength = groupStrings.length;
-        int childLength = childStrings.length;
-        for (int i = 0; i < groupLength; i++) {
-            List<String>childData = new ArrayList<>();
-            for (int j = 0; j < childLength; j++) {
-                childData.add(childStrings[i][j]);
-            }
-            mData.add(new RecyclerViewData(groupStrings[i], childData, true));
-        }
+    private void initPaperAdapter() {
+        pagerAdapter.addFragment(TaskListFragment.newInstance(groupStrings, childStrings));
+        pagerAdapter.addFragment(CreateTaskFragment.newInstance("",""));
     }
+
+
 
     /**
      * 加载右上角菜单
+     *
      * @param menu
      * @return
      */
@@ -115,6 +113,7 @@ public class MainActivity extends BasicActivity {
     /**
      * 右上角菜单点击事件
      * 1. todo 后面再对各种项监听
+     *
      * @param item
      * @return
      */

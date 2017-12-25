@@ -1,9 +1,10 @@
-package com.arsr.arsr;
+package com.arsr.arsr.adapter;
 
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.arsr.arsr.R;
 import com.arsr.arsr.util.LogUtil;
 
 import drawthink.expandablerecyclerview.holder.BaseViewHolder;

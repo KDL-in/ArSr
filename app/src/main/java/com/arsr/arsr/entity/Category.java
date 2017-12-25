@@ -1,5 +1,6 @@
 package com.arsr.arsr.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
