@@ -29,13 +29,13 @@ public class TaskActivity extends BasicActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         //设置task名
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle("List 1");
         //设置图片
-        ImageView imageView = findViewById(R.id.img_task_background);
+        ImageView imageView = findViewById(R.id.img_taskUI_bg);
         Glide.with(this).load(R.drawable.task_background).into(imageView);
         //日历相关
-        MaterialCalendarView calendarView = findViewById(R.id.calendar_month);
+        MaterialCalendarView calendarView = findViewById(R.id.calendarView_month);
 
     }
 

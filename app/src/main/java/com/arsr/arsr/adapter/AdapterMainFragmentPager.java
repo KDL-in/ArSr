@@ -18,13 +18,13 @@ import java.util.List;
  * Created by KundaLin on 17/12/23.
  */
 
-public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
+public class AdapterMainFragmentPager extends FragmentPagerAdapter {
     private List<Fragment> views;
     private final static int COUNT = 2;
-    private final int tags[] = {R.drawable.ic_today_task, R.drawable.ic_create_at};
+    private final int tags[] = {R.drawable.icon_todaytasks, R.drawable.icon_category};
     private Context mContext;
 
-    public MainFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public AdapterMainFragmentPager(FragmentManager fm, Context context) {
         super(fm);
         this.views = new ArrayList<>();
         mContext = context;
@@ -56,7 +56,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
      * @return
      */
     public View getTabView(int position) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_tab, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.tablayout_item, null);
         ImageView img = view.findViewById(R.id.img_tab);
         img.setImageResource(tags[position]);
         return view;

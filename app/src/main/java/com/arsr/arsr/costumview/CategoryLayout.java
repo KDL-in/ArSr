@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.entity.Category;
 
 /**
  * Created by KundaLin on 17/12/20.
@@ -21,21 +20,14 @@ public class CategoryLayout extends CardView {
     private TextView categoryTextView;//类别的名字view
     public CategoryLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.customview_category, this);
+        LayoutInflater.from(context).inflate(R.layout.item_tasklist_group, this);
         init();
 //        imageView.setOnClickListener(this);
     }
 
     private void init() {
-        imageView = findViewById(R.id.img_expand);
-        categoryTextView = findViewById(R.id.text_category_name);
+        imageView = findViewById(R.id.img_taskList_groupImgButton);
+        categoryTextView = findViewById(R.id.tv_taskList_groupTitle);
     }
 
-    /**
-     * 设置类别信息
-     * @param category
-     */
-    public void setCategoryProperties(Category category) {
-        categoryTextView.setText(category.getName());
-    }
 }

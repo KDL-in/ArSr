@@ -9,24 +9,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.TaskListRecycleViewAdapter;
+import com.arsr.arsr.adapter.AdapterCategoryListRecyclerView;
+import com.arsr.arsr.entity.Child;
+import com.arsr.arsr.entity.Group;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 
 /**
- * 任务列表碎片
+ * 类别碎片
+ * 等待加入内容
+ * todo 等待抽象
  */
-public class TaskListFragment extends Fragment {
-
+public class FragmentCategoryList extends Fragment {
     // 数据
-    private static List<RecyclerViewData> taskListData;
+    private static List<RecyclerViewData> categoryListData;
 
 
-    public TaskListFragment() {
+    public FragmentCategoryList() {
         // Required empty public constructor
     }
 
@@ -34,14 +36,14 @@ public class TaskListFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param groupNames  group名字.
-     * @param childNames  child名字.
-     * @return A new instance of fragment TaskListFragment.
+     * @param groups  列表中组的数据
+     * @param children  列表中子项的数据.
+     * @return A new instance of fragment FragmentTaskList.
      */
     // TODO: Rename and change types and number of parameters
-    public static TaskListFragment newInstance(String[] groupNames,String[][] childNames) {
-        TaskListFragment fragment = new TaskListFragment();
-        taskListData=initExListData(groupNames,childNames);
+    public static FragmentCategoryList newInstance(List<Group>groups, List<List<Child>>children) {
+        FragmentCategoryList fragment = new FragmentCategoryList();
+        categoryListData = AdapterCategoryListRecyclerView.initExListData(groups,children);
         return fragment;
     }
 
@@ -54,37 +56,16 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_task_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_categorylist, container, false);
         //初始化任务列表
-        RecyclerView recyclerViewTaskList = view.findViewById(R.id.recycler_task_list);
-        TaskListRecycleViewAdapter listAdapter = new TaskListRecycleViewAdapter(getActivity(), taskListData);
+        RecyclerView recyclerCategoryList = view.findViewById(R.id.recyclerView_mainUI_categoryList);
+        AdapterCategoryListRecyclerView listAdapter = new AdapterCategoryListRecyclerView(getActivity(), categoryListData);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerViewTaskList.setAdapter(listAdapter);
-        recyclerViewTaskList.setLayoutManager(layoutManager);
+        recyclerCategoryList.setAdapter(listAdapter);
+        recyclerCategoryList.setLayoutManager(layoutManager);
         return view;
     }
 
-    /**
-     * 封装初始化数据(任务列表)
-     * todo 之后这里应该要改，数据不只是名字,可能要封装成工具
-     *
-     * @param groupNames
-     * @param childNames
-     */
-    public static List<RecyclerViewData> initExListData(String[] groupNames, String[][] childNames) {
-        List<RecyclerViewData> taskListData = new ArrayList<>();
-        int groupLength = groupNames.length;
-        int childLength = childNames.length;
-
-        for (int i = 0; i < groupLength; i++) {
-            List<String> childData = new ArrayList<>();
-            for (int j = 0; j < childLength; j++) {
-                childData.add(childNames[i][j]);
-            }
-            taskListData.add(new RecyclerViewData(groupNames[i], childData, true));
-        }
-        return taskListData;
-    }
    /*  监听方面的框架
    private OnFragmentInteractionListener mListener;
     Rename method, update argument and hook method into UI event
@@ -125,9 +106,5 @@ public class TaskListFragment extends Fragment {
         //  Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
-
-
-
-
 
 }

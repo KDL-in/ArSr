@@ -20,10 +20,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_list" />
+        app:srcCompat="@drawable/icon_list" />
 
     <TextView
-        android:id="@+id/text_category_name"
+        android:id="@+id/text_category_name_nav"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"

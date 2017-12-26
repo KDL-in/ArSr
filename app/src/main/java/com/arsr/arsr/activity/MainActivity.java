@@ -1,6 +1,5 @@
 package com.arsr.arsr.activity;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -14,33 +13,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.arsr.arsr.CalendarTaskActivity;
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
-import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
-import com.arsr.arsr.fragment.CreateTaskFragment;
-import com.arsr.arsr.fragment.TaskListFragment;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
+import com.arsr.arsr.adapter.AdapterMainFragmentPager;
+import com.arsr.arsr.fragment.FragmentCategoryList;
+import com.arsr.arsr.fragment.FragmentTaskList;
+import com.arsr.arsr.util.TestDataUtil;
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
-    //临时数据
-    public String[] groupStrings = {"CET-6", "考研", "Math", "PcNet"};
-    public String[][] childStrings = {
-            {"List 1", "List 2", "List 3", "List 3"},
-            {"L 1", "L 2", "L 3", "L 4"},
-            {"Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5"},
-            {"c1", "c2", "c3", "c4"}
-    };
 
-    private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
+    private AdapterMainFragmentPager pagerAdapter;//碎片页面适配器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +34,11 @@ public class MainActivity extends BasicActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //滑动菜单
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawerLayout);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);//利用返回按钮做导航按钮
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+            actionBar.setHomeAsUpIndicator(R.drawable.icon_menu);
         }
 /*
         //expandableListView任务列表
@@ -77,11 +61,11 @@ public class MainActivity extends BasicActivity {
 */
 
         //主界面两个子页面初始化
-        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(),this);
+        pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(),this);
         initPaperAdapter();
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(pagerAdapter);
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {//自定义tab
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -89,8 +73,8 @@ public class MainActivity extends BasicActivity {
         }
 
         //navigationView上面的监听
-        final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setCheckedItem(R.id.nav_today);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -108,16 +92,17 @@ public class MainActivity extends BasicActivity {
             }
         });
         //navigationView上的列表
-        RecyclerView recyclerView = findViewById(R.id.recycler_category_list);
-        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(Arrays.asList(groupStrings));
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_navigation);
+        AdapterNavigationRecyclerView adapter = new AdapterNavigationRecyclerView(TestDataUtil.getGroupNames());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
     }
 
     private void initPaperAdapter() {
-        pagerAdapter.addFragment(TaskListFragment.newInstance(groupStrings, childStrings));
-        pagerAdapter.addFragment(CreateTaskFragment.newInstance("",""));
+        pagerAdapter.addFragment(FragmentTaskList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
+        pagerAdapter.addFragment(FragmentCategoryList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
     }
 
 
@@ -130,7 +115,7 @@ public class MainActivity extends BasicActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
 

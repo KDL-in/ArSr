@@ -2,30 +2,33 @@ package com.arsr.arsr.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.arsr.arsr.R;
+import com.arsr.arsr.adapter.AdapterTaskListRecyclerView;
+import com.arsr.arsr.entity.Child;
+import com.arsr.arsr.entity.Group;
+
+import java.util.List;
+
+import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 
 /**
- * 类别碎片
- * 等待加入内容
+ * 任务列表碎片
+ * todo 等待抽象
  */
-public class CreateTaskFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class FragmentTaskList extends Fragment {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // 数据
+    private static List<RecyclerViewData> taskListData;
 
 
-
-    public CreateTaskFragment() {
+    public FragmentTaskList() {
         // Required empty public constructor
     }
 
@@ -33,39 +36,39 @@ public class CreateTaskFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment.
+     * @param groups  列表中组的数据
+     * @param children  列表中子项的数据.
+     * @return A new instance of fragment FragmentTaskList.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateTaskFragment newInstance(String param1, String param2) {
-        CreateTaskFragment fragment = new CreateTaskFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+    public static FragmentTaskList newInstance(List<Group>groups, List<List<Child>>children) {
+        FragmentTaskList fragment = new FragmentTaskList();
+        taskListData=AdapterTaskListRecyclerView.initExListData(groups,children);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_create_task, container, false);
+        View view = inflater.inflate(R.layout.fragment_tasklist, container, false);
+        //初始化任务列表
+        RecyclerView recyclerViewTaskList = view.findViewById(R.id.recyclerView_mainUI_taskList);
+        AdapterTaskListRecyclerView listAdapter = new AdapterTaskListRecyclerView(getActivity(), taskListData);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerViewTaskList.setAdapter(listAdapter);
+        recyclerViewTaskList.setLayoutManager(layoutManager);
         return view;
     }
+
    /*  监听方面的框架
    private OnFragmentInteractionListener mListener;
-    // Rename method, update argument and hook method into UI event
+    Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -100,8 +103,12 @@ public class CreateTaskFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      *//*
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+        //  Update argument type and name
         void onFragmentInteraction(Uri uri);
     }*/
+
+
+
+
 
 }

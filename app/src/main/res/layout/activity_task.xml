@@ -8,13 +8,13 @@
     tools:context="com.arsr.arsr.activity.TaskActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBar"
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:fitsSystemWindows="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
+            android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -23,7 +23,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
-                android:id="@+id/img_task_background"
+                android:id="@+id/img_taskUI_bg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:padding="15dp">
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                android:id="@+id/calendar_month"
+                android:id="@+id/calendarView_month"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:src="@drawable/ic_delete"
-        app:layout_anchor="@id/appBar"
+        android:src="@drawable/icon_delete"
+        app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|end" />
 </android.support.design.widget.CoordinatorLayout>

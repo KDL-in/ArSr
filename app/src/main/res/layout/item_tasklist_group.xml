@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/group"
+    android:id="@+id/cardView_taskList_group"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="0.1dp"
@@ -16,14 +16,15 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:src="@drawable/ic_list"
+            android:id="@+id/img_taskList_groupIcon"
+            android:src="@drawable/icon_list"
             android:tint="@color/colorPrimary"
             android:layout_marginLeft="10dp"
             android:layout_width="15dp"
             android:layout_height="match_parent" />
 
         <TextView
-            android:id="@+id/text_category_name"
+            android:id="@+id/tv_taskList_groupTitle"
             android:layout_width="0dp"
             android:paddingLeft="16dp"
             android:layout_height="wrap_content"
@@ -33,7 +34,7 @@
             android:textSize="16sp" />
 
         <ImageView
-            android:id="@+id/img_expand"
+            android:id="@+id/img_taskList_groupImgButton"
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:background="@drawable/selector_expand"
