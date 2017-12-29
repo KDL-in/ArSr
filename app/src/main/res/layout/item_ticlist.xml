@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:id="@+id/linearLayout_categoryList_child"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_ticList_icon"
+            android:src="@drawable/icon_task"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="30dp"
+            android:tint="@color/colorPrimary"
+            android:layout_width="25dp"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/tv_ticList_childTittle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp"
+            android:text="List 1"
+            android:layout_marginLeft="20dp"
+            android:padding="5dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/bubbleSeekBar"
+        android:layout_marginLeft="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bsb_max="6"
+        app:bsb_min="0"
+        app:bsb_progress="4"
+        app:bsb_second_track_color="@color/colorPrimary"
+        app:bsb_track_color="@color/background"
+        app:bsb_thumb_color="@color/colorPrimary" />
+</LinearLayout>

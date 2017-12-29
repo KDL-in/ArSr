@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arsr.arsr.R;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
+import drawthink.expandablerecyclerview.bean.GroupItem;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 import drawthink.expandablerecyclerview.holder.BaseViewHolder;
 
@@ -123,6 +125,7 @@ public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<Group, 
     }
 
 
+
     /**
      * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType
      * todo 等待抽象
@@ -132,6 +135,7 @@ public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<Group, 
     public static class VHTaskListRecyclerView extends BaseViewHolder {
         //group的数据
         TextView categoryTextView;
+        public ImageView expandImgBtn;
         //child的数据
         TextView childTextView;
 
@@ -141,6 +145,7 @@ public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<Group, 
             switch (viewType) {
                 case VIEW_TYPE_PARENT:
                     categoryTextView = itemView.findViewById(R.id.tv_taskList_groupTitle);
+                    expandImgBtn = itemView.findViewById(R.id.img_taskList_groupImgButton);
                     break;
                 case VIEW_TYPE_CHILD:
                     childTextView = itemView.findViewById(R.id.tv_taskList_childTittle);

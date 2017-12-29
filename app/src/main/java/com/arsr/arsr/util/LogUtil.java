@@ -14,7 +14,7 @@ public class LogUtil {
     public static final int WARN = 3;
     public static final int ERROR = 4;
     public static final int NOTING = 5;
-    private static final String TAG = "default test";
+    private static final String TAG = "default_test";
     public static int level = VERBOSE;
 
     public static void v(String tag, String msg) {
@@ -50,6 +50,12 @@ public class LogUtil {
     public static void d() {
         if (level <= DEBUG) {
             Log.d(TAG, "i am here");
+        }
+    }
+
+    public static void d(String path) {
+        if (level < DEBUG){
+            Log.d(TAG, path);
         }
     }
 }

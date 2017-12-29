@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.arsr.arsr.activity.ActivityTasksInCategory;
 import com.arsr.arsr.R;
 
 import java.util.List;
@@ -22,9 +23,16 @@ public class AdapterNavigationRecyclerView extends RecyclerView.Adapter<AdapterN
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_navigation_category, parent, false);
-        return new MyViewHolder(view);
+        MyViewHolder holder = new MyViewHolder(view);
+        holder.textName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {//todo 应该监听布局
+                ActivityTasksInCategory.startAction(parent.getContext());
+            }
+        });
+        return holder;
     }
 
     @Override

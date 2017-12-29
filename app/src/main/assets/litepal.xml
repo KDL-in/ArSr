@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<litepal>
+    <dbname value="ArSrDB"></dbname>
+    <version value ="1"></version>
+    <list>
+        <mapping class="com.arsr.arsr.db.Tag" />
+        <mapping class="com.arsr.arsr.db.Category" />
+        <mapping class="com.arsr.arsr.db.Task" />
+    </list>
+</litepal>

@@ -19,7 +19,11 @@ import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
 import com.arsr.arsr.adapter.AdapterMainFragmentPager;
 import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
+import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.IOUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.TestDataUtil;
+import com.snatik.storage.Storage;
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
@@ -40,37 +44,17 @@ public class MainActivity extends BasicActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);//利用返回按钮做导航按钮
             actionBar.setHomeAsUpIndicator(R.drawable.icon_menu);
         }
-/*
-        //expandableListView任务列表
-        ExpandableListView listView = findViewById(R.id.list_task_list);
-        listView.setAdapter(new TaskListAdapterBak(this,groupStrings,childStrings));
-        listView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(getApplicationContext(), groupStrings[groupPosition], Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-        listView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getApplicationContext(), childStrings[groupPosition][childPosition], Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-*/
-
         //主界面两个子页面初始化
         pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(),this);
         initPaperAdapter();
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {//自定义tab
+        tabLayout.setupWithViewPager(viewPager);//自定义tab
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(pagerAdapter.getTabView(i));
-        }
+        }//end自定义tab
 
         //navigationView上面的监听
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
@@ -97,10 +81,18 @@ public class MainActivity extends BasicActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
+        //test
+        test();
     }
 
-    private void initPaperAdapter() {
+    /**
+     * 写一些测试用代码
+     */
+    private void test() {
+    }
+
+    private void initPaperAdapter() {//cur
+        DBUtil.initDatabase();
         pagerAdapter.addFragment(FragmentTaskList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
         pagerAdapter.addFragment(FragmentCategoryList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
     }
