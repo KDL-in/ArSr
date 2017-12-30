@@ -1,5 +1,6 @@
 package com.arsr.arsr.activity;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
 import com.arsr.arsr.adapter.AdapterMainFragmentPager;
+
 import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.DBUtil;
@@ -24,6 +26,7 @@ import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.TestDataUtil;
 import com.snatik.storage.Storage;
+
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
@@ -45,7 +48,7 @@ public class MainActivity extends BasicActivity {
             actionBar.setHomeAsUpIndicator(R.drawable.icon_menu);
         }
         //主界面两个子页面初始化
-        pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(),this);
+        pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(), this);
         initPaperAdapter();
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(pagerAdapter);
@@ -89,14 +92,38 @@ public class MainActivity extends BasicActivity {
      * 写一些测试用代码
      */
     private void test() {
+ /*       //清空
+        DataSupport.deleteAll(Tag.class);
+        DataSupport.deleteAll(Category.class);
+        //插入分类列表数据
+        CategoryDAO.insert("CTE-6");
+        CategoryDAO.insert("Math");
+        CategoryDAO.insert("考研");
+        CategoryDAO.insert("计算机网络");
+        //插入标签列表数据
+        TagDAO.insert("Word", "List", "CTE-6", "单词");
+        TagDAO.insert("Word", "List", "考研", null);
+        TagDAO.insert("2016 Reading 1", "Text", "考研", "2016试卷");*/
+        //删除测试
+//        CategoryDAO.output(CategoryDAO.selectAll());
+//        TagDAO.output(TagDAO.selectAll());
+////        DataSupport.deleteAll(Category.class, "name=?", "CTE-6");
+//        CategoryDAO.select("CTE-6").delete();
+////        DataSupport.delete(Category.class, 11);
+//        CategoryDAO.output(CategoryDAO.selectAll());
+//        TagDAO.output(TagDAO.selectAll());
+
+
     }
 
-    private void initPaperAdapter() {//cur
-        DBUtil.initDatabase();
+    private void initPaperAdapter() {//cu
+        SQLiteDatabase db = DBUtil.get();
+        db.execSQL(DBUtil.test1);
+        db.execSQL(DBUtil.test3);
+        db.execSQL(DBUtil.test2);
         pagerAdapter.addFragment(FragmentTaskList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
         pagerAdapter.addFragment(FragmentCategoryList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
     }
-
 
 
     /**

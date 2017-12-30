@@ -34,7 +34,6 @@ dependencies {
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.xw.repo:bubbleseekbar:3.12-lite'
-    compile 'org.litepal.android:core:1.6.1'
     compile 'com.snatik:storage:2.1.0'
 
 }
