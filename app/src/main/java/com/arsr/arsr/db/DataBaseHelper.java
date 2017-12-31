@@ -1,4 +1,4 @@
-package db;
+package com.arsr.arsr.db;
 
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
@@ -18,7 +18,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     private final String CREATE_TAG = "create table tag(\n" +
             "       id integer primary key autoincrement,\n" +
             "       name text not null unique,\n" +
-            "       prefix text not null unique,\n" +
+            "       prefix text not null,\n" +
             "       cid integer not null,\n" +
             "       note text,\n" +
             "       constraint fk_tag_cid_category foreign key(cid) references category(id) on delete cascade\n" +
@@ -27,11 +27,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "       id integer primary key autoincrement,\n" +
             "       name text not null unique,\n" +
             "       times integer not null default 0,\n" +
-            "       dayToRecall integer not null default -1,\n" +
+            "       dayToRecall integer not null default 0,\n" +
             "       assistTimes integer not null default -1,\n" +
             "       dayToAssist integer not null default -1,\n" +
             "       tid integer not null,\n" +
-            "       constraint fk_task_tid_tag foreign key(id) references tag(id) on delete cascade\n" +
+            "       constraint fk_task_tid_tag foreign key(tid) references tag(id) on delete cascade\n" +
             ");";
 
     public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

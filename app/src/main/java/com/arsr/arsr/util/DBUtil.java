@@ -1,11 +1,16 @@
 package com.arsr.arsr.util;
 
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.arsr.arsr.MyApplication;
 
-import db.DataBaseHelper;
+import com.arsr.arsr.dao.CategoryDAO;
+import com.arsr.arsr.dao.TagDAO;
+import com.arsr.arsr.dao.TaskDAO;
+import com.arsr.arsr.db.DataBaseHelper;
 
 /**
  * 数据库操作工具
@@ -14,20 +19,7 @@ import db.DataBaseHelper;
  */
 
 public class DBUtil {
-
-    public static String test1 = "insert into category(name)\n" +
-            "values(\"CTE-6\");\n" +
-            "insert into category(name)\n" +
-            "values(\"Math\");\n" +
-            "insert into category(name)\n" +
-            "values(\"考研\");\n" +
-            "\n" +
-            "insert into tag(name,prefix,cid,note)\n" +
-            "values(\"CTE-6_Word\",\"List\",1,null)";
-    public static String test2 = "delete from category\n" +
-            "where name=\"CTE-6\"";
-    public static String test3 = "insert into tag(name,prefix,cid,note)\n" +
-            "values(\"CTE-6_Word\",\"List\",1,null)";
+    public final static String DELETED = "beDeleted";
 
     /**
      * 用于初始化数据库
@@ -44,5 +36,44 @@ public class DBUtil {
      */
     public static SQLiteDatabase get() {
         return db;
+    }
+
+    public static <T> Cursor findAll(Class<T> tClass)  {
+        Cursor cursor = db.query(tClass.getSimpleName(), null, null, null, null, null, null);
+        return cursor;
+    }
+
+    /**
+     * 插入数据
+     *
+     * @param tClass 插入表对应类
+     * @param values 插入值
+     * @param <T>
+     */
+    public static <T> long insert(Class<T> tClass, ContentValues values) {
+        return db.insert(tClass.getSimpleName(), null, values);
+    }
+
+    /**
+     * 初始化读取数据库中表格作为缓存
+     */
+    public static void initCache() {
+        CategoryDAO.loadCache();
+        TagDAO.loadCache();
+        TaskDAO.loadCache();
+    }
+
+    public static<T> long delete(Class<T> tClass, String selection, String[] selectionArgs) {
+       return db.delete(tClass.getSimpleName(), selection, selectionArgs);
+    }
+
+    /**
+     * 解析出名字中类别，名字，编码
+     *
+     * @param name 格式为 category_name_number
+     * @return 返回解析后的数组
+     */
+    public static String[] parse(String name) {
+        return name.split("_");
     }
 }

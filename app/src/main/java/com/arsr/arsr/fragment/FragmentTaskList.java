@@ -70,6 +70,7 @@ public class FragmentTaskList extends Fragment implements OnRecyclerViewListener
         recyclerViewTaskList.setLayoutManager(layoutManager);
         return view;
     }
+
     //监听
     private RecyclerView recyclerViewTaskList;
     private AdapterTaskListRecyclerView listAdapter;

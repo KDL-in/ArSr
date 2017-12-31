@@ -3,8 +3,8 @@
     <dbname value="ArSrDB"></dbname>
     <version value ="2"></version>
     <list>
-        <mapping class="com.arsr.arsr.db.Tag" />
-        <mapping class="com.arsr.arsr.db.Category" />
-        <mapping class="com.arsr.arsr.db.Task" />
+        <mapping class="com.arsr.arsr.com.arsr.arsr.db.Tag" />
+        <mapping class="com.arsr.arsr.com.arsr.arsr.db.Category" />
+        <mapping class="com.arsr.arsr.com.arsr.arsr.db.Task" />
     </list>
 </litepal>
