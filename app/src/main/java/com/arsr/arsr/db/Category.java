@@ -1,6 +1,6 @@
 package com.arsr.arsr.db;
 
-public class Category {
+public class Category extends Entity {
     private long id;
 
     public Category() {
@@ -19,6 +19,7 @@ public class Category {
 
     private String name;//任务名
 
+    @Override
     public long getId() {
         return id;
     }
@@ -27,6 +28,7 @@ public class Category {
         this.id = id;
     }
 
+    @Override
     public String getName() {
         return name;
     }

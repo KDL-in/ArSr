@@ -20,6 +20,7 @@ import com.arsr.arsr.adapter.AdapterMainFragmentPager;
 import com.arsr.arsr.dao.CategoryDAO;
 import com.arsr.arsr.dao.TagDAO;
 import com.arsr.arsr.dao.TaskDAO;
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.DBUtil;
@@ -90,46 +91,47 @@ public class MainActivity extends BasicActivity {
      * 写一些测试用代码
      */
     private void test() {
-
-        DBUtil.initCache();
-/*        //category
-        CategoryDAO.insert("CTE-6");
-        CategoryDAO.insert("Math");
-        CategoryDAO.insert("考研");
-        CategoryDAO.insert("计算机网络");
+        CategoryDAO categoryDAO =DBUtil.categoryDAO;
+        TagDAO tagDAO = DBUtil.tagDAO;
+        TaskDAO taskDAO = DBUtil.taskDAO;
+        //category
+        categoryDAO.insert("CTE-6");
+        categoryDAO.insert("Math");
+        categoryDAO.insert("考研");
+        categoryDAO.insert("计算机网络");
         //tag
-        TagDAO.insert("Word","List","CTE-6","单词");
-        TagDAO.insert("Reading 2016","Text","CTE-6","长难句");
-        TagDAO.insert("Word","List","考研",null);
-        TagDAO.insert("Chapter","Chapter","Math",null);
-        TagDAO.insert("Chapter", "C", "计算机网络", null);
+        tagDAO.insert("Word","List","CTE-6","单词");
+        tagDAO.insert("Reading 2016","Text","CTE-6","长难句");
+        tagDAO.insert("Word","List","考研",null);
+        tagDAO.insert("Chapter","Chapter","Math",null);
+        tagDAO.insert("Chapter", "C", "计算机网络", null);
         //task
         //values("CTE-6_List_1",4,0,-1,-1,1);
-        TaskDAO.insert("List_1",4,0,-1,-1,"CTE-6_Word");
-        TaskDAO.insert("List_2",3,0,-1,-1,"CTE-6_Word");
-        TaskDAO.insert("List_3",2,0,-1,-1,"CTE-6_Word");
-        TaskDAO.insert("List_4",1,0,-1,-1,"CTE-6_Word");
-        TaskDAO.insert("List_5",0,0,-1,-1,"CTE-6_Word");
-        TaskDAO.insert("C_1",3,0,-1,-1,"Math_Chapter");
-        TaskDAO.insert("C_2",3,0,-1,-1,"Math_Chapter");
-        TaskDAO.insert("List_1",4,0,-1,-1,"考研_Word");
-        TaskDAO.insert("List_2",2,0,-1,-1,"考研_Word");
-        TaskDAO.insert("List_3",2,0,-1,-1,"考研_Word");
-        CategoryDAO.display();
-        TagDAO.display();
-        TaskDAO.display();*/
+        taskDAO.insert("List_1",4,0,-1,-1,"CTE-6_Word");
+        taskDAO.insert("List_2",3,0,-1,-1,"CTE-6_Word");
+        taskDAO.insert("List_3",2,0,-1,-1,"CTE-6_Word");
+        taskDAO.insert("List_4",1,0,-1,-1,"CTE-6_Word");
+        taskDAO.insert("List_5",0,0,-1,-1,"CTE-6_Word");
+        taskDAO.insert("C_1",3,0,-1,-1,"Math_Chapter");
+        taskDAO.insert("C_2",3,0,-1,-1,"Math_Chapter");
+        taskDAO.insert("List_1",4,0,-1,-1,"考研_Word");
+        taskDAO.insert("List_2",2,0,-1,-1,"考研_Word");
+        taskDAO.insert("List_3",2,0,-1,-1,"考研_Word");
+        categoryDAO.display();
+        tagDAO.display();
+        taskDAO.display();
         //更新
-        DBUtil.get().execSQL("update category\n" +
+        DBUtil.db.execSQL("update category\n" +
                 "set name = \"CESHI\"\n" +
                 "where id = 1");
 
-        CategoryDAO.display();
-        TagDAO.display();
-        TaskDAO.display();
+        categoryDAO.display();
+        tagDAO.display();
+        taskDAO.display();
         //删除
-     /*   CategoryDAO.delete("CTE-6");
-        CategoryDAO.display();
-        TagDAO.display();*/
+//        categoryDAO.delete("CESHI");
+//        categoryDAO.display();
+//        categoryDAO.display();
     }
 
     private void initPaperAdapter() {//cu

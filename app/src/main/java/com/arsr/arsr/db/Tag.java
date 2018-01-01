@@ -1,6 +1,6 @@
 package com.arsr.arsr.db;
 
-public class Tag {
+public class Tag extends Entity{
     private long id;
     private String name;//标签名 保存时为分类名+ +标签名
     private String prefix;//用于自动生成任务前缀
@@ -25,7 +25,7 @@ public class Tag {
     public void setCid(int cid) {
         this.cid = cid;
     }
-
+    @Override
     public long getId() {
         return id;
     }
@@ -34,7 +34,7 @@ public class Tag {
         this.id = id;
     }
 
-
+    @Override
     public String getName() {
         return name;
     }
