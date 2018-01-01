@@ -17,11 +17,9 @@ import android.view.MenuItem;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
 import com.arsr.arsr.adapter.AdapterMainFragmentPager;
-
 import com.arsr.arsr.dao.CategoryDAO;
 import com.arsr.arsr.dao.TagDAO;
 import com.arsr.arsr.dao.TaskDAO;
-import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.DBUtil;
@@ -93,8 +91,8 @@ public class MainActivity extends BasicActivity {
      */
     private void test() {
 
-/*        DBUtil.initCache();
-        //category
+        DBUtil.initCache();
+/*        //category
         CategoryDAO.insert("CTE-6");
         CategoryDAO.insert("Math");
         CategoryDAO.insert("考研");
@@ -120,6 +118,14 @@ public class MainActivity extends BasicActivity {
         CategoryDAO.display();
         TagDAO.display();
         TaskDAO.display();*/
+        //更新
+        DBUtil.get().execSQL("update category\n" +
+                "set name = \"CESHI\"\n" +
+                "where id = 1");
+
+        CategoryDAO.display();
+        TagDAO.display();
+        TaskDAO.display();
         //删除
      /*   CategoryDAO.delete("CTE-6");
         CategoryDAO.display();

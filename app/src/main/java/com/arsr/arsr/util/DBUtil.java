@@ -39,7 +39,7 @@ public class DBUtil {
     }
 
     public static <T> Cursor findAll(Class<T> tClass)  {
-        Cursor cursor = db.query(tClass.getSimpleName(), null, null, null, null, null, null);
+        Cursor cursor = db.query(tClass.getSimpleName(), null, null, null, null, null, "updateTime DESC");
         return cursor;
     }
 

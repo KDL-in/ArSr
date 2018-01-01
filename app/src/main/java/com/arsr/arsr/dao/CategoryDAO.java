@@ -7,7 +7,6 @@ import com.arsr.arsr.util.DBUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -19,8 +18,7 @@ import com.arsr.arsr.util.LogUtil;
  */
 
 public class CategoryDAO {
-    private static Map<Long, Category> categoryMap;//缓存列表，提高效率
-    private static Map<String, Long> idMap;//id映射
+
 
     /**
      * ====================================================================
@@ -65,46 +63,68 @@ public class CategoryDAO {
     private static void updateCache(Category category) {
         if (category.getId() == -1) return;//失败标志
         if (category.getName().equals(DBUtil.DELETED)) {//删除标志
-            Category rm = categoryMap.remove(category.getId());
-            idMap.remove(rm.getName());
-            TagDAO.reloadCache();
-            TaskDAO.reloadCache();
-            return;
+            long id = category.getId();
+            int idx = idToIdx.get(id);
+            String name = idToName.get(id);
+            list.set(idx, null);
+            removeMap(name, id, idx);
+
+        } else {//添加的情况
+            list.add(category);
+            buildMap(category.getName(),category.getId(),list.size());
         }
-        idMap.put(category.getName(), category.getId());//插入
-        categoryMap.put(category.getId(), category);
+    }
+    /**
+     * 建立映射关系
+     */
+    public static void buildMap(String name, long id, int idx) {
+        nameToId.put( name,id);
+        idToName.put(id, name);
+        nameToIndex.put(name, idx);
+        idToIdx.put(id, idx);
+    }
+
+    /**、
+     * 删除映射
+     */
+    private static void removeMap(String name, long id, int idx) {
+        nameToId.remove(name);
+        idToName.remove(id);
+        nameToIndex.remove(name);
+        idToIdx.remove(id);
     }
 
     /**
      * ===============================================================
      * 初始化缓存
      */
+    public static List<Category> list;//缓存列表，提高效率
+    private static Map<String, Long> nameToId;//id映射
+    private static Map<String,Integer> nameToIndex;//下标映射
+    private static Map<Long,String> idToName;//名字映射
+    private static Map<Long,Integer> idToIdx;
     public static void loadCache() {
         Cursor cursor = DBUtil.findAll(Category.class);
-        List<Category> categories = readCursor(cursor);
-        categoryMap = new HashMap<>();
-        idMap = new HashMap<>();
-        for (Category category :
-                categories) {
-            updateCache(category);
+        list = readCursor(cursor);
+        nameToIndex = new HashMap<>();
+        idToName=new HashMap<>();
+        nameToId = new HashMap<>();
+        idToIdx =new HashMap<>();
+        for (int i = 0; i < list.size(); i++) {
+            Category e = list.get(i);
+            buildMap(e.getName(),e.getId(),i);
         }
     }
 
-    /**
-     * 取得id为x的数据项
-     */
-    public Category getCategory(int id) {
-        return categoryMap.get(id);
-    }
+
 
     /**
      * 取得name的id
-     *
      * @param name 分类名
      * @return 它的id
      */
     public static long getId(String name) {
-        return idMap.get(name);
+        return nameToId.get(name);
     }
 
     /**
@@ -133,10 +153,12 @@ public class CategoryDAO {
      */
     public static void display() {
         LogUtil.d("In category");
-        for (long key :
-                categoryMap.keySet()) {
-            LogUtil.d(categoryMap.get(key).toString());
+        for (Category e :
+                list) {
+            if (e!=null)
+            LogUtil.d(e.toString());
         }
+
     }
 
 
