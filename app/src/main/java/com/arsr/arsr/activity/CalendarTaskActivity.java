@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterTaskListRecyclerView;
 import com.arsr.arsr.fragment.FragmentTaskList;
+import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.TestDataUtil;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -49,7 +50,7 @@ public class CalendarTaskActivity extends BasicActivity {
      * 显示某一天的列表
      */
     private void showListAt(int day) {
-        List<RecyclerViewData> taskListData = AdapterTaskListRecyclerView.initExListData(TestDataUtil.getGroups(), TestDataUtil.getChildren());
+        List<RecyclerViewData> taskListData = ListUtil.getTaskListAt(day);
         AdapterTaskListRecyclerView adapterTaskListRecyclerView = new AdapterTaskListRecyclerView(this, taskListData);
         RecyclerView recyclerView = findViewById(R.id.recyclerView_calenderUI);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

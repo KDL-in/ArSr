@@ -1,16 +1,13 @@
 package com.arsr.arsr.util;
 
 
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.arsr.arsr.MyApplication;
 
-import com.arsr.arsr.dao.CategoryDAO;
-import com.arsr.arsr.dao.TagDAO;
-import com.arsr.arsr.dao.TaskDAO;
-import com.arsr.arsr.db.Category;
+import com.arsr.arsr.db.dao.CategoryDAO;
+import com.arsr.arsr.db.dao.TagDAO;
+import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.db.DataBaseHelper;
 
 /**
@@ -38,8 +35,6 @@ public class DBUtil {
         tagDAO = new TagDAO();
         taskDAO = new TaskDAO();
     }
-
-
 
 
     /**

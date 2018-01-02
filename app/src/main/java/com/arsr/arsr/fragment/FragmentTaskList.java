@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterTaskListRecyclerView;
+import com.arsr.arsr.adapter.holder.VHTaskListRecyclerView;
 import com.arsr.arsr.entity.Child;
 import com.arsr.arsr.entity.Group;
 
@@ -39,15 +40,12 @@ public class FragmentTaskList extends Fragment implements OnRecyclerViewListener
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param groups   列表中组的数据
-     * @param children 列表中子项的数据.
      * @return A new instance of fragment FragmentTaskList.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentTaskList newInstance(List<Group> groups, List<List<Child>> children) {
+    public static FragmentTaskList newInstance(List<RecyclerViewData> list) {
         FragmentTaskList fragment = new FragmentTaskList();
-        taskListData = AdapterTaskListRecyclerView.initExListData(groups, children);
+        taskListData = list;
         return fragment;
     }
 
@@ -78,7 +76,7 @@ public class FragmentTaskList extends Fragment implements OnRecyclerViewListener
 
     @Override
     public void onGroupItemClick(int position, int groupPosition, View view) {
-        AdapterTaskListRecyclerView.VHTaskListRecyclerView holder = (AdapterTaskListRecyclerView.VHTaskListRecyclerView) recyclerViewTaskList.getChildViewHolder(recyclerViewTaskList.getChildAt(position));
+        VHTaskListRecyclerView holder = (VHTaskListRecyclerView) recyclerViewTaskList.getChildViewHolder(recyclerViewTaskList.getChildAt(position));
         GroupItem groupItem = taskListData.get(groupPosition).getGroupItem();
         holder.expandImgBtn.setSelected(groupItem.isExpand());
     }

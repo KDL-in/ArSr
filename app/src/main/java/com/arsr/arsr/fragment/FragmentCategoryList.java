@@ -36,14 +36,12 @@ public class FragmentCategoryList extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param groups  列表中组的数据
-     * @param children  列表中子项的数据.
      * @return A new instance of fragment FragmentTaskList.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentCategoryList newInstance(List<Group>groups, List<List<Child>>children) {
+    public static FragmentCategoryList newInstance(List<RecyclerViewData>list) {
         FragmentCategoryList fragment = new FragmentCategoryList();
-        categoryListData = AdapterCategoryListRecyclerView.initExListData(groups,children);
+        categoryListData = list;
         return fragment;
     }
 

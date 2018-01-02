@@ -17,14 +17,18 @@ import android.view.MenuItem;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
 import com.arsr.arsr.adapter.AdapterMainFragmentPager;
-import com.arsr.arsr.dao.CategoryDAO;
-import com.arsr.arsr.dao.TagDAO;
-import com.arsr.arsr.dao.TaskDAO;
-import com.arsr.arsr.db.Category;
+import com.arsr.arsr.db.dao.CategoryDAO;
+import com.arsr.arsr.db.dao.TagDAO;
+import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.TestDataUtil;
+
+import java.util.List;
+
+import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 
 public class MainActivity extends BasicActivity {
@@ -39,6 +43,8 @@ public class MainActivity extends BasicActivity {
         //状态栏更换
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //test
+        test();
         //滑动菜单
         mDrawerLayout = findViewById(R.id.drawerLayout);
         ActionBar actionBar = getSupportActionBar();
@@ -83,8 +89,7 @@ public class MainActivity extends BasicActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        //test
-        test();
+
     }
 
     /**
@@ -135,8 +140,10 @@ public class MainActivity extends BasicActivity {
     }
 
     private void initPaperAdapter() {//cu
-        pagerAdapter.addFragment(FragmentTaskList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
-        pagerAdapter.addFragment(FragmentCategoryList.newInstance(TestDataUtil.getGroups(), TestDataUtil.getChildren()));
+        List<RecyclerViewData> listData1 = ListUtil.getTaskList();
+        pagerAdapter.addFragment(FragmentTaskList.newInstance(listData1));
+        List<RecyclerViewData> listData = ListUtil.getTaskList();
+        pagerAdapter.addFragment(FragmentCategoryList.newInstance(listData));
     }
 
 

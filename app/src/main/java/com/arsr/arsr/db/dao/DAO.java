@@ -1,9 +1,8 @@
-package com.arsr.arsr.dao;
+package com.arsr.arsr.db.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.LogUtil;
@@ -72,7 +71,7 @@ public abstract class DAO<T extends Entity> {
             removeMap(name, id, idx);
         } else {//添加的情况
             list.add(t);
-            buildMap(t.getName(),t.getId(),list.size());
+            buildMap(t.getName(),t.getId(),list.size()-1);
         }
     }
     /**
@@ -135,5 +134,9 @@ public abstract class DAO<T extends Entity> {
                 LogUtil.d(e.toString());
         }
 
+    }
+
+    public List<T> getList() {
+        return list;
     }
 }

@@ -1,15 +1,12 @@
-package com.arsr.arsr.dao;
+package com.arsr.arsr.db.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.arsr.arsr.db.Tag;
-import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
-import com.arsr.arsr.util.LogUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

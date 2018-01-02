@@ -1,4 +1,4 @@
-package com.arsr.arsr.dao;
+package com.arsr.arsr.db.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -63,7 +63,7 @@ public class CategoryDAO extends DAO<Category> {
 
 
 /*
-package com.arsr.arsr.dao;
+package com.arsr.arsr.db.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
