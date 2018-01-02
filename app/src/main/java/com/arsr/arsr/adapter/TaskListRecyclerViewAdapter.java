@@ -37,11 +37,13 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
 
     private Context mContext;
     private LayoutInflater mInflater;
+    List<RecyclerViewData> mData;
 
     public TaskListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
+        mData = datas;
     }
 
     /**
@@ -93,6 +95,13 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     @Override
     public void onBindChildpHolder(VHTaskListRecyclerView holder, int groupPos, int childPos, int position, String childData) {
         holder.childTextView.setText(childData.substring(childData.indexOf(' ')));
+    }
+
+
+    public void remove(int position,int groupPosition, int childPosition) {
+//        mData.get(groupPosition).removeChild(childPosition);
+//        notifyRecyclerViewData();
+
     }
 
 

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
 import com.arsr.arsr.adapter.AdapterMainFragmentPager;
+import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.dao.CategoryDAO;
 import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
@@ -50,9 +51,10 @@ public class MainActivity extends BasicActivity {
         }
         //主界面两个子页面初始化
         pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(), this);
-        FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(ListUtil.getTaskListAdapter(MainActivity.this));
+        TaskListRecyclerViewAdapter listAdapter = ListUtil.getTaskListAdapter(MainActivity.this);
+        FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(listAdapter);
         FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getTodayTasksAdapter(MainActivity.this));
-        fragmentTaskList.setOnItemClickListener(new OnTaskClickListener());
+        fragmentTaskList.setOnItemClickListener(new OnTaskClickListener(listAdapter));
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
         ViewPager viewPager = findViewById(R.id.viewPager);
