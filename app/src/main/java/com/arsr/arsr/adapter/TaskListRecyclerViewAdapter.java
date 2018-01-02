@@ -33,12 +33,12 @@ import drawthink.expandablerecyclerview.holder.BaseViewHolder;
  * VH :VHCategoryRecyclerView
  */
 
-public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<String, String, VHTaskListRecyclerView> {
+public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String, String, VHTaskListRecyclerView> {
 
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public AdapterTaskListRecyclerView(Context ctx, List<RecyclerViewData> datas) {
+    public TaskListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
@@ -81,11 +81,6 @@ public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<String,
 
     /**
      * onBindHolder中调用，如果是group则绑定以下的操作
-     *
-     * @param holder
-     * @param groupPos
-     * @param position
-     * @param groupData
      */
     @Override
     public void onBindGroupHolder(VHTaskListRecyclerView holder, int groupPos, int position, String groupData) {
@@ -94,16 +89,10 @@ public class AdapterTaskListRecyclerView extends BaseRecyclerViewAdapter<String,
 
     /**
      * onBindHolder中调用，如果是child则绑定以下操作
-     *
-     * @param holder
-     * @param groupPos
-     * @param childPos
-     * @param position
-     * @param childData
      */
     @Override
     public void onBindChildpHolder(VHTaskListRecyclerView holder, int groupPos, int childPos, int position, String childData) {
-        holder.childTextView.setText(childData);
+        holder.childTextView.setText(childData.substring(childData.indexOf(' ')));
     }
 
 

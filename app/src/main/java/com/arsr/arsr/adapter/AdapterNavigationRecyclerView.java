@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.arsr.arsr.activity.ActivityTasksInCategory;
+import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.R;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class AdapterNavigationRecyclerView extends RecyclerView.Adapter<AdapterN
         holder.textName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//todo 应该监听布局
-                ActivityTasksInCategory.startAction(parent.getContext());
+                TasksInCategoryActivity.startAction(parent.getContext());
             }
         });
         return holder;

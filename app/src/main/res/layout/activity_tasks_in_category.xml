@@ -28,10 +28,10 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_ticUI_ticList"
+        <FrameLayout
+            android:id="@+id/frameLayout_ticUI_replace"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"></FrameLayout>
     </android.support.design.widget.CoordinatorLayout>
     <!--以下是滑动菜单-->
     <LinearLayout

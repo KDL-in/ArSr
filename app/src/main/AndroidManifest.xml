@@ -25,7 +25,7 @@
         <activity
             android:name=".activity.CalendarTaskActivity"
             android:theme="@style/transparent_theme" />
-        <activity android:name=".activity.ActivityTasksInCategory"></activity>
+        <activity android:name=".activity.TasksInCategoryActivity"></activity>
     </application>
 
 </manifest>

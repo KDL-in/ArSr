@@ -4,15 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.AdapterTaskListRecyclerView;
+import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.ListUtil;
-import com.arsr.arsr.util.TestDataUtil;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import java.util.List;
@@ -48,14 +50,20 @@ public class CalendarTaskActivity extends BasicActivity {
 
     /**
      * 显示某一天的列表
+     * todo 某天的查询
      */
     private void showListAt(int day) {
-        List<RecyclerViewData> taskListData = ListUtil.getTaskListAt(day);
-        AdapterTaskListRecyclerView adapterTaskListRecyclerView = new AdapterTaskListRecyclerView(this, taskListData);
-        RecyclerView recyclerView = findViewById(R.id.recyclerView_calenderUI);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setAdapter(adapterTaskListRecyclerView);
-        recyclerView.setLayoutManager(layoutManager);
+
+        TaskListRecyclerViewAdapter adapterTaskListRecyclerView = ListUtil.getTaskListAt(CalendarTaskActivity.this, day);
+        FragmentTaskList fragment = FragmentTaskList.newInstance(ListUtil.getTaskListAt(this, day));
+        loadFragment(fragment);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frameLayout_tadUI__replace, fragment);
+        transaction.commit();
     }
 
     public static void startAction(Context context) {

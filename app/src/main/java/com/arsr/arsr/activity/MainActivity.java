@@ -20,15 +20,11 @@ import com.arsr.arsr.adapter.AdapterMainFragmentPager;
 import com.arsr.arsr.db.dao.CategoryDAO;
 import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
-import com.arsr.arsr.fragment.FragmentCategoryList;
 import com.arsr.arsr.fragment.FragmentTaskList;
+import com.arsr.arsr.listener.OnTaskClickListener;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.TestDataUtil;
-
-import java.util.List;
-
-import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 
 public class MainActivity extends BasicActivity {
@@ -54,7 +50,11 @@ public class MainActivity extends BasicActivity {
         }
         //主界面两个子页面初始化
         pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(), this);
-        initPaperAdapter();
+        FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(ListUtil.getTaskListAdapter(MainActivity.this));
+        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getTodayTasksAdapter(MainActivity.this));
+        fragmentTaskList.setOnItemClickListener(new OnTaskClickListener());
+        pagerAdapter.addFragment(fragmentTaskList);//添加碎片
+        pagerAdapter.addFragment(fragmentCategoryList);
         ViewPager viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
@@ -139,12 +139,6 @@ public class MainActivity extends BasicActivity {
 //        categoryDAO.display();
     }
 
-    private void initPaperAdapter() {//cu
-        List<RecyclerViewData> listData1 = ListUtil.getTaskList();
-        pagerAdapter.addFragment(FragmentTaskList.newInstance(listData1));
-        List<RecyclerViewData> listData = ListUtil.getTaskList();
-        pagerAdapter.addFragment(FragmentCategoryList.newInstance(listData));
-    }
 
 
     /**

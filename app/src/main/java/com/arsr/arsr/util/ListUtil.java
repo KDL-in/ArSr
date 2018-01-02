@@ -1,5 +1,10 @@
 package com.arsr.arsr.util;
 
+import android.content.Context;
+
+import com.arsr.arsr.activity.TasksInCategoryActivity;
+import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Entity;
 
 import java.util.ArrayList;
@@ -7,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 /**
@@ -20,22 +26,24 @@ public class ListUtil {
     /**
      * 获取分类-任务
      */
-    public static List<RecyclerViewData> getTaskList() {
+    public static TaskListRecyclerViewAdapter getTaskListAdapter(Context context) {
         List<String> group = getGroup(DBUtil.categoryDAO.getList());
         List<List<String>> children = getChildren(DBUtil.taskDAO.getList(), group);
         for (int i = 0; i < group.size(); i++) {
             if (children.get(i).isEmpty()) children.set(i, null);
         }
-        return getList(group, children, true);
+        TaskListRecyclerViewAdapter adapter = new TaskListRecyclerViewAdapter(context,getList(group, children, true));
+        return adapter;
     }
 
     /**
      * 获取分类-标签列表
      */
-    public static List<RecyclerViewData> getTICList() {
+    public static CategoryListRecyclerViewAdapter getTodayTasksAdapter(Context context) {
         List<String> group = getGroup(DBUtil.categoryDAO.getList());
         List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
-        return getList(group,children,false);
+        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
+        return adapter;
     }
 
     private static List<RecyclerViewData> getList(List<String> group, List<List<String>> children, boolean isExpand) {
@@ -61,7 +69,7 @@ public class ListUtil {
             if (t != null) {
                 String nameStr[] = DBUtil.parse(t.getName());
                 String name = "";
-                for (int i = 1; i < nameStr.length; i++) {
+                for (int i = 0; i < nameStr.length; i++) {
                     if (i != nameStr.length - 1)
                         name += nameStr[i] + " ";
                     else
@@ -89,7 +97,16 @@ public class ListUtil {
         return group;
     }
 
-    public static List<RecyclerViewData> getTaskListAt(int day) {//todo
-        return getTaskList();
+    public static TaskListRecyclerViewAdapter getTaskListAt(Context context, int day) {//todo
+        //todo 获取某天的任务
+        return getTaskListAdapter(context);
+    }
+
+    public static BaseRecyclerViewAdapter getTICListAdapter(Context context) {
+        //todo 测试代码
+        List<String> group = getGroup(DBUtil.categoryDAO.getList());
+        List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
+        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
+        return adapter;
     }
 }

@@ -11,6 +11,7 @@ import com.arsr.arsr.activity.TaskActivity;
 import com.arsr.arsr.adapter.holder.VHCategoryRecyclerView;
 import com.arsr.arsr.entity.Child;
 import com.arsr.arsr.entity.Group;
+import com.arsr.arsr.util.DBUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,11 +24,11 @@ import drawthink.expandablerecyclerview.holder.BaseViewHolder;
  * Created by KundaLin on 17/12/26.
  */
 
-public class AdapterCategoryListRecyclerView extends BaseRecyclerViewAdapter<String,String,VHCategoryRecyclerView> {
+public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,String,VHCategoryRecyclerView> {
     private Context mContext;
     private LayoutInflater mInflater;
 
-    public AdapterCategoryListRecyclerView(Context ctx, List<RecyclerViewData> datas) {
+    public CategoryListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
@@ -69,7 +70,7 @@ public class AdapterCategoryListRecyclerView extends BaseRecyclerViewAdapter<Str
 
     @Override
     public void onBindChildpHolder(VHCategoryRecyclerView holder, int groupPos, int childPos, int position, String childData) {
-        holder.childTextView.setText(childData);
+        holder.childTextView.setText(childData.substring(childData.indexOf(' ')));
     }
 
 
