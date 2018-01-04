@@ -24,6 +24,7 @@ import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.listener.OnTaskClickListener;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.TestDataUtil;
 
@@ -51,9 +52,9 @@ public class MainActivity extends BasicActivity {
         }
         //主界面两个子页面初始化
         pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(), this);
-        TaskListRecyclerViewAdapter listAdapter = ListUtil.getTaskListAdapter(MainActivity.this);
+        TaskListRecyclerViewAdapter listAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
         FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(listAdapter);
-        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getTodayTasksAdapter(MainActivity.this));
+        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getCategoryAdapter(MainActivity.this));
         fragmentTaskList.setOnItemClickListener(new OnTaskClickListener(listAdapter));
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
@@ -104,34 +105,30 @@ public class MainActivity extends BasicActivity {
         //category
         categoryDAO.insert("CTE-6");
         categoryDAO.insert("Math");
-        categoryDAO.insert("考研");
+        categoryDAO.insert("kaoyan");
         categoryDAO.insert("计算机网络");
         //tag
         tagDAO.insert("Word","List","CTE-6","单词");
         tagDAO.insert("Reading 2016","Text","CTE-6","长难句");
-        tagDAO.insert("Word","List","考研",null);
+        tagDAO.insert("Word","List","kaoyan",null);
         tagDAO.insert("Chapter","Chapter","Math",null);
         tagDAO.insert("Chapter", "C", "计算机网络", null);
         //task
         //values("CTE-6_List_1",4,0,-1,-1,1);
-        taskDAO.insert("List_1",4,0,-1,-1,"CTE-6_Word");
-        taskDAO.insert("List_2",3,0,-1,-1,"CTE-6_Word");
-        taskDAO.insert("List_3",2,0,-1,-1,"CTE-6_Word");
-        taskDAO.insert("List_4",1,0,-1,-1,"CTE-6_Word");
-        taskDAO.insert("List_5",0,0,-1,-1,"CTE-6_Word");
-        taskDAO.insert("C_1",3,0,-1,-1,"Math_Chapter");
-        taskDAO.insert("C_2",3,0,-1,-1,"Math_Chapter");
-        taskDAO.insert("List_1",4,0,-1,-1,"考研_Word");
-        taskDAO.insert("List_2",2,0,-1,-1,"考研_Word");
-        taskDAO.insert("List_3",2,0,-1,-1,"考研_Word");
+        taskDAO.insert("List_1",4,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_2",3,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_3",2,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_4",1,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_5",0,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("C_1",3,0,-2,-2,"Math_Chapter");
+        taskDAO.insert("C_2",3,0,-2,-2,"Math_Chapter");
+        taskDAO.insert("List_1",4,0,-2,-2,"kaoyan_Word");
+        taskDAO.insert("List_2",2,0,-2,-2,"kaoyan_Word");
+        taskDAO.insert("List_3",2,0,-2,-2,"kaoyan_Word");
         categoryDAO.display();
         tagDAO.display();
         taskDAO.display();
         //更新
-        DBUtil.db.execSQL("update category\n" +
-                "set name = \"CESHI\"\n" +
-                "where id = 1");
-
         categoryDAO.display();
         tagDAO.display();
         taskDAO.display();
@@ -139,6 +136,7 @@ public class MainActivity extends BasicActivity {
 //        categoryDAO.delete("CESHI");
 //        categoryDAO.display();
 //        categoryDAO.display();
+//        IOUtil.test();
     }
 
 

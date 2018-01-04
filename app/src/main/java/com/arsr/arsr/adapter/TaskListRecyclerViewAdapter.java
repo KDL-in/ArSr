@@ -4,28 +4,25 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.RadioGroup;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.activity.TaskActivity;
 import com.arsr.arsr.adapter.holder.VHTaskListRecyclerView;
-import com.arsr.arsr.entity.Child;
-import com.arsr.arsr.entity.Group;
+import com.arsr.arsr.db.Task;
+import com.arsr.arsr.listener.OnFeelRadioCheckedChangeListener;
+import com.arsr.arsr.util.DBUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.bean.GroupItem;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
-import drawthink.expandablerecyclerview.holder.BaseViewHolder;
+
+import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_CHILD;
 
 /**
  * 任务列表的适配器，具体参数查看文档
  * 具体来说，这个用recyclerView实现的二级list的原理就是，通过标记group或child区分item的类型，
  * 进行不同操作，最后再加入展开收缩管理，以及定义好数据接口
- * todo 等待抽象 几个列表都差不多 只有监听以及一些小区别
  * Created by KundaLin on 17/12/22
  * 参数说明.
  * T :group  data
@@ -70,6 +67,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
 
     /**
      * createViewHolder中被调用，使用自定义holder创建出holder
+     *
      * @param ctx
      * @param view
      * @param viewType
@@ -77,7 +75,12 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
      */
     @Override
     public VHTaskListRecyclerView createRealViewHolder(Context ctx, View view, int viewType) {
+        view.setTag(false);
         VHTaskListRecyclerView holder = new VHTaskListRecyclerView(ctx, view, viewType);
+        if (viewType == VIEW_TYPE_CHILD) {
+            RadioGroup radioGroup = view.findViewById(R.id.rdioGroup);
+            radioGroup.setOnCheckedChangeListener(new OnFeelRadioCheckedChangeListener(this,view));
+        }
         return holder;
     }
 
@@ -86,7 +89,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
      */
     @Override
     public void onBindGroupHolder(VHTaskListRecyclerView holder, int groupPos, int position, String groupData) {
-        holder.categoryTextView.setText(groupData);
+        holder.groupTextView.setText(groupData);
     }
 
     /**
@@ -94,7 +97,17 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
      */
     @Override
     public void onBindChildpHolder(VHTaskListRecyclerView holder, int groupPos, int childPos, int position, String childData) {
-        holder.childTextView.setText(childData.substring(childData.indexOf(' ')));
+        Task task = getTask(groupPos, childPos);
+        if (task.getDayToRecall() == -1 || task.getDayToAssist() == -1) {
+            holder.childTextView.setSelected(true);
+            holder.childIconImg.setSelected(true);
+        } else {
+            holder.childTextView.setSelected(false);
+            holder.childIconImg.setSelected(false);
+        }
+        holder.childTextView.setText(DBUtil.getSubstringName(childData, ' '));
+        holder.childCategory.setText(DBUtil.getSubstringCategory(childData, ' '));
+
     }
 
 
@@ -105,4 +118,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     }
 
 
+    public Task getTask(int groupPosition, int childPosition) {
+        return DBUtil.getTask(DBUtil.packing((String)mData.get(groupPosition).getChild(childPosition)));
+    }
 }

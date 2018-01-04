@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.arsr.arsr.db.Entity;
+import com.arsr.arsr.db.Tag;
+import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.LogUtil;
 
@@ -139,4 +141,27 @@ public abstract class DAO<T extends Entity> {
     public List<T> getList() {
         return list;
     }
+
+    /**
+     * 获取某个实体
+     * @param name 实体名字
+     * @return 实体对象
+     */
+    public T get(String name){
+        return list.get(nameToIndex.get(name));
+    }
+    /**
+     * 获取某个实体
+     * @param id 实体id
+     * @return 实体对象
+     */
+    public T get(long id) {
+        return list.get(idToIdx.get(id));
+    }
+
+    /**
+     * 更新
+     * @param t 实体
+     */
+//    public abstract void update(T t);
 }

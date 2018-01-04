@@ -61,8 +61,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             "       name text not null unique,\n" +
             "       times integer not null default 0,\n" +
             "       dayToRecall integer not null default 0,\n" +
-            "       assistTimes integer not null default -1,\n" +
-            "       dayToAssist integer not null default -1,\n" +
+            "       assistTimes integer not null default -2,\n" +
+            "       dayToAssist integer not null default -2,\n" +
             "       tid integer not null,\n" +
             "       updateTime  text DEFAULT (strftime('%Y-%m-%d %H:%M:%S:%s','now', 'localtime')),\n" +
             "       constraint fk_task_tid_tag foreign key(tid) references tag(id)\n" +

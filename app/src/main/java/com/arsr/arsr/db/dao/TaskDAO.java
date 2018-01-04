@@ -3,6 +3,7 @@ package com.arsr.arsr.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
 
@@ -46,6 +47,13 @@ public class TaskDAO extends DAO<Task>{
         return list;
     }
 
+    public void update(Task task) {
+        String sql = "update Task\n" +
+                "set name = \"" + task.getName() + "\",times=" + task.getTimes() + ",dayToRecall=" + task.getDayToRecall() + ",assistTimes=" + task.getAssistTimes() + ",dayToAssist=" + task.getDayToAssist() + "\n" +
+                "where id = "+task.getId();
+        DBUtil.db.execSQL(sql);
+    }
+
     /**
      * 插入任务
      *
@@ -71,6 +79,22 @@ public class TaskDAO extends DAO<Task>{
         Task task = new Task(id, times, dayToRecall, assistTimes, dayToAssist, name, tid);
         updateCache(task);
         return id;
+    }
+
+    /**
+     * 获得今日任务
+     * @return 今日任务
+     */
+    public List<Task> getTodayList() {
+        List<Task> todayTasks = new ArrayList<>();
+        List<Task> tasks = getList();
+        for (Task t :
+                tasks) {
+            if (t.getDayToRecall() == 0 || t.getDayToRecall() == -1 || t.getDayToAssist() == 0 || t.getDayToAssist() == -1) {
+                todayTasks.add(t);
+            }
+        }
+        return todayTasks;
     }
 }/*public class TaskDAO {
     private static Map<Long, Task> taskMap;

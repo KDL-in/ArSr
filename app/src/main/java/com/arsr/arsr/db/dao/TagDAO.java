@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.IOUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +67,9 @@ public class TagDAO extends DAO<Tag> {
         values.put("note", note);
         long id = insert(values);
         Tag tag =new Tag(id, name, prefix,cid,note);
-        updateCache(tag);
+        updateCache(tag);//更新缓存
+        //设置默认recall时间点
+        IOUtil.setPointInTimeOf(tag,"");
         return id;
     }
 

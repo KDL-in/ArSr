@@ -12,7 +12,6 @@
     app:cardCornerRadius="2dp">
 
     <LinearLayout
-        android:id="@+id/linearLayout_tasklist_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
@@ -20,40 +19,55 @@
         <ImageView
             android:id="@+id/img_taskList_icon"
             android:layout_width="36dp"
+            android:tint="@drawable/selector_task"
             android:layout_height="match_parent"
             android:src="@drawable/icon_task" />
         <TextView
+            android:id="@+id/tv_taskList_childCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        <TextView
             android:id="@+id/tv_taskList_childTittle"
             android:layout_width="0dp"
+            android:textColor="@drawable/selector_task"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:layout_weight="7"
+            android:layout_weight="1"
             android:textSize="14sp" />
 
-        <ImageView
-            android:id="@+id/img_taskList_childImgButton"
-            android:layout_width="30dp"
-            android:layout_height="match_parent" />
+        <LinearLayout
+            android:visibility="invisible"
+            android:id="@+id/linearLayout_tasklist_result"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/linearLayout_tasklist_result"
-        android:visibility="invisible"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent" />
+            <RadioGroup
+                android:id="@+id/rdioGroup"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:paddingRight="15dp"
+                android:layout_height="match_parent">
+                <RadioButton
+                    android:id="@+id/rdiobtn_tasklist_feelbadman"
+                    android:drawableTop="@drawable/icon_feelbadman"
+                    style="@style/rdiobtn_tasklist_feel" />
+                <RadioButton
+                    android:id="@+id/rdiobtn_tasklist_feelnormalman"
+                    android:checked="true"
+                    android:drawableTop="@drawable/icon_feelnormalman"
+                    style="@style/rdiobtn_tasklist_feel" />
+                <RadioButton
+                    android:id="@+id/rdiobtn_tasklist_feelgoodman"
+                    android:drawableTop="@drawable/icon_feelgoodman"
+                    style="@style/rdiobtn_tasklist_feel" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

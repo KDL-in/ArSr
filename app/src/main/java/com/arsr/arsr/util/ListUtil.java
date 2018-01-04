@@ -2,7 +2,6 @@ package com.arsr.arsr.util;
 
 import android.content.Context;
 
-import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Entity;
@@ -26,9 +25,9 @@ public class ListUtil {
     /**
      * 获取分类-任务
      */
-    public static TaskListRecyclerViewAdapter getTaskListAdapter(Context context) {
+    public static TaskListRecyclerViewAdapter getTodayTaskListAdapter(Context context) {
         List<String> group = getGroup(DBUtil.categoryDAO.getList());
-        List<List<String>> children = getChildren(DBUtil.taskDAO.getList(), group);
+        List<List<String>> children = getChildren(DBUtil.taskDAO.getTodayList(), group);
         for (int i = 0; i < group.size(); i++) {
             if (children.get(i).isEmpty()) children.set(i, null);
         }
@@ -39,7 +38,7 @@ public class ListUtil {
     /**
      * 获取分类-标签列表
      */
-    public static CategoryListRecyclerViewAdapter getTodayTasksAdapter(Context context) {
+    public static CategoryListRecyclerViewAdapter getCategoryAdapter(Context context) {
         List<String> group = getGroup(DBUtil.categoryDAO.getList());
         List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
         CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
@@ -99,7 +98,7 @@ public class ListUtil {
 
     public static TaskListRecyclerViewAdapter getTaskListAt(Context context, int day) {//todo
         //todo 获取某天的任务
-        return getTaskListAdapter(context);
+        return getTodayTaskListAdapter(context);
     }
 
     public static BaseRecyclerViewAdapter getTICListAdapter(Context context) {
