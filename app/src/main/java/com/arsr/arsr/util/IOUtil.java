@@ -1,5 +1,8 @@
 package com.arsr.arsr.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
@@ -18,16 +21,20 @@ import java.util.List;
 
 public class IOUtil {
 
-    private static final String DEFAULT_POINT_IN_TIMES = "0 1 2 4 6 7 8";
-    private static final String ASSIST_DATES_DIR;
-    private static final String POINTS_IN_TIME_DIR;
-    public static final int FLAG_FEEL_BAD =-1;
-    public static final int FLAG_FEEL_GOOD =1;
+    private static final String DEFAULT_POINT_IN_TIMES = "1 2 4 6 7 8";//默认recall时间点
+    private static final int[] ASSIST_POINT_IN_TIME = {1, 3, 5, 8};//辅助recall时间点
+    private static final String ASSIST_DATES_DIR;//文件夹路径
+    private static final String FILES_DIR;//同上
+    private static final String RECALL_DATES_DIR;//同上
+    private static final String POINTS_IN_TIME_DIR;//同上
 
-    private static Storage mStorage;
-    private static final String FILES_DIR;
-    private static final String RECALL_DATES_DIR;
-
+    public static final int FLAG_FEEL_BAD =-1;//微调标志
+    public static final int FLAG_FEEL_GOOD =1;//同上
+    private static Storage mStorage;//Io操作对象
+    private static SharedPreferences recordPref;//spref操作对象
+    private static SharedPreferences.Editor recordEditor;//同上
+    private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
+    private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
     static {
         mStorage = new Storage(MyApplication.getContext());
         FILES_DIR = mStorage.getInternalFilesDirectory();
@@ -35,6 +42,8 @@ public class IOUtil {
         ASSIST_DATES_DIR = getDirPath(new String[]{FILES_DIR, "assist_dates"});
         POINTS_IN_TIME_DIR = getDirPath(new String[]{FILES_DIR, "points_in_time"});
         init();
+        recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
+        recordEditor = recordPref.edit();
     }
 
     private static void init() {
@@ -236,7 +245,7 @@ public class IOUtil {
      *
      * @param tag  标签
      * @param args 时间点参数，为""时代表默认设置,格式是
-     *                修改标志 1 2 3 4 5 6（次的recall需要时间）
+     *                 1 2 3 4 5 6（次的recall需要时间）
      */
     public static void setPointInTimeOf(Tag tag, String args) {
         String category = DBUtil.getSubstringCategory(tag.getName(), '_');
@@ -254,11 +263,11 @@ public class IOUtil {
      * //todo 这种转换必须保证数据录入绝对正确，意味着界面设置数据要求严格合法检测
      *
      * @param content recall时间点，格式是
-     *                修改标志 1 2 3 4 5 6（次的recall需要时间）
-     * @return 长度为7的一维int数组
+     *                1 2 3 4 5 6（次的recall需要时间）
+     * @return 长度为6的一维int数组
      */
     private static int[] stringToIntegers(String content) {
-        int[] arr = new int[7];
+        int[] arr = new int[6];
         String str[] = content.split(" ");
         for (int i = 0; i < str.length; i++) {
             arr[i] = Integer.parseInt(str[i]);
@@ -282,23 +291,57 @@ public class IOUtil {
     /**
      * 微调tag某次recall时间点
      * @param tag 标签
-     * @param times 第几次
+     * @param task 任务
      * @param flagFeel recall效果好坏，对于常量-1,+1
      */
-    public static void adjustPointInTimeOf(Tag tag, int times, int flagFeel) {
+    public static void adjustPointInTimeOf(Tag tag, Task task, int flagFeel) {
         int []args = getPointsInTimeOf(tag);
-        args[0] = flagFeel;
-        args[times] += flagFeel;
-        setPointInTimeOf(tag,integersToString(args));
+        int idx = task.getTimes() - 1;
+        if (idx==-1)return;//任务开始的时候第0次
+        if (args[idx] + flagFeel <= UPPER_BOUND[idx] && args[idx] + flagFeel >= LOWER_BOUND[idx]) {
+            args[task.getTimes()-1] += flagFeel;
+            setPointInTimeOf(tag,integersToString(args));
+            //保存微调记录
+            saveAdjustRecord(task.getId(), flagFeel);
+        }
     }
 
     /**
+     * 通过shardPreferences保存微调记录，以便于回滚
+     * todo 记录只保留一天，需要在凌晨清空
+     *
+     * @param id task的id作为key
+     * @param flagFeel 上调或下调
+     */
+    private static void saveAdjustRecord(long id, int flagFeel) {
+        recordEditor.putInt(id + "", flagFeel);
+        recordEditor.apply();
+    }
+
+    /**
+     * 获得某id的操作记录
+     */
+    private static int getAdjustRecord(long id) {
+        return recordPref.getInt(id+"",0);
+    }
+    /**
+     * 删除记录
+     */
+    private static void removeAdjustRecord(long id) {
+        recordEditor.remove(id + "");
+        recordEditor.apply();
+    }
+    /**
      * 取消最后一次微调
      */
-    public static void cancelAdjustPointInTimeOf(Tag tag, int times) {
+    public static void cancelAdjustPointInTimeOf(Tag tag, Task task) {
         int []args = getPointsInTimeOf(tag);
-        args[times] -= args[0];
-        args[0] = 0;
+        int feelFlag = getAdjustRecord(task.getId());
+        args[task.getTimes()-1] -= feelFlag;
         setPointInTimeOf(tag,integersToString(args));
+        //删除记录
+        if (feelFlag!=0)removeAdjustRecord(task.getId());
     }
+
+
 }

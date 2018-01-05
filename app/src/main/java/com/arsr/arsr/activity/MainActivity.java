@@ -119,7 +119,7 @@ public class MainActivity extends BasicActivity {
         taskDAO.insert("List_2",3,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("List_3",2,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("List_4",1,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("List_5",0,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_5",2,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("C_1",3,0,-2,-2,"Math_Chapter");
         taskDAO.insert("C_2",3,0,-2,-2,"Math_Chapter");
         taskDAO.insert("List_1",4,0,-2,-2,"kaoyan_Word");
