@@ -8,4 +8,5 @@
     <color name="select_day">#ed4141</color>
     <color name="divider">#b2bcbd</color>
     <color name="black">#000</color>
+    <color name="colorAssist">#FF81C784</color>
 </resources>

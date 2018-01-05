@@ -9,8 +9,6 @@ import android.widget.TextView;
 import com.arsr.arsr.R;
 import com.arsr.arsr.activity.TaskActivity;
 import com.arsr.arsr.adapter.holder.VHCategoryRecyclerView;
-import com.arsr.arsr.entity.Child;
-import com.arsr.arsr.entity.Group;
 import com.arsr.arsr.util.DBUtil;
 
 import java.util.ArrayList;

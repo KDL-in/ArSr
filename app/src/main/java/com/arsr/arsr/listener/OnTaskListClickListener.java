@@ -1,6 +1,7 @@
 package com.arsr.arsr.listener;
 
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -22,10 +23,10 @@ import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
  * Created by KundaLin on 18/1/2.
  */
 
-public class OnTaskClickListener implements OnRecyclerViewListener.OnItemClickListener {
+public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemClickListener {
     TaskListRecyclerViewAdapter adapter;
 
-    public OnTaskClickListener(TaskListRecyclerViewAdapter listAdapter) {
+    public OnTaskListClickListener(TaskListRecyclerViewAdapter listAdapter) {
         adapter = listAdapter;
     }
 
@@ -51,11 +52,13 @@ public class OnTaskClickListener implements OnRecyclerViewListener.OnItemClickLi
         nameTv.setSelected(isFinish);
         taskIco.setSelected(isFinish);//颜色改变end
         if (task.getDayToRecall()==0) {//辅助recall下不显示效果选择面板
+            //todo 点击完成 点击取消 再迅速点击效果就会出错，取消的时候延迟动画需要处理
             AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_SHOW, 100);
             AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_HIDDEN, 4000);
         }
         //操作取消（回滚）
         if (!isFinish){//取消完成
+            result.clearAnimation();
             if (task.getDayToRecall()==-1) task.setDayToRecall(0);
             else if(task.getDayToAssist()==-1) task.setDayToAssist(0);
             IOUtil.cancelSaveRecallDate(task);//取消本地存储

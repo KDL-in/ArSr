@@ -18,13 +18,13 @@ import java.util.List;
  * Created by KundaLin on 17/12/23.
  */
 
-public class AdapterMainFragmentPager extends FragmentPagerAdapter {
+public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> views;
     private final static int COUNT = 2;
     private final int tags[] = {R.drawable.icon_todaytasks, R.drawable.icon_category};
     private Context mContext;
 
-    public AdapterMainFragmentPager(FragmentManager fm, Context context) {
+    public MainFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.views = new ArrayList<>();
         mContext = context;

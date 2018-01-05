@@ -8,6 +8,7 @@ import android.widget.RadioGroup;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.holder.VHTaskListRecyclerView;
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.listener.OnFeelRadioCheckedChangeListener;
 import com.arsr.arsr.util.DBUtil;
@@ -120,5 +121,9 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
 
     public Task getTask(int groupPosition, int childPosition) {
         return DBUtil.getTask(DBUtil.packing((String)mData.get(groupPosition).getChild(childPosition)));
+    }
+
+    public Category getCategory(int groupPosition) {
+        return DBUtil.getCategory((String) mData.get(groupPosition).getGroupData());
     }
 }

@@ -15,10 +15,10 @@ import java.util.List;
  * Created by KundaLin on 17/12/25.
  */
 
-public class AdapterNavigationRecyclerView extends RecyclerView.Adapter<AdapterNavigationRecyclerView.MyViewHolder>{
+public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<NavigationRecyclerViewAdapter.MyViewHolder>{
     private List<String> mData;
 
-    public AdapterNavigationRecyclerView(List<String> mData) {
+    public NavigationRecyclerViewAdapter(List<String> mData) {
         this.mData = mData;
     }
 
@@ -29,7 +29,7 @@ public class AdapterNavigationRecyclerView extends RecyclerView.Adapter<AdapterN
         holder.textName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//todo 应该监听布局
-                TasksInCategoryActivity.startAction(parent.getContext());
+                TasksInCategoryActivity.startAction("");
             }
         });
         return holder;

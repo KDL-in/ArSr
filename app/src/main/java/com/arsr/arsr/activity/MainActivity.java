@@ -1,6 +1,9 @@
 package com.arsr.arsr.activity;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -13,52 +16,58 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.AdapterNavigationRecyclerView;
-import com.arsr.arsr.adapter.AdapterMainFragmentPager;
+import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
+import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.dao.CategoryDAO;
 import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.fragment.FragmentTaskList;
-import com.arsr.arsr.listener.OnTaskClickListener;
+import com.arsr.arsr.listener.OnMainPagerChangeListener;
+import com.arsr.arsr.listener.OnTaskListClickListener;
+import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
-import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
-import com.arsr.arsr.util.TestDataUtil;
 
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
 
-    private AdapterMainFragmentPager pagerAdapter;//碎片页面适配器
+    private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //状态栏更换
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         //test
         test();
         //滑动菜单
         mDrawerLayout = findViewById(R.id.drawerLayout);
-        ActionBar actionBar = getSupportActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);//利用返回按钮做导航按钮
             actionBar.setHomeAsUpIndicator(R.drawable.icon_menu);
         }
+
         //主界面两个子页面初始化
-        pagerAdapter = new AdapterMainFragmentPager(getSupportFragmentManager(), this);
+        pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         TaskListRecyclerViewAdapter listAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
         FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(listAdapter);
-        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getCategoryAdapter(MainActivity.this));
-        fragmentTaskList.setOnItemClickListener(new OnTaskClickListener(listAdapter));
+        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getTagInCategoryAdapter(MainActivity.this));
+        fragmentTaskList.setOnItemClickListener(new OnTaskListClickListener(listAdapter));
+        fragmentTaskList.setOnItemLongClickListener(new OnTaskListLongClickListener(listAdapter));
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
         ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager.addOnPageChangeListener(new OnMainPagerChangeListener(viewPager,MainActivity.this));//滑动监听
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);//自定义tab
@@ -88,7 +97,7 @@ public class MainActivity extends BasicActivity {
         });
         //navigationView上的列表
         RecyclerView recyclerView = findViewById(R.id.recyclerView_navigation);
-        AdapterNavigationRecyclerView adapter = new AdapterNavigationRecyclerView(TestDataUtil.getGroupNames());
+        NavigationRecyclerViewAdapter adapter = new NavigationRecyclerViewAdapter(ListUtil.getCategoryAdapter());
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

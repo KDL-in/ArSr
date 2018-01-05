@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
+import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
 import com.bumptech.glide.Glide;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -41,10 +42,11 @@ public class TaskActivity extends BasicActivity {
 
     /**
      * 启动方法
-     * @param context
      */
-    public static void actionStart(Context context) {
+    public static void actionStart(String name) {
+        Context context = MyApplication.getContext();
         Intent intent = new Intent(context, TaskActivity.class);
+        intent.putExtra("taskName", name);
         context.startActivity(intent);
     }
 }

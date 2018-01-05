@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class ListUtil {
     /**
      * 获取分类-标签列表
      */
-    public static CategoryListRecyclerViewAdapter getCategoryAdapter(Context context) {
+    public static CategoryListRecyclerViewAdapter getTagInCategoryAdapter(Context context) {
         List<String> group = getGroup(DBUtil.categoryDAO.getList());
         List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
         CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
@@ -107,5 +108,19 @@ public class ListUtil {
         List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
         CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
         return adapter;
+    }
+
+    /**
+     * 分类列表
+     * @return 分类名列表
+     */
+    public static List<String> getCategoryAdapter() {
+        List<Category> list = DBUtil.categoryDAO.getList();
+        List<String>nameList = new ArrayList<>();
+        for (Category category :
+                list) {
+            nameList.add(category.getName());
+        }
+        return nameList;
     }
 }

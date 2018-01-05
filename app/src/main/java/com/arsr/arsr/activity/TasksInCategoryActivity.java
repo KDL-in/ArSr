@@ -1,6 +1,5 @@
 package com.arsr.arsr.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,7 +7,9 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
+import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.util.ListUtil;
 
@@ -38,8 +39,9 @@ public class TasksInCategoryActivity extends BasicActivity {
         transaction.commit();
     }
 
-    public static void startAction(Context context) {
-        Intent intent = new Intent(context,TasksInCategoryActivity.class);
-        context.startActivity(intent);
+    public static void startAction(String category) {
+        Intent intent = new Intent(MyApplication.getContext(), TasksInCategoryActivity.class);
+        intent.putExtra("category", category);
+        MyApplication.getContext().startActivity(intent);
     }
 }

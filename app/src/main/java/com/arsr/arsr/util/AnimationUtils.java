@@ -19,7 +19,7 @@ public class AnimationUtils {
      * @param state 需要实现的状态
      * @param duration 动画实现的时长（ms）
      */
-    public static void showAndHiddenAnimation(final View view,AnimationState state,long duration){
+    public static AlphaAnimation showAndHiddenAnimation(final View view,AnimationState state,long duration){
         float start = 0f;
         float end = 0f;
         if(state == AnimationState.STATE_SHOW){
@@ -50,5 +50,6 @@ public class AnimationUtils {
         });
         view.setAnimation(animation);
         animation.start();
+        return animation;
     }
 }

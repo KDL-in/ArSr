@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.arsr.arsr.MyApplication;
 
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.db.dao.CategoryDAO;
@@ -13,6 +14,8 @@ import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.db.DataBaseHelper;
 
 import java.io.File;
+
+import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 /**
  * 数据库操作工具
@@ -94,5 +97,9 @@ public class DBUtil {
 
     public static Tag getTag(long tid) {
         return tagDAO.get(tid);
+    }
+
+    public static Category getCategory(String name) {
+        return categoryDAO.get(name);
     }
 }
