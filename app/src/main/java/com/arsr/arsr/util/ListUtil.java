@@ -27,7 +27,7 @@ public class ListUtil {
      * 获取分类-任务
      */
     public static TaskListRecyclerViewAdapter getTodayTaskListAdapter(Context context) {
-        List<String> group = getGroup(DBUtil.categoryDAO.getList());
+        List<String> group = getCategoryNameGroup();
         List<List<String>> children = getChildren(DBUtil.taskDAO.getTodayList(), group);
         for (int i = 0; i < group.size(); i++) {
             if (children.get(i).isEmpty()) children.set(i, null);
@@ -37,14 +37,28 @@ public class ListUtil {
     }
 
     /**
+     * 得到categories的名字列表
+     */
+    public static List<String> getCategoryNameGroup() {
+        return getGroup(DBUtil.categoryDAO.getList());
+    }
+    /**
+     * 得到tags的名字列表
+     */
+    public static List<List<String>> getTagNameChildren(List<String> group) {
+        return getChildren(DBUtil.tagDAO.getList(), group);
+    }
+    /**
      * 获取分类-标签列表
      */
     public static CategoryListRecyclerViewAdapter getTagInCategoryAdapter(Context context) {
-        List<String> group = getGroup(DBUtil.categoryDAO.getList());
-        List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
+        List<String> group = getCategoryNameGroup();
+        List<List<String>> children = getTagNameChildren(group);
         CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
         return adapter;
     }
+
+
 
     private static List<RecyclerViewData> getList(List<String> group, List<List<String>> children, boolean isExpand) {
         List<RecyclerViewData> listData = new ArrayList<>();
@@ -60,14 +74,14 @@ public class ListUtil {
      */
     private static <T extends Entity> List<List<String>> getChildren(List<T> list, List<String> group) {
         List<List<String>> children = new ArrayList<>();
-        for (int i = 0; i < group.size(); i++) {
+        for (int i = 0; i < group.size(); i++) {//初始化个组的children的list
             List<String> childList = new ArrayList<>();
             children.add(childList);
         }
         for (T t :
                 list) {
             if (t != null) {
-                String nameStr[] = DBUtil.parse(t.getName());
+                String nameStr[] = DBUtil.parse(t.getName());//去掉下划线
                 String name = "";
                 for (int i = 0; i < nameStr.length; i++) {
                     if (i != nameStr.length - 1)
@@ -89,7 +103,7 @@ public class ListUtil {
         nameToInteger.clear();
         for (int i = 0; i < list.size(); i++) {
             T t = list.get(i);
-            if (t != null) {
+            if (t != null) {//缓存中可能被删除
                 group.add(t.getName());
                 nameToInteger.put(t.getName(), group.size() - 1);
             }
@@ -104,8 +118,8 @@ public class ListUtil {
 
     public static BaseRecyclerViewAdapter getTICListAdapter(Context context) {
         //todo 测试代码
-        List<String> group = getGroup(DBUtil.categoryDAO.getList());
-        List<List<String>> children = getChildren(DBUtil.tagDAO.getList(), group);
+        List<String> group = getCategoryNameGroup();
+        List<List<String>> children = getTagNameChildren(group);
         CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
         return adapter;
     }

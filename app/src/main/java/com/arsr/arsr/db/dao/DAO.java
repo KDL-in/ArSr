@@ -2,6 +2,7 @@ package com.arsr.arsr.db.dao;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 
 import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Tag;
@@ -50,8 +51,9 @@ public abstract class DAO<T extends Entity> {
      * 插入数据
      * @param values 插入值
      */
-    public long insert(ContentValues values) {
-        return DBUtil.db.insert(tClass.getSimpleName(), null, values);
+    public long insert(ContentValues values){
+        long id = DBUtil.db.insert(tClass.getSimpleName(), null, values);
+        return id;
     }
     public Cursor findAll()  {
         Cursor cursor = DBUtil.db.query(tClass.getSimpleName(), null, null, null, null, null, "updateTime DESC");
@@ -158,6 +160,11 @@ public abstract class DAO<T extends Entity> {
     public T get(long id) {
         return list.get(idToIdx.get(id));
     }
+
+    /**
+     * 插入某个实体
+     */
+    public abstract long insert(T t);
 
     /**
      * 更新

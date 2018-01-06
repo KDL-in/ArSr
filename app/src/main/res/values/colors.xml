@@ -2,11 +2,12 @@
 <resources>
     <color name="colorPrimary">#4ea3e8</color>
     <color name="colorPrimaryDark">#4fa4e8</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#fc4d50</color>
     <color name="background">#e8e8e8</color>
     <color name="white">#fff</color>
     <color name="select_day">#ed4141</color>
     <color name="divider">#b2bcbd</color>
     <color name="black">#000</color>
     <color name="colorAssist">#FF81C784</color>
+    <color name="gray">#c2c2c2</color>
 </resources>

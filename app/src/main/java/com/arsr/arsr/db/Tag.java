@@ -22,7 +22,7 @@ public class Tag extends Entity{
         return cid;
     }
 
-    public void setCid(int cid) {
+    public void setCid(long cid) {
         this.cid = cid;
     }
     @Override
@@ -30,7 +30,7 @@ public class Tag extends Entity{
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

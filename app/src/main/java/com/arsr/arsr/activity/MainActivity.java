@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.arsr.arsr.R;
+import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
@@ -27,6 +29,8 @@ import com.arsr.arsr.db.dao.CategoryDAO;
 import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.fragment.FragmentTaskList;
+import com.arsr.arsr.listener.OnCategoryListClickListener;
+import com.arsr.arsr.listener.OnFabClickListener;
 import com.arsr.arsr.listener.OnMainPagerChangeListener;
 import com.arsr.arsr.listener.OnTaskListClickListener;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
@@ -56,25 +60,33 @@ public class MainActivity extends BasicActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);//利用返回按钮做导航按钮
             actionBar.setHomeAsUpIndicator(R.drawable.icon_menu);
         }
-
+        //浮动按钮
+        FloatingActionButton fab = findViewById(R.id.fab_mainUI);
+        fab.setOnClickListener(new OnFabClickListener(MainActivity.this));
         //主界面两个子页面初始化
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
-        TaskListRecyclerViewAdapter listAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
-        FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(listAdapter);
-        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(ListUtil.getTagInCategoryAdapter(MainActivity.this));
-        fragmentTaskList.setOnItemClickListener(new OnTaskListClickListener(listAdapter));
-        fragmentTaskList.setOnItemLongClickListener(new OnTaskListLongClickListener(listAdapter));
+        //-任务列表
+        TaskListRecyclerViewAdapter taskAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
+        FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(taskAdapter);//任务列表
+        //-分类列表
+        CategoryListRecyclerViewAdapter categoryAdapter = ListUtil.getTagInCategoryAdapter(MainActivity.this);
+        FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(categoryAdapter);
+        //-设置监听
+        fragmentTaskList.setOnItemClickListener(new OnTaskListClickListener(taskAdapter));//tasklist监听
+        fragmentTaskList.setOnItemLongClickListener(new OnTaskListLongClickListener(taskAdapter));
+        fragmentCategoryList.setOnItemClickListener(new OnCategoryListClickListener());
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
-        ViewPager viewPager = findViewById(R.id.viewPager);
+        ViewPager viewPager = findViewById(R.id.viewPager);//设置adapter
         viewPager.addOnPageChangeListener(new OnMainPagerChangeListener(viewPager,MainActivity.this));//滑动监听
         viewPager.setAdapter(pagerAdapter);
+        //-自定义tab
         TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);//自定义tab
+        tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(pagerAdapter.getTabView(i));
-        }//end自定义tab
+        }
 
         //navigationView上面的监听
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);

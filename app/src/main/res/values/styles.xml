@@ -38,5 +38,14 @@
         <item name="android:layout_height">40dp</item>
     </style>
 
+    <style name="edit_add_dialog" parent="Theme.AppCompat.Light">
+        <item name="android:background">@drawable/bg_edit</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:inputType">text</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/colorAssist</item>
+        <item name="android:textColorHint">@color/gray</item>
+    </style>
 
 </resources>

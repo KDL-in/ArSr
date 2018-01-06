@@ -102,4 +102,17 @@ public class DBUtil {
     public static Category getCategory(String name) {
         return categoryDAO.get(name);
     }
+
+    public static Tag getTag(String name) {
+        return tagDAO.get(name);
+    }
+
+    /**
+     * taskDAO为每一个分类维护一个最大编号
+     * @param tag
+     * @return
+     */
+    public static int getMaxNOf(Tag tag) {
+        return taskDAO.getMaxNOf(tag.getId());
+    }
 }

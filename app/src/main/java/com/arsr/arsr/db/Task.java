@@ -1,11 +1,11 @@
 package com.arsr.arsr.db;
 
-public class Task  extends Entity{
+public class Task extends Entity {
     private long id;//任务id
-    private int times;//当前已经重复次数
-    private int dayToRecall;//下一次recall的剩余时间
-    private int assistTimes;//辅助recall的次数
-    private int dayToAssist;//下次辅助recall的剩余时间
+    private int times=0;//当前已经重复次数
+    private int dayToRecall=0;//下一次recall的剩余时间
+    private int assistTimes=-2;//辅助recall的次数
+    private int dayToAssist=-2;//下次辅助recall的剩余时间
     private String name;//任务名 保存的时候默认为分类名+ +任务名
     private long tid;//任务id
 
@@ -25,21 +25,23 @@ public class Task  extends Entity{
 
     @Override
     public String toString() {
-        return id+" | "+name+" | "+times+"次 | "+dayToRecall+"天 | "+assistTimes+"次 | "+dayToAssist+"天 | "+tid;
+        return id + " | " + name + " | " + times + "次 | " + dayToRecall + "天 | " + assistTimes + "次 | " + dayToAssist + "天 | " + tid;
     }
+
     public long getTid() {
         return tid;
     }
 
-    public void setTid(int tid) {
+    public void setTid(long tid) {
         this.tid = tid;
     }
+
     @Override
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
