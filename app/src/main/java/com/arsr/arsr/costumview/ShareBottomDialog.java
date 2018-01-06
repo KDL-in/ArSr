@@ -40,6 +40,7 @@ public class ShareBottomDialog extends BaseBottomDialog {
     private static List<List<String>> children;
     private String lastInput = "";
 
+
     public ShareBottomDialog() {
     }
 
@@ -86,11 +87,14 @@ public class ShareBottomDialog extends BaseBottomDialog {
         ensureBtn.setOnClickListener(new View.OnClickListener() {//确认插入
             @Override
             public void onClick(View v) {
-                DBUtil.taskDAO.display();
                 String tagName = categoryTv.getText() + "_" + tagTv.getText();
                 String taskName = categoryTv.getText() + "_" + taskTv.getText() + "_" + idxTv.getText();
                 long id =DBUtil.taskDAO.insert(taskName, tagName);
-                UIDataUtil.updateUI("today_tasks");
+                if (id == -1) {
+                    ShareBottomDialog.this.dismiss();
+                    return;
+                }
+                UIDataUtil.updateUI(UIDataUtil.TODAY_TASKS,taskName);
                 ShareBottomDialog.this.dismiss();//关闭
             }
         });

@@ -36,6 +36,7 @@ import com.arsr.arsr.listener.OnTaskListClickListener;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
+import com.arsr.arsr.util.UIDataUtil;
 
 
 public class MainActivity extends BasicActivity {
@@ -67,6 +68,7 @@ public class MainActivity extends BasicActivity {
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         //-任务列表
         TaskListRecyclerViewAdapter taskAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
+        UIDataUtil.add("today_tasks", taskAdapter);
         FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(taskAdapter);//任务列表
         //-分类列表
         CategoryListRecyclerViewAdapter categoryAdapter = ListUtil.getTagInCategoryAdapter(MainActivity.this);

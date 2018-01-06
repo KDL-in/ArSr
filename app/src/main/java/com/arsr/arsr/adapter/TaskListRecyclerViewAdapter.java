@@ -13,9 +13,12 @@ import com.arsr.arsr.db.Task;
 import com.arsr.arsr.listener.OnFeelRadioCheckedChangeListener;
 import com.arsr.arsr.util.DBUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
+import drawthink.expandablerecyclerview.bean.GroupItem;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_CHILD;
@@ -36,13 +39,30 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     private Context mContext;
     private LayoutInflater mInflater;
     List<RecyclerViewData> mData;
+    Map<String,Integer> groupToIdx;//名字映射下标，更新数据用
+    Map<String,Integer> childToIdx;
 
     public TaskListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
         mData = datas;
+        initMap();
     }
+
+    private void initMap() {
+        groupToIdx = new HashMap<>();
+        childToIdx = new HashMap<>();
+        for (int i = 0; i < mData.size(); i++) {
+            RecyclerViewData r = mData.get(i);
+            List<String> list = r.getGroupItem().getChildDatas();
+            groupToIdx.put((String) r.getGroupData(), i);
+            for (int j = 0; j < list.size(); j++) {
+                childToIdx.put(list.get(j), j);
+            }
+        }
+    }
+
 
     /**
      * 为类别（group）的时候，createViewHolder中被调用，加载布局
@@ -114,7 +134,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
 
     public void remove(int position,int groupPosition, int childPosition) {
 //        mData.get(groupPosition).removeChild(childPosition);
-//        notifyRecyclerViewData();
+        notifyRecyclerViewData();
 
     }
 
@@ -125,5 +145,18 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
 
     public Category getCategory(int groupPosition) {
         return DBUtil.getCategory((String) mData.get(groupPosition).getGroupData());
+    }
+
+    public void update(String name) {
+        if (childToIdx.containsKey(name)) {//原来有，删除
+            String category = DBUtil.getSubstringCategory(name, ' ');
+            RecyclerViewData data = mData.get(groupToIdx.get(category));
+            data.removeChild(childToIdx.get(name));
+        } else {
+            String category = DBUtil.getSubstringCategory(name, ' ');
+            RecyclerViewData data = mData.get(groupToIdx.get(category));
+            data.getGroupItem().getChildDatas().add(0,name);
+        }
+
     }
 }
