@@ -1,5 +1,6 @@
 package com.arsr.arsr.costumview;
 
+import android.support.design.widget.BaseTransientBottomBar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,18 +24,19 @@ import java.util.List;
 
 import me.shaohui.bottomdialog.BaseBottomDialog;
 
-public class ShareBottomDialog extends BaseBottomDialog {
+public class AddTaskBottomDialog extends BaseBottomDialog {
     private final int BIG_N = 100000;
     private ImageView tagImg;
     private EditText taskTv, categoryTv, tagTv, idxTv;
-    private Button cancelBtn,ensureBtn;
+    private Button cancelBtn, ensureBtn;
     //分类-标签数据
     private static List<String> group;
     private static List<List<String>> children;
     private String lastInput = "";
+    private String UIData = "";
 
 
-    public ShareBottomDialog() {
+    public AddTaskBottomDialog() {
     }
 
 
@@ -46,11 +48,11 @@ public class ShareBottomDialog extends BaseBottomDialog {
 
     @Override
     public void bindView(View v) {
-        // do any thing you want
         //初始化
         tagImg = v.findViewById(R.id.img_addDialog_tag);
         taskTv = v.findViewById(R.id.edit_addTag_name);
         idxTv = v.findViewById(R.id.edit_addDialog_idx);
+        UIDataUtil.setConstrain(taskTv, idxTv);
         tagTv = v.findViewById(R.id.edit_addDialog_tag);
         categoryTv = v.findViewById(R.id.edit_addTag_prefix);
         cancelBtn = v.findViewById(R.id.btn_addDialog_cancel);
@@ -74,28 +76,57 @@ public class ShareBottomDialog extends BaseBottomDialog {
         cancelBtn.setOnClickListener(new View.OnClickListener() {//取消
             @Override
             public void onClick(View v) {
-                ShareBottomDialog.this.dismiss();
+                AddTaskBottomDialog.this.dismiss();
             }
         });
         ensureBtn.setOnClickListener(new View.OnClickListener() {//确认插入
             @Override
             public void onClick(View v) {
-                String tagName = categoryTv.getText() + "_" + tagTv.getText();
-                String taskName = categoryTv.getText() + "_" + taskTv.getText() + "_" + idxTv.getText();
-                long id =DBUtil.taskDAO.insert(taskName, tagName);
-                if (id == -1) {
-                    ToastUtil.makeToast("添加失败：任务已存在");
-                    ShareBottomDialog.this.dismiss();
+
+                String category = categoryTv.getText().toString();
+                String realTagName = tagTv.getText().toString();
+                String realTaskName = taskTv.getText().toString();
+                String number = idxTv.getText().toString();
+                if (UIDataUtil.checkEmpty(category, realTagName, realTaskName, number)) {
+                    ToastUtil.makeToast("输入不能为空");
                     return;
                 }
-                UIDataUtil.updateUI(UIDataUtil.KEY_TODAY_TASKS);
-                ShareBottomDialog.this.dismiss();//关闭
+                final String tagName = category + "_" + realTagName;
+                final String taskName = category + "_" + realTaskName + "_" + number;
+                ToastUtil.makeSnackbar(v, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
+                    @Override
+                    public void onUndoClick() {
+                        AddTaskBottomDialog.this.dismiss();
+                    }
+
+                    @Override
+                    public void onDismissed(int event) {
+                        if (event== BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION)
+                            return;
+                        long id = DBUtil.taskDAO.insert(taskName, tagName);
+                        if (id == -1) {
+                            ToastUtil.makeToast("添加失败：任务已存在");
+                            AddTaskBottomDialog.this.dismiss();
+                            return;
+                        }
+                        UIDataUtil.updateList(UIDataUtil.KEY_TODAY_TASKS);
+                        AddTaskBottomDialog.this.dismiss();//关闭
+                    }
+                });
+
             }
         });
+        if (!UIData.equals("")) {//如果有设置数据
+            autoInput(UIData.replaceAll("_"," "));
+            UIData = "";
+        }
 
 
     }
 
+    public void setData(String tagName) {
+        UIData = tagName;
+    }
 
 
     /**
@@ -112,7 +143,7 @@ public class ShareBottomDialog extends BaseBottomDialog {
                 SubMenu subMenu = menu.addSubMenu(i, i, Menu.NONE, group.get(i - 1));
                 for (int j = 1; j <= childList.size(); j++) {
                     String name = childList.get(j - 1);
-                    subMenu.add(i, i * BIG_N + j, Menu.NONE, name.substring(name.indexOf(' ')+1));
+                    subMenu.add(i, i * BIG_N + j, Menu.NONE, name.substring(name.indexOf(' ') + 1));
                 }
             }
             popupMenu.show();
@@ -129,17 +160,21 @@ public class ShareBottomDialog extends BaseBottomDialog {
             int itemId = item.getItemId();
             if (itemId >= BIG_N) {
                 String name = children.get(item.getGroupId() - 1).get(itemId % BIG_N - 1);
-                Tag tag = DBUtil.getTag(DBUtil.packing(name));
-                taskTv.setText(tag.getPrefix());
-                lastInput = tag.getPrefix();
-                idxTv.setText(DBUtil.getMaxNOf(tag) + 1 + "");
-                categoryTv.setText(group.get(item.getGroupId() - 1));
-                tagTv.setText(item.getTitle());
-                taskTv.setEnabled(true);
-                idxTv.setEnabled(true);
-                taskTv.setSelection(taskTv.getText().length());
+                autoInput(name);
             }
             return false;
         }
+    }
+
+    private void autoInput(String name) {
+        Tag tag = DBUtil.getTag(DBUtil.packing(name));
+        taskTv.setText(tag.getPrefix());
+        lastInput = tag.getPrefix();
+        idxTv.setText(DBUtil.getMaxNOf(tag) + 1 + "");
+        categoryTv.setText(DBUtil.getSubstringCategory(name,' '));
+        tagTv.setText(DBUtil.getSubstringName(name,' '));
+        taskTv.setEnabled(true);
+        idxTv.setEnabled(true);
+        taskTv.setSelection(taskTv.getText().length());
     }
 }

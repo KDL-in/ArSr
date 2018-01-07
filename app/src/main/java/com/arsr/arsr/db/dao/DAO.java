@@ -46,8 +46,8 @@ public abstract class DAO<T extends Entity> {
      * @param selectionArgs ？替换
      * @return id
      */
-    public long delete(String selection, String[] selectionArgs) {
-        return DBUtil.db.delete(tClass.getSimpleName(),selection, selectionArgs);
+    public void delete(String selection, String[] selectionArgs) {
+        DBUtil.db.delete(tClass.getSimpleName(),selection, selectionArgs);
     }
     /**
      * 插入数据
@@ -182,10 +182,10 @@ public abstract class DAO<T extends Entity> {
         //更新缓存
         updateCache(id,DBUtil.DELETED);
     }
-    /**
+/*    *//**
      * 删除名为name的实体
-     * @param name 实体名
-     */
+     *
+     *//*
 
     public  void delete(String name) {
         String selection = "name=?";
@@ -194,7 +194,7 @@ public abstract class DAO<T extends Entity> {
         //更新缓存
         long id = getId(name);
         updateCache(id,DBUtil.DELETED);
-    }
+    }*/
 
     abstract void updateCache(long id, String flag);
     /**

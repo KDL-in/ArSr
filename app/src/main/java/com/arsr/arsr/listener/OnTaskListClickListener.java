@@ -52,7 +52,6 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
         nameTv.setSelected(isFinish);
         taskIco.setSelected(isFinish);//颜色改变end
         if (task.getDayToRecall()==0) {//辅助recall下不显示效果选择面板
-            //todo 点击完成 点击取消 再迅速点击效果就会出错，取消的时候延迟动画需要处理
             AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_SHOW, 100);
             AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_HIDDEN, 4000);
         }

@@ -260,7 +260,6 @@ public class IOUtil {
 
     /**
      * 将string中的数字提取出来
-     * //todo 这种转换必须保证数据录入绝对正确，意味着界面设置数据要求严格合法检测
      *
      * @param content recall时间点，格式是
      *                1 2 3 4 5 6（次的recall需要时间）

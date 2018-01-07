@@ -25,6 +25,7 @@ import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.listener.OnCategoryListClickListener;
+import com.arsr.arsr.listener.OnCategoryListLongClickListener;
 import com.arsr.arsr.listener.OnFabClickListener;
 import com.arsr.arsr.listener.OnMainPagerChangeListener;
 import com.arsr.arsr.listener.OnTaskListClickListener;
@@ -71,7 +72,8 @@ public class MainActivity extends BasicActivity {
         //-设置监听
         fragmentTaskList.setOnItemClickListener(new OnTaskListClickListener(taskAdapter));//tasklist监听
         fragmentTaskList.setOnItemLongClickListener(new OnTaskListLongClickListener(taskAdapter));
-        fragmentCategoryList.setOnItemClickListener(new OnCategoryListClickListener());
+        fragmentCategoryList.setOnItemClickListener(new OnCategoryListClickListener(MainActivity.this, categoryAdapter));
+        fragmentCategoryList.setOnItemLongClickListener(new OnCategoryListLongClickListener(MainActivity.this, categoryAdapter));
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
         ViewPager viewPager = findViewById(R.id.viewPager);//设置adapter
@@ -127,7 +129,7 @@ public class MainActivity extends BasicActivity {
         categoryDAO.insert("计算机网络");
         //tag
         tagDAO.insert("Word","List","CTE-6","单词");
-        tagDAO.insert("Reading 2016","Text","CTE-6","长难句");
+        tagDAO.insert("Reading2016","Text","CTE-6","长难句");
         tagDAO.insert("Word","List","kaoyan",null);
         tagDAO.insert("Chapter","Chapter","Math",null);
         tagDAO.insert("Chapter", "C", "计算机网络", null);
@@ -173,7 +175,6 @@ public class MainActivity extends BasicActivity {
 
     /**
      * 右上角菜单点击事件
-     * 1. todo 后面再对各种项监听
      *
      * @param item
      * @return

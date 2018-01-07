@@ -18,7 +18,6 @@ import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
 
 /**
  * 任务列表碎片
- * todo 等待抽象
  */
 public class FragmentTaskList extends Fragment {
 

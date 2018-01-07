@@ -1,6 +1,7 @@
 package com.arsr.arsr.util;
 
 import android.content.Context;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Toast;
@@ -16,12 +17,19 @@ public class ToastUtil {
     static {
         mContext = MyApplication.getContext();
     }
-    public static void makeSnackbar(View v, String doStr, final String undoStr, final OnSnackbarUndoListener listener) {
-        Snackbar.make(v,doStr,Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+    public static void makeSnackbar(View v, String hint, final String undoStr, final OnSnackbarListener listener) {
+        Snackbar.make(v,hint,Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//点击undo监听
                 Toast.makeText(mContext, undoStr, Toast.LENGTH_SHORT).show();
-                listener.run();
+                listener.onUndoClick();
+            }
+        }).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {//无操作（确认）执行
+
+            @Override
+            public void onDismissed(Snackbar transientBottomBar, int event) {
+                super.onDismissed(transientBottomBar, event);
+                listener.onDismissed(event);
             }
         }).show();
     }
@@ -30,8 +38,10 @@ public class ToastUtil {
         Toast.makeText(mContext,s,Toast.LENGTH_SHORT).show();
     }
 
-    public interface OnSnackbarUndoListener{
-        void run();
+    public interface OnSnackbarListener {
+        void onUndoClick();
+
+        void onDismissed(int event);
     }
 
 }

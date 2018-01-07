@@ -11,7 +11,6 @@ import com.arsr.arsr.R;
 /**
  * Created by KundaLin on 17/12/20.
  * 单个任务的自定义控件
- * todo 后期需要添加对各种属性操作的接口
  */
 
 public class TaskLayout extends CardView {

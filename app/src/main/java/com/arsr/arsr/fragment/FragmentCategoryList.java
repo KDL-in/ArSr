@@ -21,7 +21,6 @@ import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 /**
  * 类别碎片
  * 等待加入内容
- * todo 等待抽象
  *//*
 
 public class FragmentCategoryList extends Fragment {

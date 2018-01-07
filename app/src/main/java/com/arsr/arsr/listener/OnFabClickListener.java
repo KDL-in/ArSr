@@ -2,20 +2,9 @@ package com.arsr.arsr.listener;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.SubMenu;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 
-import com.arsr.arsr.MyApplication;
-import com.arsr.arsr.activity.MainActivity;
-import com.arsr.arsr.costumview.ShareBottomDialog;
-import com.arsr.arsr.util.DBUtil;
-import com.arsr.arsr.util.ListUtil;
-import com.arsr.arsr.util.LogUtil;
-
-import java.util.List;
+import com.arsr.arsr.costumview.AddTaskBottomDialog;
 
 /**
  * 添加按钮监听器
@@ -24,7 +13,7 @@ import java.util.List;
 
 public class OnFabClickListener implements View.OnClickListener {
     private static Context context;
-    private ShareBottomDialog dialog;
+    private AddTaskBottomDialog dialog;
 
 
     public OnFabClickListener(Context context) {
@@ -34,7 +23,7 @@ public class OnFabClickListener implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         //dialog布局弹出
-        dialog = new ShareBottomDialog();
+        dialog = new AddTaskBottomDialog();
         dialog.show(((AppCompatActivity) context).getSupportFragmentManager());
     }
 }

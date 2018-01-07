@@ -10,7 +10,6 @@ import drawthink.expandablerecyclerview.holder.BaseViewHolder;
 
 /**
  * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType
- * todo 等待抽象
  * Created by KundaLin on 17/12/22.
  */
 

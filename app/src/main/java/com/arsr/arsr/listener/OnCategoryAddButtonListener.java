@@ -3,6 +3,8 @@ package com.arsr.arsr.listener;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -40,6 +42,7 @@ public class OnCategoryAddButtonListener implements View.OnClickListener {
         final EditText tagNameEdit = view.findViewById(R.id.edit_addTag_name);
         final EditText tagPrefixEdit = view.findViewById(R.id.edit_addTag_prefix);
         final EditText tagNote = view.findViewById(R.id.edit_addTag_note);
+        UIDataUtil.setConstrain(tagNameEdit, tagPrefixEdit);
         //弹出窗口
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(view);
@@ -48,28 +51,35 @@ public class OnCategoryAddButtonListener implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final String name = tagNameEdit.getText().toString().trim();
-                String prefix = tagPrefixEdit.getText().toString().trim();
-                String note = tagNote.getText().toString().trim();
+                final String prefix = tagPrefixEdit.getText().toString().trim();
+                final String note = tagNote.getText().toString().trim();
                 if (UIDataUtil.checkEmpty(name, prefix)) {
                     ToastUtil.makeToast("名字、前缀不能为空");
-                }
-                String category = categoryTv.getText().toString();
-                DBUtil.tagDAO.display();
-                final long id = DBUtil.tagDAO.insert(name, prefix, category,note );
-                if (id == -1) {
-                    ToastUtil.makeToast("添加失败，标签已存在");
                     return;
                 }
-                UIDataUtil.updateUI(UIDataUtil.KEY_CATEGORY_TAG_LIST);//插入
-                DBUtil.tagDAO.display();
-                ToastUtil.makeSnackbar(parent, "添加新标签" + name, "取消添加", new ToastUtil.OnSnackbarUndoListener() {
+                final String category = categoryTv.getText().toString();
+
+                ToastUtil.makeSnackbar(parent, "确定插入标签" + name, "撤销插入", new ToastUtil.OnSnackbarListener() {
                     @Override
-                    public void run() {//取消插入
-                        DBUtil.tagDAO.delete(id);
-                        UIDataUtil.updateUI(UIDataUtil.KEY_CATEGORY_TAG_LIST);
-                        DBUtil.tagDAO.display();
+                    public void onUndoClick() {
+
+                    }
+
+                    @Override
+                    public void onDismissed(int event) {
+                        if (event == BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION) {
+                            return;
+                        }
+                        long id = DBUtil.tagDAO.insert(name, prefix, category, note);
+                        if (id == -1) {
+                            ToastUtil.makeToast("添加失败，标签已存在");
+                            return;
+                        }
+                        UIDataUtil.updateList(UIDataUtil.KEY_CATEGORY_TAG_LIST);//插入
                     }
                 });
+
+
             }
         });
         builder.show();

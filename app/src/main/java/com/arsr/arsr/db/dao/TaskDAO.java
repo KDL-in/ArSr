@@ -129,6 +129,7 @@ public class TaskDAO extends DAO<Task> {
         List<Task> tasks = getList();
         for (Task t :
                 tasks) {
+            if (t==null) continue;
             if (t.getDayToRecall() == 0 || t.getDayToRecall() == -1 || t.getDayToAssist() == 0 || t.getDayToAssist() == -1) {
                 todayTasks.add(t);
             }
@@ -168,5 +169,19 @@ public class TaskDAO extends DAO<Task> {
         task.setId(id);
         task.setName(flag);
         updateCache(task);
+    }
+
+    /**
+     * 找到应用外键tid的task
+     */
+    public List<Task> findRelatedItem(long tid) {
+        List<Task>relatedList = new ArrayList<>();
+        for (Task t :
+                list) {
+            if (t.getTid() == tid) {
+                relatedList.add(t);
+            }
+        }
+        return relatedList;
     }
 }

@@ -80,6 +80,17 @@ public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<Str
     }
 
 
+    public String getGroupData(int groupPosition) {
+        return (String) mData.get(groupPosition).getGroupData();
+    }
 
+    public String getChildData(int groupPosition, int childPosition) {
+        return (String) mData.get(groupPosition).getChild(childPosition);
+    }
 
+    @Override
+    public void setAllDatas(List<RecyclerViewData> allDatas) {
+        super.setAllDatas(allDatas);
+        mData = allDatas;
+    }
 }
