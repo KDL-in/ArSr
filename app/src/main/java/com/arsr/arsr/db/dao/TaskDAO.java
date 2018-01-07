@@ -3,6 +3,7 @@ package com.arsr.arsr.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
@@ -158,5 +159,14 @@ public class TaskDAO extends DAO<Task> {
         if (curN > maxN) maxNs.put(tid, curN);
     }
 
-
+    /**
+     * 删除更新缓存
+     */
+    @Override
+    void updateCache(long id, String flag) {
+        Task task = new Task();
+        task.setId(id);
+        task.setName(flag);
+        updateCache(task);
+    }
 }

@@ -3,6 +3,7 @@ package com.arsr.arsr.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.IOUtil;
@@ -62,15 +63,8 @@ public class TagDAO extends DAO<Tag> {
         ContentValues values = new ContentValues();
         String name = cName + "_" + tName;
         long cid = DBUtil.categoryDAO.getId(cName);
-        values.put("name", name);
-        values.put("prefix", prefix);
-        values.put("cid", cid);
-        values.put("note", note);
-        long id = insert(values);
-        Tag tag = new Tag(id, name, prefix, cid, note);
-        updateCache(tag);//更新缓存
-        //设置默认recall时间点
-        IOUtil.setPointInTimeOf(tag, "");
+        Tag tag = new Tag(0, name, prefix, cid, note);
+        long id = insert(tag);
         return id;
     }
 
@@ -88,6 +82,17 @@ public class TagDAO extends DAO<Tag> {
         if (id!=-1)IOUtil.setPointInTimeOf(tag, "");
         return id;
     }
+    /**
+     * 删除更新缓存
+     */
+    @Override
+    void updateCache(long id, String flag) {
+        Tag tag = new Tag();
+        tag.setId(id);
+        tag.setName(flag);
+        updateCache(tag);
+    }
+
 
 }
 /*

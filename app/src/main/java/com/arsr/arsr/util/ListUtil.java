@@ -23,16 +23,20 @@ import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 public class ListUtil {
     private static Map<String, Integer> nameToInteger = new HashMap<>();
 
-    /**
-     * 获取分类-任务
-     */
-    public static TaskListRecyclerViewAdapter getTodayTaskListAdapter(Context context) {
+    public static List<RecyclerViewData> getTodayTaskList() {
         List<String> group = getCategoryNameGroup();
         List<List<String>> children = getChildren(DBUtil.taskDAO.getTodayList(), group);
-        for (int i = 0; i < group.size(); i++) {
+        for (int i = 0; i < group.size(); i++) {//去掉没子项的
             if (children.get(i).isEmpty()) children.set(i, null);
         }
-        TaskListRecyclerViewAdapter adapter = new TaskListRecyclerViewAdapter(context,getList(group, children, true));
+        return getList(group, children, true);
+    }
+    /**
+     * 获取分类-任务adapter
+     */
+    public static TaskListRecyclerViewAdapter getTodayTaskListAdapter(Context context) {
+        TaskListRecyclerViewAdapter adapter = new TaskListRecyclerViewAdapter(context, getTodayTaskList());
+        UIDataUtil.add(UIDataUtil.KEY_TODAY_TASKS, adapter);//添加给更新控制
         return adapter;
     }
 
@@ -51,10 +55,17 @@ public class ListUtil {
     /**
      * 获取分类-标签列表
      */
-    public static CategoryListRecyclerViewAdapter getTagInCategoryAdapter(Context context) {
+    public static List<RecyclerViewData> getTagInCategoryList() {
         List<String> group = getCategoryNameGroup();
         List<List<String>> children = getTagNameChildren(group);
-        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
+        return getList(group, children, true);
+    }
+    /**
+     * 获取分类-标签adapter
+     */
+    public static CategoryListRecyclerViewAdapter getTagInCategoryAdapter(Context context) {
+        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context, getTagInCategoryList());
+        UIDataUtil.add(UIDataUtil.KEY_CATEGORY_TAG_LIST,adapter);//添加给更新控制
         return adapter;
     }
 

@@ -1,26 +1,19 @@
 package com.arsr.arsr.costumview;
 
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
-import com.arsr.arsr.activity.MainActivity;
 import com.arsr.arsr.db.Tag;
-import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.ToastUtil;
@@ -48,7 +41,7 @@ public class ShareBottomDialog extends BaseBottomDialog {
     @Override
 
     public int getLayoutRes() {
-        return R.layout.dialog_layout;
+        return R.layout.dialog_addtask;
     }
 
     @Override
@@ -56,10 +49,10 @@ public class ShareBottomDialog extends BaseBottomDialog {
         // do any thing you want
         //初始化
         tagImg = v.findViewById(R.id.img_addDialog_tag);
-        taskTv = v.findViewById(R.id.edit_addDialog_name);
+        taskTv = v.findViewById(R.id.edit_addTag_name);
         idxTv = v.findViewById(R.id.edit_addDialog_idx);
         tagTv = v.findViewById(R.id.edit_addDialog_tag);
-        categoryTv = v.findViewById(R.id.edit_addDialog_category);
+        categoryTv = v.findViewById(R.id.edit_addTag_prefix);
         cancelBtn = v.findViewById(R.id.btn_addDialog_cancel);
         ensureBtn = v.findViewById(R.id.btn_addDialog_ensure);
         //获得分类-标签数据
@@ -91,10 +84,11 @@ public class ShareBottomDialog extends BaseBottomDialog {
                 String taskName = categoryTv.getText() + "_" + taskTv.getText() + "_" + idxTv.getText();
                 long id =DBUtil.taskDAO.insert(taskName, tagName);
                 if (id == -1) {
+                    ToastUtil.makeToast("添加失败：任务已存在");
                     ShareBottomDialog.this.dismiss();
                     return;
                 }
-                UIDataUtil.updateUI(UIDataUtil.TODAY_TASKS,taskName);
+                UIDataUtil.updateUI(UIDataUtil.KEY_TODAY_TASKS);
                 ShareBottomDialog.this.dismiss();//关闭
             }
         });

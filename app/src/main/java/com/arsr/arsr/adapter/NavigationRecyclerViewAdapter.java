@@ -21,7 +21,6 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
     public NavigationRecyclerViewAdapter(List<String> mData) {
         this.mData = mData;
     }
-
     @Override
     public MyViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_navigation_category, parent, false);

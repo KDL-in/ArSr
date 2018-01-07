@@ -1,12 +1,12 @@
 package com.arsr.arsr.util;
 
 import android.support.v7.widget.RecyclerView;
-import android.widget.EditText;
 
+import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
-import com.arsr.arsr.adapter.holder.VHTaskListRecyclerView;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
@@ -18,30 +18,33 @@ import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
  */
 
 public class UIDataUtil {
-    public static final String TODAY_TASKS="today_tasks";
+    public static final int EXPANDABLE_LIST = 0;
+    public static final String KEY_TODAY_TASKS = "today_task_list";
+    public static final String KEY_CATEGORY_TAG_LIST = "category_tag_list";
+    public static final String KEY_CATEGORY = "category_list";
     private static Map<String, RecyclerView.Adapter> adapters;
 
     static {
         adapters = new HashMap<>();
     }
 
-    /**
-     * 检查editText是否为空
-     */
-    public static boolean isEmpty(EditText edit) {
-        return edit.getText().toString().trim().equals("");
-    }
 
     /**
      * 更新数据
      */
-    public static void updateUI(String type, String taskName) {
-        switch (type) {
-            case TODAY_TASKS:
-                TaskListRecyclerViewAdapter adapter = (TaskListRecyclerViewAdapter) adapters.get(type);
-                adapter.update(taskName.replaceAll("_", " "));
-                adapter.notifyRecyclerViewData();
-                break;
+    public static void updateUI(String type) {
+        if (type.equals(KEY_CATEGORY)) {
+            //任务列表
+        } else {
+            BaseRecyclerViewAdapter adapter = (BaseRecyclerViewAdapter) adapters.get(type);
+            switch (type) {
+                case KEY_TODAY_TASKS:
+                    ((TaskListRecyclerViewAdapter)adapter).setAllDatas(ListUtil.getTodayTaskList());
+                    break;
+                case KEY_CATEGORY_TAG_LIST:
+                    adapter.setAllDatas(ListUtil.getTagInCategoryList());
+                    break;
+            }
         }
     }
 
@@ -50,5 +53,16 @@ public class UIDataUtil {
      */
     public static void add(String type, BaseRecyclerViewAdapter adapter) {
         adapters.put(type, adapter);
+    }
+
+    /**
+     * 检测字符串是否为空
+     */
+    public static boolean checkEmpty(String... arr) {
+        for (String s :
+                arr) {
+            if (s.equals("")) return true;
+        }
+        return false;
     }
 }

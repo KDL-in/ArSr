@@ -15,7 +15,6 @@ public class ToastUtil {
     private static Context mContext;
     static {
         mContext = MyApplication.getContext();
-
     }
     public static void makeSnackbar(View v, String doStr, final String undoStr, final OnSnackbarUndoListener listener) {
         Snackbar.make(v,doStr,Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
@@ -25,6 +24,10 @@ public class ToastUtil {
                 listener.run();
             }
         }).show();
+    }
+
+    public static void makeToast(String s) {
+        Toast.makeText(mContext,s,Toast.LENGTH_SHORT).show();
     }
 
     public interface OnSnackbarUndoListener{

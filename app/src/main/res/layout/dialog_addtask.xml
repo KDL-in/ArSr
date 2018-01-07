@@ -41,7 +41,7 @@ tools:layout_editor_absoluteY="25dp">
     app:layout_constraintTop_toTopOf="parent" />
 
 <EditText
-    android:id="@+id/edit_addDialog_name"
+    android:id="@+id/edit_addTag_name"
     style="@style/edit_add_dialog"
     android:layout_width="155dp"
     android:layout_height="wrap_content"
@@ -64,9 +64,9 @@ tools:layout_editor_absoluteY="25dp">
     android:hint="编号"
     android:inputType="number"
     android:textAlignment="center"
-    app:layout_constraintBottom_toBottomOf="@+id/edit_addDialog_name"
-    app:layout_constraintStart_toEndOf="@+id/edit_addDialog_name"
-    app:layout_constraintTop_toTopOf="@+id/edit_addDialog_name"
+    app:layout_constraintBottom_toBottomOf="@+id/edit_addTag_name"
+    app:layout_constraintStart_toEndOf="@+id/edit_addTag_name"
+    app:layout_constraintTop_toTopOf="@+id/edit_addTag_name"
     app:layout_constraintVertical_bias="1.0" />
 
 <ImageView
@@ -84,7 +84,7 @@ tools:layout_editor_absoluteY="25dp">
     app:srcCompat="@drawable/icon_tag" />
 
 <EditText
-    android:id="@+id/edit_addDialog_category"
+    android:id="@+id/edit_addTag_prefix"
     style="@style/edit_add_dialog"
     android:layout_width="140dp"
     android:layout_height="wrap_content"
@@ -94,12 +94,12 @@ tools:layout_editor_absoluteY="25dp">
     android:hint="类别"
     android:inputType="none"
     android:singleLine="true"
-    app:layout_constraintEnd_toEndOf="@+id/edit_addDialog_name"
+    app:layout_constraintEnd_toEndOf="@+id/edit_addTag_name"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintStart_toStartOf="@+id/edit_addDialog_name"
-    app:layout_constraintTop_toBottomOf="@+id/edit_addDialog_name" />
+    app:layout_constraintStart_toStartOf="@+id/edit_addTag_name"
+    app:layout_constraintTop_toBottomOf="@+id/edit_addTag_name" />
 
 <EditText
     android:id="@+id/edit_addDialog_tag"
@@ -112,12 +112,12 @@ tools:layout_editor_absoluteY="25dp">
     android:hint="标签"
     android:inputType="text"
     android:singleLine="true"
-    app:layout_constraintEnd_toEndOf="@+id/edit_addDialog_category"
+    app:layout_constraintEnd_toEndOf="@+id/edit_addTag_prefix"
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintStart_toStartOf="@+id/edit_addDialog_category"
-    app:layout_constraintTop_toBottomOf="@+id/edit_addDialog_category" />
+    app:layout_constraintStart_toStartOf="@+id/edit_addTag_prefix"
+    app:layout_constraintTop_toBottomOf="@+id/edit_addTag_prefix" />
 
 <Button
     android:id="@+id/btn_addDialog_cancel"

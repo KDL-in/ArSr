@@ -4,19 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.activity.TaskActivity;
 import com.arsr.arsr.adapter.holder.VHCategoryRecyclerView;
+import com.arsr.arsr.listener.OnCategoryAddButtonListener;
 import com.arsr.arsr.util.DBUtil;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
-import drawthink.expandablerecyclerview.holder.BaseViewHolder;
+
+import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_PARENT;
 
 /**
  * Created by KundaLin on 17/12/26.
@@ -25,11 +27,13 @@ import drawthink.expandablerecyclerview.holder.BaseViewHolder;
 public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,String,VHCategoryRecyclerView> {
     private Context mContext;
     private LayoutInflater mInflater;
+    private List<RecyclerViewData>mData;
 
     public CategoryListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
+        mData = datas;
     }
 
     /**
@@ -58,6 +62,10 @@ public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<Str
     @Override
     public VHCategoryRecyclerView createRealViewHolder(Context ctx, View view, int viewType) {
         VHCategoryRecyclerView holder = new VHCategoryRecyclerView(ctx, view, viewType);
+        if (viewType == VIEW_TYPE_PARENT) {
+            ImageView imageView = view.findViewById(R.id.img_categoryList_groupImgButton);
+            imageView.setOnClickListener(new OnCategoryAddButtonListener(view,mContext));
+        }
         return holder;
     }
 
@@ -70,6 +78,8 @@ public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<Str
     public void onBindChildpHolder(VHCategoryRecyclerView holder, int groupPos, int childPos, int position, String childData) {
         holder.childTextView.setText(childData.substring(childData.indexOf(' ')));
     }
+
+
 
 
 }

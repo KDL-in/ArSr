@@ -55,19 +55,17 @@ public class CategoryDAO extends DAO<Category> {
         updateCache(category);
         return id;
     }
-    /**
-     * 删除名为name的分类
-     * @param name 分类名
-     */
 
-    public  void delete(String name) {
-        String selection = "name=?";
-        String selectionArgs[] = {name};
-        delete(selection, selectionArgs);
-        //更新缓存
-        long id = getId(name);
-        Category category = new Category(id, DBUtil.DELETED);
+    /**
+     * 删除更新缓存
+     */
+    @Override
+    void updateCache(long id, String flag) {
+        Category category = new Category();
+        category.setId(id);
+        category.setName(flag);
         updateCache(category);
     }
+
 }
 

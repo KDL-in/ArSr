@@ -1,9 +1,6 @@
 package com.arsr.arsr.activity;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -17,8 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
@@ -68,10 +63,10 @@ public class MainActivity extends BasicActivity {
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         //-任务列表
         TaskListRecyclerViewAdapter taskAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
-        UIDataUtil.add("today_tasks", taskAdapter);
         FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(taskAdapter);//任务列表
         //-分类列表
         CategoryListRecyclerViewAdapter categoryAdapter = ListUtil.getTagInCategoryAdapter(MainActivity.this);
+        ;
         FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(categoryAdapter);
         //-设置监听
         fragmentTaskList.setOnItemClickListener(new OnTaskListClickListener(taskAdapter));//tasklist监听

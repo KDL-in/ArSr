@@ -39,30 +39,19 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     private Context mContext;
     private LayoutInflater mInflater;
     List<RecyclerViewData> mData;
-    Map<String,Integer> groupToIdx;//名字映射下标，更新数据用
-    Map<String,Integer> childToIdx;
 
     public TaskListRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
         mData = datas;
-        initMap();
     }
 
-    private void initMap() {
-        groupToIdx = new HashMap<>();
-        childToIdx = new HashMap<>();
-        for (int i = 0; i < mData.size(); i++) {
-            RecyclerViewData r = mData.get(i);
-            List<String> list = r.getGroupItem().getChildDatas();
-            groupToIdx.put((String) r.getGroupData(), i);
-            for (int j = 0; j < list.size(); j++) {
-                childToIdx.put(list.get(j), j);
-            }
-        }
+    @Override
+    public void setAllDatas(List<RecyclerViewData> allDatas) {
+        super.setAllDatas(allDatas);
+        mData = allDatas;
     }
-
 
     /**
      * 为类别（group）的时候，createViewHolder中被调用，加载布局
@@ -132,31 +121,14 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     }
 
 
-    public void remove(int position,int groupPosition, int childPosition) {
-//        mData.get(groupPosition).removeChild(childPosition);
-        notifyRecyclerViewData();
-
-    }
-
-
     public Task getTask(int groupPosition, int childPosition) {
-        return DBUtil.getTask(DBUtil.packing((String)mData.get(groupPosition).getChild(childPosition)));
+
+        return DBUtil.taskDAO.get(DBUtil.packing((String)mData.get(groupPosition).getChild(childPosition)));
     }
 
     public Category getCategory(int groupPosition) {
         return DBUtil.getCategory((String) mData.get(groupPosition).getGroupData());
     }
 
-    public void update(String name) {
-        if (childToIdx.containsKey(name)) {//原来有，删除
-            String category = DBUtil.getSubstringCategory(name, ' ');
-            RecyclerViewData data = mData.get(groupToIdx.get(category));
-            data.removeChild(childToIdx.get(name));
-        } else {
-            String category = DBUtil.getSubstringCategory(name, ' ');
-            RecyclerViewData data = mData.get(groupToIdx.get(category));
-            data.getGroupItem().getChildDatas().add(0,name);
-        }
 
-    }
 }

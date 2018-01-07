@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
 
+import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
@@ -11,6 +12,7 @@ import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.LogUtil;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,7 @@ public abstract class DAO<T extends Entity> {
         return id;
     }
     public Cursor findAll()  {
-        Cursor cursor = DBUtil.db.query(tClass.getSimpleName(), null, null, null, null, null, "updateTime DESC");
+        Cursor cursor = DBUtil.db.query(tClass.getSimpleName(), null, null, null, null, null, "updateTime asc");
         return cursor;
     }
 
@@ -141,7 +143,11 @@ public abstract class DAO<T extends Entity> {
     }
 
     public List<T> getList() {
-        return list;
+        List<T> r = new ArrayList<>();
+        for (int i = list.size()-1; i >=0; i--) {
+            r.add(list.get(i));
+        }
+        return r;
     }
 
     /**
@@ -165,7 +171,32 @@ public abstract class DAO<T extends Entity> {
      * 插入某个实体
      */
     public abstract long insert(T t);
+    /**
+     * 删除id的实体
+     * @param id 实体id
+     */
+    public  void delete(long id){
+        String selection = "id=?";
+        String selectionArgs[] = {id+""};
+        delete(selection, selectionArgs);
+        //更新缓存
+        updateCache(id,DBUtil.DELETED);
+    }
+    /**
+     * 删除名为name的实体
+     * @param name 实体名
+     */
 
+    public  void delete(String name) {
+        String selection = "name=?";
+        String selectionArgs[] = {name};
+        delete(selection, selectionArgs);
+        //更新缓存
+        long id = getId(name);
+        updateCache(id,DBUtil.DELETED);
+    }
+
+    abstract void updateCache(long id, String flag);
     /**
      * 更新
      * @param t 实体

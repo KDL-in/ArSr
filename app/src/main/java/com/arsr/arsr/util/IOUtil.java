@@ -335,6 +335,7 @@ public class IOUtil {
      * 取消最后一次微调
      */
     public static void cancelAdjustPointInTimeOf(Tag tag, Task task) {
+        if (task.getTimes()==0)return;
         int []args = getPointsInTimeOf(tag);
         int feelFlag = getAdjustRecord(task.getId());
         args[task.getTimes()-1] -= feelFlag;
