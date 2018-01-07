@@ -77,6 +77,11 @@ public class OnCategoryAddButtonListener implements View.OnClickListener {
                         }
                         UIDataUtil.updateList(UIDataUtil.KEY_CATEGORY_TAG_LIST);//插入
                     }
+
+                    @Override
+                    public void onShown() {
+
+                    }
                 });
 
 

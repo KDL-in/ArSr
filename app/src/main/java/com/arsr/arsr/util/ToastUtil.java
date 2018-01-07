@@ -18,13 +18,18 @@ public class ToastUtil {
         mContext = MyApplication.getContext();
     }
     public static void makeSnackbar(View v, String hint, final String undoStr, final OnSnackbarListener listener) {
-        Snackbar.make(v,hint,Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
+        Snackbar.make(v,hint,Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
             @Override
             public void onClick(View v) {//点击undo监听
                 Toast.makeText(mContext, undoStr, Toast.LENGTH_SHORT).show();
                 listener.onUndoClick();
             }
         }).addCallback(new BaseTransientBottomBar.BaseCallback<Snackbar>() {//无操作（确认）执行
+
+            @Override
+            public void onShown(Snackbar transientBottomBar) {
+                listener.onShown();
+            }
 
             @Override
             public void onDismissed(Snackbar transientBottomBar, int event) {
@@ -42,6 +47,8 @@ public class ToastUtil {
         void onUndoClick();
 
         void onDismissed(int event);
+
+        void onShown();
     }
 
 }

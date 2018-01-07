@@ -47,16 +47,16 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
     }
 
     @Override
-    public void bindView(View v) {
+    public void bindView(final View view) {
         //初始化
-        tagImg = v.findViewById(R.id.img_addDialog_tag);
-        taskTv = v.findViewById(R.id.edit_addTag_name);
-        idxTv = v.findViewById(R.id.edit_addDialog_idx);
+        tagImg = view.findViewById(R.id.img_addDialog_tag);
+        taskTv = view.findViewById(R.id.edit_addTag_name);
+        idxTv = view.findViewById(R.id.edit_addDialog_idx);
         UIDataUtil.setConstrain(taskTv, idxTv);
-        tagTv = v.findViewById(R.id.edit_addDialog_tag);
-        categoryTv = v.findViewById(R.id.edit_addTag_prefix);
-        cancelBtn = v.findViewById(R.id.btn_addDialog_cancel);
-        ensureBtn = v.findViewById(R.id.btn_addDialog_ensure);
+        tagTv = view.findViewById(R.id.edit_addDialog_tag);
+        categoryTv = view.findViewById(R.id.edit_addTag_prefix);
+        cancelBtn = view.findViewById(R.id.btn_addDialog_cancel);
+        ensureBtn = view.findViewById(R.id.btn_addDialog_ensure);
         //获得分类-标签数据
         group = ListUtil.getCategoryNameGroup();
         children = ListUtil.getTagNameChildren(group);
@@ -81,7 +81,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
         });
         ensureBtn.setOnClickListener(new View.OnClickListener() {//确认插入
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
 
                 String category = categoryTv.getText().toString();
                 String realTagName = tagTv.getText().toString();
@@ -96,21 +96,25 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                 ToastUtil.makeSnackbar(v, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
-                        AddTaskBottomDialog.this.dismiss();
+
                     }
 
                     @Override
                     public void onDismissed(int event) {
-                        if (event== BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION)
-                            return;
-                        long id = DBUtil.taskDAO.insert(taskName, tagName);
-                        if (id == -1) {
-                            ToastUtil.makeToast("添加失败：任务已存在");
-                            AddTaskBottomDialog.this.dismiss();
-                            return;
+                        if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION) {
+                            long id = DBUtil.taskDAO.insert(taskName, tagName);
+                            if (id == -1) {
+                                ToastUtil.makeToast("添加失败：任务已存在");
+                                return;
+                            }
+                            UIDataUtil.updateList(UIDataUtil.KEY_TODAY_TASKS);
                         }
-                        UIDataUtil.updateList(UIDataUtil.KEY_TODAY_TASKS);
                         AddTaskBottomDialog.this.dismiss();//关闭
+                    }
+
+                    @Override
+                    public void onShown() {
+                        view.setVisibility(View.INVISIBLE);
                     }
                 });
 

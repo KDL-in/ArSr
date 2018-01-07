@@ -76,6 +76,11 @@ public class OnCategoryListLongClickListener implements OnRecyclerViewListener.O
                                         DBUtil.tagDAO.delete(name.replaceAll(" ", "_"));
                                         UIDataUtil.updateUIData(UIDataUtil.TYPE_TAG_CHANGED);
                                     }
+
+                                    @Override
+                                    public void onShown() {
+
+                                    }
                                 });
                             }
                         }).show();
