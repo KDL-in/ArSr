@@ -3,6 +3,7 @@ package com.arsr.arsr.util;
 import android.content.Context;
 
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
@@ -139,7 +140,7 @@ public class ListUtil {
      * 分类列表
      * @return 分类名列表
      */
-    public static List<String> getCategoryAdapter() {
+    public static List<String> getCategoryList() {
         List<Category> list = DBUtil.categoryDAO.getList();
         List<String>nameList = new ArrayList<>();
         for (Category category :
@@ -147,5 +148,11 @@ public class ListUtil {
             nameList.add(category.getName());
         }
         return nameList;
+    }
+
+    public static NavigationRecyclerViewAdapter getCategoryAdapter() {
+        NavigationRecyclerViewAdapter adapter = new NavigationRecyclerViewAdapter(ListUtil.getCategoryList());
+        UIDataUtil.add(UIDataUtil.KEY_CATEGORY,adapter);
+        return adapter;
     }
 }

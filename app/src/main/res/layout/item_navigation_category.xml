@@ -23,7 +23,7 @@
         app:srcCompat="@drawable/icon_list" />
 
     <TextView
-        android:id="@+id/text_category_name_nav"
+        android:id="@+id/tv_nav_categoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="72dp"

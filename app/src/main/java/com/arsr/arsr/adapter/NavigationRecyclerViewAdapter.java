@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.R;
 
 import java.util.List;
@@ -17,6 +16,7 @@ import java.util.List;
 
 public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<NavigationRecyclerViewAdapter.MyViewHolder>{
     private List<String> mData;
+    private OnClickListener listener;
 
     public NavigationRecyclerViewAdapter(List<String> mData) {
         this.mData = mData;
@@ -25,10 +25,17 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
     public MyViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_navigation_category, parent, false);
         MyViewHolder holder = new MyViewHolder(view);
-        holder.textName.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//todo 应该监听布局
-                TasksInCategoryActivity.startAction("");
+            public void onClick(View v) {
+                listener.onItemClickListener(v);
+            }
+        });
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onItemLongClickListener(v);
+                return true;
             }
         });
         return holder;
@@ -44,12 +51,28 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
         return mData.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView textName;
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            textName = itemView.findViewById(R.id.text_category_name_nav);
-        }
+    public void setOnItemClickListener(OnClickListener listener) {
+        this.listener = listener;
     }
 
+    public void add(String name) {
+        mData.add(name);
+        notifyItemInserted(mData.size());
+    }
+
+
+    class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView textName;
+        View view;
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            view = itemView;
+            textName = itemView.findViewById(R.id.tv_nav_categoryName);
+        }
+    }
+    public interface OnClickListener {
+        void onItemClickListener(View v);
+
+        void onItemLongClickListener(View v);
+    }
 }

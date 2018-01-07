@@ -6,6 +6,7 @@ import android.text.Spanned;
 import android.widget.EditText;
 
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class UIDataUtil {
     public static void updateList(String... keys) {
         for (String key :
                 keys) {
-            RecyclerView.Adapter adapter = (BaseRecyclerViewAdapter) adapters.get(key);
+            RecyclerView.Adapter adapter = adapters.get(key);
 
             switch (key) {
                 case KEY_TODAY_TASKS:
@@ -65,6 +66,7 @@ public class UIDataUtil {
                     ((CategoryListRecyclerViewAdapter) adapter).setAllDatas(ListUtil.getTagInCategoryList());
                     break;
                 case KEY_CATEGORY:
+//                    ((NavigationRecyclerViewAdapter)adapter)
                     break;
             }
         }
@@ -74,7 +76,7 @@ public class UIDataUtil {
     /**
      * 添加数据列表，便于更新传递
      */
-    public static void add(String type, BaseRecyclerViewAdapter adapter) {
+    public static void add(String type, RecyclerView.Adapter adapter) {
         adapters.put(type, adapter);
     }
 
@@ -136,5 +138,10 @@ public class UIDataUtil {
                 edits) {
             setEditTextInhibitInputSpace(e);
         }
+    }
+
+    public static void insertCategory(String name) {
+        NavigationRecyclerViewAdapter adapter = (NavigationRecyclerViewAdapter) adapters.get(KEY_CATEGORY);
+        adapter.add(name);
     }
 }

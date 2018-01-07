@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
@@ -28,17 +29,19 @@ import com.arsr.arsr.listener.OnCategoryListClickListener;
 import com.arsr.arsr.listener.OnCategoryListLongClickListener;
 import com.arsr.arsr.listener.OnFabClickListener;
 import com.arsr.arsr.listener.OnMainPagerChangeListener;
+import com.arsr.arsr.listener.OnNavAddButtonListener;
+import com.arsr.arsr.listener.OnNavigationItemClickListener;
 import com.arsr.arsr.listener.OnTaskListClickListener;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
-import com.arsr.arsr.util.UIDataUtil;
 
 
 public class MainActivity extends BasicActivity {
     private DrawerLayout mDrawerLayout;//根布局
 
     private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,31 +90,37 @@ public class MainActivity extends BasicActivity {
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
-        //navigationView上面的监听
+        //navigationView
         final DrawerLayout drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView = findViewById(R.id.navigationView);
         navigationView.setCheckedItem(R.id.nav_today);
+        //-中间菜单
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
+                switch (item.getItemId()) {//todo 失焦问题
                     case R.id.nav_today:
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_calendar:
                         CalendarTaskActivity.startAction(MainActivity.this);
+//                        navigationView.getMenu().performIdentifierAction(R.id.nav_today, 0);
+                        drawerLayout.closeDrawers();
                         break;
                 }
-
                 return true;
             }
         });
-        //navigationView上的列表
+        //-navigationView上的列表
         RecyclerView recyclerView = findViewById(R.id.recyclerView_navigation);
-        NavigationRecyclerViewAdapter adapter = new NavigationRecyclerViewAdapter(ListUtil.getCategoryAdapter());
+        NavigationRecyclerViewAdapter navigationListAdapter =ListUtil.getCategoryAdapter();
+        navigationListAdapter.setOnItemClickListener(new OnNavigationItemClickListener(MainActivity.this,navigationListAdapter));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(navigationListAdapter);
+        //-底部添加按钮
+        View view = findViewById(R.id.nav_addCategory);
+        view.setOnClickListener(new OnNavAddButtonListener(MainActivity.this));
 
     }
 
