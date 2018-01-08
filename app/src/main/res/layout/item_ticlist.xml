@@ -40,5 +40,6 @@
         app:bsb_progress="4"
         app:bsb_second_track_color="@color/colorPrimary"
         app:bsb_track_color="@color/background"
-        app:bsb_thumb_color="@color/colorPrimary" />
+        app:bsb_thumb_color="@color/colorPrimary"
+        />
 </LinearLayout>

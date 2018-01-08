@@ -11,7 +11,14 @@
     <color name="colorAssist">#FF81C784</color>
     <color name="gray">#c2c2c2</color>
     <color name="calendar_recallday">#194ea3e8</color>
-
-
+    <array name="seekBarColors">
+        <item>#e8e8e8</item>
+        <item>#f9f3a2</item>
+        <item>#FFa8dba8</item>
+        <item>#FF84B1ED</item>
+        <item>#e1b0fe</item>
+        <item>#ff77fd</item>
+        <item>#fc756b</item>
+    </array>
 
 </resources>

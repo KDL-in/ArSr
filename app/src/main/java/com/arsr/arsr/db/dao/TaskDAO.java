@@ -206,4 +206,8 @@ public class TaskDAO extends DAO<Task> {
         }
         return rList;
     }
+
+    public int quaryTimes(String name) {
+        return list.get(nameToIndex.get(name)).getTimes();
+    }
 }

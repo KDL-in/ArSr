@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.ToastUtil;
 import com.xw.repo.BubbleSeekBar;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
@@ -25,17 +28,23 @@ public class TasksInCategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter<
     private Context mContext;
     private LayoutInflater mInflater;
     List<RecyclerViewData> mData;
+    Map<String,Integer> nameToTimes;
+    int[]colors;
 
     public TasksInCategoryRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
         mData = datas;
+        nameToTimes = new HashMap<>();
+        colors=ctx.getResources().getIntArray(R.array.seekBarColors);
+
     }
     @Override
     public void setAllDatas(List<RecyclerViewData> allDatas) {
         super.setAllDatas(allDatas);
         mData = allDatas;
+
     }
     @Override
     public View getGroupView(ViewGroup parent) {
@@ -60,7 +69,35 @@ public class TasksInCategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter<
 
     @Override
     public void onBindChildpHolder(MyViewHold holder, int groupPos, int childPos, int position, String childData) {
-        holder.childTv.setText(DBUtil.getSubstringName(childData,'_'));
+        holder.childTv.setText(DBUtil.getSubstringName(childData, '_').replaceAll("_", " "));
+        if (nameToTimes.containsKey(childData)) {
+            holder.seekBar.setProgress(nameToTimes.get(childData));
+        } else {
+            int times = DBUtil.taskDAO.quaryTimes(childData);
+            holder.seekBar.setProgress(times);
+            nameToTimes.put(childData, times);
+            holder.seekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+                private int fp = -1;
+
+                @Override
+                public void onProgressChanged(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+                    bubbleSeekBar.setSecondTrackColor(colors[progress]);
+                    if (fp == -1) fp = progress;
+                }
+
+                @Override
+                public void getProgressOnActionUp(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+                    bubbleSeekBar.setProgress(fp);
+                    fp = -1;
+                }
+
+                @Override
+                public void getProgressOnFinally(BubbleSeekBar bubbleSeekBar, int progress, float progressFloat) {
+                }
+            });
+        }
+        holder.seekBar.setSecondTrackColor(colors[nameToTimes.get(childData)]);
+        holder.seekBar.setThumbColor(colors[nameToTimes.get(childData)]);
     }
 
     class MyViewHold extends BaseViewHolder {
