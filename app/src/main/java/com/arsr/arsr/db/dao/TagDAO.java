@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.arsr.arsr.db.Category;
+import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.DBUtil;
@@ -122,5 +123,22 @@ public class TagDAO extends DAO<Tag> {
         return relatedList.size();
     }
 
+    //取出所有属于cName的tag
+    public List<Tag> getListOf(String cName) {
+        List<Tag> tags=new ArrayList<>();
+        long cid = DBUtil.categoryDAO.getId(cName);
+        for (Tag tag :
+                list) {
+            if (tag ==null) continue;
+            if (tag.getCid() == cid) {
+                tags.add(tag);
+            }
+        }
+        return tags;
+    }
+
+    public String getName(long tid) {
+        return idToName.get(tid);
+    }
 }
 

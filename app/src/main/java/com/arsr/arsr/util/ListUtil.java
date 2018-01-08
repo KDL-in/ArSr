@@ -5,15 +5,16 @@ import android.content.Context;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
+import com.arsr.arsr.db.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 /**
@@ -128,12 +129,41 @@ public class ListUtil {
         return getTodayTaskListAdapter(context);
     }
 
-    public static BaseRecyclerViewAdapter getTICListAdapter(Context context) {
-        //todo 测试代码
-        List<String> group = getCategoryNameGroup();
-        List<List<String>> children = getTagNameChildren(group);
-        CategoryListRecyclerViewAdapter adapter = new CategoryListRecyclerViewAdapter(context,getList(group,children,false));
+    /**
+     * 任务分类管理列表
+     */
+    public static TasksInCategoryRecyclerViewAdapter getTICListAdapter(Context context, String categoryName) {
+        List<RecyclerViewData> ticList = getTicList(categoryName);
+
+        TasksInCategoryRecyclerViewAdapter adapter = new TasksInCategoryRecyclerViewAdapter(context,ticList);
         return adapter;
+    }
+
+    private static List<RecyclerViewData> getTicList(String categoryName) {
+        //group
+        List<String> group = getTagNameGroup(categoryName);
+        //child
+        List<List<String>> children = new ArrayList<>();
+        for (int i = 0; i < group.size(); i++) {//初始化个组的children的list
+            List<String> childList = new ArrayList<>();
+            children.add(childList);
+        }
+        List<Task> list = DBUtil.taskDAO.getListOf(nameToInteger);
+        for (Task t :
+                list) {
+            String tagName = DBUtil.tagDAO.getName(t.getTid());
+            children.get(nameToInteger.get(tagName)).add(t.getName());
+        }
+        return getList(group, children,true);
+    }
+
+    /**
+     * 获取cName分类下所有标签的名字
+     *
+     * @param cName 分类名
+     */
+    private static List<String> getTagNameGroup(String cName) {
+        return getGroup(DBUtil.tagDAO.getListOf(cName));
     }
 
     /**

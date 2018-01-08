@@ -4,22 +4,21 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.holder.VHTaskListRecyclerView;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.listener.OnFeelRadioCheckedChangeListener;
 import com.arsr.arsr.util.DBUtil;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.bean.GroupItem;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
+import drawthink.expandablerecyclerview.holder.BaseViewHolder;
 
 import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_CHILD;
 
@@ -34,7 +33,7 @@ import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_C
  * VH :VHCategoryRecyclerView
  */
 
-public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String, String, VHTaskListRecyclerView> {
+public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String, String, TaskListRecyclerViewAdapter.VHTaskListRecyclerView> {
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -132,4 +131,46 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     }
 
 
+    /**
+     * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType
+     * Created by KundaLin on 17/12/22.
+     */
+
+    public static class VHTaskListRecyclerView extends BaseViewHolder {
+        public View view;
+        //group的数据
+        public TextView groupTextView;
+        public ImageView expandImgBtn;
+        //child的数据
+        public TextView childTextView;
+        public ImageView childIconImg;
+        public TextView childCategory;
+
+        public VHTaskListRecyclerView(Context ctx, View itemView, int viewType) {
+            super(ctx, itemView, viewType);
+            view = itemView;
+            //        LogUtil.d("type",itemView.getClass().toString());
+            switch (viewType) {
+                case VIEW_TYPE_PARENT:
+                    groupTextView = itemView.findViewById(R.id.tv_taskList_groupTitle);
+                    expandImgBtn = itemView.findViewById(R.id.img_taskList_groupImgButton);
+                    break;
+                case VIEW_TYPE_CHILD:
+                    childTextView = itemView.findViewById(R.id.tv_taskList_childTittle);
+                    childIconImg = itemView.findViewById(R.id.img_taskList_icon);
+                    childCategory = itemView.findViewById(R.id.tv_taskList_childCategory);
+                    break;
+            }
+        }
+
+        @Override
+        public int getChildViewResId() {
+            return R.id.cardView_taskList_child;
+        }
+
+        @Override
+        public int getGroupViewResId() {
+            return R.id.cardView_taskList_group;
+        }
+    }
 }

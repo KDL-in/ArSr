@@ -138,6 +138,7 @@ public class TaskActivity extends BasicActivity {
         } else {
             nextDay = task.getDayToRecall();
         }
+        //assist datas
     }
 
     /**

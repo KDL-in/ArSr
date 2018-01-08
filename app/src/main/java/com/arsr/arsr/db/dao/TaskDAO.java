@@ -188,4 +188,22 @@ public class TaskDAO extends DAO<Task> {
     public void delete(String name) {
         delete(nameToId.get(name));
     }
+
+    /**
+     * 获得分类下的所有任务
+     *
+     * @param tagMap 分类包含标签
+     */
+    public List<Task> getListOf(Map<String, Integer> tagMap) {
+        List<Task> rList = new ArrayList<>();
+        for (Task t :
+                list) {
+            if (t ==null) continue;
+            String tagName = DBUtil.tagDAO.getName(t.getTid());
+            if (tagMap.containsKey(tagName)) {
+                rList.add(t);
+            }
+        }
+        return rList;
+    }
 }
