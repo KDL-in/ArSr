@@ -177,6 +177,7 @@ public class IOUtil {
         String parentDirs[] = {RECALL_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
         mStorage.appendFile(filePath, " "+ DateUtil.dateToString(DateUtil.getToDay()) );
+//        mStorage.createFile(filePath, " 2017-12-20 2017-12-22 2017-12-26 2018-01-01 2018-01-08" );
     }
 
     /**
@@ -344,4 +345,10 @@ public class IOUtil {
     }
 
 
+    public static String[] getRecallDatesOf(String name) {
+        String path = getDirPath(new String[]{RECALL_DATES_DIR, DBUtil.getSubstringCategory(name, '_')});
+        String filePath = getFilePath(path, DBUtil.getSubstringName(name, '_'));
+        String content = mStorage.readTextFile(filePath);
+        return content.split(" ");
+    }
 }

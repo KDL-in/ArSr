@@ -109,6 +109,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     public void onBindChildpHolder(VHTaskListRecyclerView holder, int groupPos, int childPos, int position, String childData) {
         Task task = getTask(groupPos, childPos);
         if (task.getDayToRecall() == -1 || task.getDayToAssist() == -1) {
+            holder.view.setTag(true);
             holder.childTextView.setSelected(true);
             holder.childIconImg.setSelected(true);
         } else {

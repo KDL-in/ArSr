@@ -41,20 +41,20 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="25dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            app:mcv_selectionColor="@color/colorPrimary"
+            app:mcv_arrowColor="@color/colorPrimary"
+            android:id="@+id/calendarView_month"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="15dp">
-            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                android:id="@+id/calendarView_month"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+            android:layout_height="match_parent" />
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_taskUI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"

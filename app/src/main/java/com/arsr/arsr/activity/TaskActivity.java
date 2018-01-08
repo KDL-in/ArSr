@@ -2,25 +2,57 @@ package com.arsr.arsr.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
+import com.arsr.arsr.db.Task;
+import com.arsr.arsr.listener.OnDateDouSelectChangedListener;
+import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.DateUtil;
+import com.arsr.arsr.util.DrawableUtil;
+import com.arsr.arsr.util.IOUtil;
+import com.arsr.arsr.util.ToastUtil;
+import com.arsr.arsr.util.UIDataUtil;
 import com.bumptech.glide.Glide;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
 
 
 /**
  * 任务界面活动
  */
 public class TaskActivity extends BasicActivity {
+    public static CalendarDay lastDay = null;
+    private MaterialCalendarView calendarView;
+    //测试数据
+    private String datesOfRecall[] = {"2017-12-12", "2017-12-14", "2017-12-18", "2017-12-24", "2017-12-31", "2018-01-08"};
+    private HashSet<CalendarDay> sets;
+    private  int nextDay = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //获得数据
+        Intent intent = getIntent();
+        final String name = intent.getStringExtra("taskName");
+
         setContentView(R.layout.activity_task);
         //状态栏
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -31,13 +63,81 @@ public class TaskActivity extends BasicActivity {
         }
         //设置task名
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
-        collapsingToolbarLayout.setTitle("List 1");
+        collapsingToolbarLayout.setTitle(DBUtil.getSubstringName(name, '_').replaceAll("_", " "));
         //设置图片
         ImageView imageView = findViewById(R.id.img_taskUI_bg);
         Glide.with(this).load(R.drawable.task_background).into(imageView);
         //日历相关
-        MaterialCalendarView calendarView = findViewById(R.id.calendarView_month);
+        calendarView = findViewById(R.id.calendarView_month);
+        calendarView.setShowOtherDates(MaterialCalendarView.SHOW_ALL);
+//        calendarView.setShowOtherDates(MaterialCalendarView.SHOW_DEFAULTS);
+        initDatas(name);
+        //-设置范围
+        Calendar minCal = Calendar.getInstance();
+        minCal.add(Calendar.MONTH, -2);
+        Calendar maxCal = Calendar.getInstance();
+        maxCal.add(Calendar.MONTH, 1);
+        calendarView.state().edit().setMinimumDate(minCal).setMaximumDate(maxCal).commit();
+        calendarView.setSelectedDate(Calendar.getInstance().getTime());
+        //-添加装饰
+        calendarView.addDecorators(new PastDaySelectorDecorator(),new RecallDayDecorator(),new TodaySelectorDecorator(),new NextRecallDecorator());
+        //-监听
+        calendarView.setOnDateChangedListener(new OnDateDouSelectChangedListener(this));
+        //浮动按钮的监听
+        FloatingActionButton button = findViewById(R.id.fab_taskUI);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtil.makeSnackbar(v, "是否删除", "撤销删除", new ToastUtil.OnSnackbarListener() {
+                    @Override
+                    public void onUndoClick() {
 
+                    }
+
+                    @Override
+                    public void onDismissed(int event) {
+                        if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION) {
+                            DBUtil.taskDAO.delete(name);
+                            UIDataUtil.updateUIData(UIDataUtil.TYPE_TASK_CHANGED);
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void onShown() {
+                    }
+                });
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initDatas(String name) {
+        //取出recall datesOfRecall
+        datesOfRecall = IOUtil.getRecallDatesOf(name);
+        sets = new HashSet<>();
+        for (int i = 0; i < datesOfRecall.length; i++) {//转换数据
+            Date date = DateUtil.stringToDate(datesOfRecall[i]);
+            CalendarDay day = CalendarDay.from(date);
+            sets.add(day);
+        }
+        Task task = DBUtil.taskDAO.get(name);
+        if (task.getDayToRecall() == -1) {
+            int timeInPoint[] = IOUtil.getPointsInTimeOf(DBUtil.tagDAO.get(task.getTid()));
+            nextDay = timeInPoint[task.getTimes() + 1];
+        } else {
+            nextDay = task.getDayToRecall();
+        }
     }
 
     /**
@@ -49,4 +149,81 @@ public class TaskActivity extends BasicActivity {
         intent.putExtra("taskName", name);
         context.startActivity(intent);
     }
+
+    /**
+     * recall datesOfRecall 的装饰
+     */
+    private class RecallDayDecorator implements DayViewDecorator {
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return sets.contains(day);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            Drawable drawable = DrawableUtil.getDrawable(TaskActivity.this, R.drawable.calendar_mark);
+            DrawableUtil.tintDrawable(TaskActivity.this, drawable, R.color.colorPrimary);
+            view.setBackgroundDrawable(drawable);
+            view.setDaysDisabled(true);
+        }
+    }
+
+    private CalendarDay today = CalendarDay.today();//今天
+    /**
+     * 禁止过去的选择
+     */
+    private class PastDaySelectorDecorator implements DayViewDecorator {
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return day.isBefore(today);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.setDaysDisabled(true);
+        }
+    }
+
+    /**
+     * 当前日期的装饰
+     */
+    private class TodaySelectorDecorator implements DayViewDecorator {
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return day.equals(today);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.addSpan(new DotSpan(7, getResources().getColor(R.color.colorAccent)));
+        }
+    }
+
+    /**
+     * 下一次执行的装饰
+     */
+    private class NextRecallDecorator implements DayViewDecorator {
+        CalendarDay day;
+
+        public NextRecallDecorator() {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, nextDay);
+            day = CalendarDay.from(calendar);
+        }
+
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return this.day.equals(day);
+        }
+
+        @Override
+        public void decorate(DayViewFacade view) {
+            view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_nextday));
+        }
+    }
+
+
+
 }

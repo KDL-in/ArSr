@@ -144,7 +144,7 @@ public class MainActivity extends BasicActivity {
         tagDAO.insert("Chapter", "C", "计算机网络", null);
         //task
         //values("CTE-6_List_1",4,0,-1,-1,1);
-        taskDAO.insert("List_1",4,0,-2,-2,"CTE-6_Word");
+        taskDAO.insert("List_1",5,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("List_2",3,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("List_3",2,0,-2,-2,"CTE-6_Word");
         taskDAO.insert("List_4",1,0,-2,-2,"CTE-6_Word");

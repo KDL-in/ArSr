@@ -15,6 +15,7 @@ import drawthink.expandablerecyclerview.holder.BaseViewHolder;
  */
 
 public class VHTaskListRecyclerView extends BaseViewHolder {
+    public View view;
     //group的数据
     public TextView groupTextView;
     public ImageView expandImgBtn;
@@ -25,6 +26,7 @@ public class VHTaskListRecyclerView extends BaseViewHolder {
 
     public VHTaskListRecyclerView(Context ctx, View itemView, int viewType) {
         super(ctx, itemView, viewType);
+        view = itemView;
         //        LogUtil.d("type",itemView.getClass().toString());
         switch (viewType) {
             case VIEW_TYPE_PARENT:

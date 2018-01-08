@@ -184,4 +184,8 @@ public class TaskDAO extends DAO<Task> {
         }
         return relatedList;
     }
+
+    public void delete(String name) {
+        delete(nameToId.get(name));
+    }
 }

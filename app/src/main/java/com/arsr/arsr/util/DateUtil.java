@@ -1,5 +1,11 @@
 package com.arsr.arsr.util;
 
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.drawable.DrawableCompat;
+
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -16,8 +22,10 @@ import static java.util.Calendar.getInstance;
  * Created by KundaLin on 17/12/29.
  */
 
-class DateUtil {
+public class DateUtil {
     static final long MILLISECOND_OF_ONE_DAY = 1000 * 60 * 60 * 24;
+    private static CalendarDay calendarDay;
+
 
     /**
      * date转为string
@@ -30,9 +38,14 @@ class DateUtil {
         return format.format(date);
     }
 
-    public static Date stringToDate(String date) throws ParseException {
+    public static Date stringToDate(String date) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        return format.parse(date);
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -57,6 +70,14 @@ class DateUtil {
         c.set(MILLISECOND, 0);
         return c.getTime();
     }
+
+    public static CalendarDay getCalendarDay() {
+        return calendarDay;
+    }
+
+
+
+
 }
 /*public class DateUtil {
     static final long MILLISECOND_OF_ONE_DAY = 1000 * 60 * 60 * 24;
