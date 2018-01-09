@@ -30,14 +30,16 @@ public class TasksInCategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter<
     List<RecyclerViewData> mData;
     Map<String,Integer> nameToTimes;
     int[]colors;
+    private String category;
 
-    public TasksInCategoryRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas) {
+    public TasksInCategoryRecyclerViewAdapter(Context ctx, List<RecyclerViewData> datas, String categoryName) {
         super(ctx, datas);
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
         mData = datas;
         nameToTimes = new HashMap<>();
         colors=ctx.getResources().getIntArray(R.array.seekBarColors);
+        category = categoryName;
 
     }
     @Override
@@ -98,6 +100,18 @@ public class TasksInCategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter<
         }
         holder.seekBar.setSecondTrackColor(colors[nameToTimes.get(childData)]);
         holder.seekBar.setThumbColor(colors[nameToTimes.get(childData)]);
+    }
+
+    public String getChildData(int groupPosition, int position) {
+        return (String) mData.get(groupPosition).getChild(position);
+    }
+
+    public String getGroupData(int groupPosition) {
+        return (String) mData.get(groupPosition).getGroupData();
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     class MyViewHold extends BaseViewHolder {

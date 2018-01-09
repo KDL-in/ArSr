@@ -60,6 +60,11 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
         notifyItemInserted(mData.size());
     }
 
+    public void setAllDatas(List<String> allDatas) {
+        this.mData = allDatas;
+        notifyDataSetChanged();
+    }
+
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView textName;

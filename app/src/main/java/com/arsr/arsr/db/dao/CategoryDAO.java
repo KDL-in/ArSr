@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.arsr.arsr.db.Category;
+import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +69,18 @@ public class CategoryDAO extends DAO<Category> {
         updateCache(category);
     }
 
+    public void delete(String name) {
+        String selection = "name=?";
+        String selectionArgs[] = {name};
+        //处理tag表外键
+        long id = getId(name);
+        List<Tag> relatedList = DBUtil.tagDAO.findRelatedItem(id);
+        for (Tag t :
+                relatedList) {
+            DBUtil.tagDAO.delete(t.getName());
+        }
+        delete(selection, selectionArgs);
+        updateCache(id, DBUtil.DELETED);
+    }
 }
 

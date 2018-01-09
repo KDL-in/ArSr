@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,7 @@ public class UIDataUtil {
     public static final int TYPE_TASK_CHANGED = 1;
     public static final int TYPE_TAG_CHANGED = 2;
     public static final int TYPE_CATEGORY_CHANGE = 3;
+    public static final String KEY_TASKS_CATEGORY = "tasks_in_caterory";
     private static Map<String, RecyclerView.Adapter> adapters;
 
     static {
@@ -41,11 +43,11 @@ public class UIDataUtil {
      */
     public static void updateUIData(int type) {
         if (type == TYPE_TASK_CHANGED) {
-            updateList(KEY_TODAY_TASKS);
+            updateList(KEY_TODAY_TASKS, KEY_TASKS_CATEGORY);
         } else if (type == TYPE_TAG_CHANGED) {
-            updateList(KEY_CATEGORY_TAG_LIST,KEY_TODAY_TASKS);
+            updateList(KEY_CATEGORY_TAG_LIST, KEY_TODAY_TASKS, KEY_TASKS_CATEGORY);
         } else if (type == TYPE_CATEGORY_CHANGE) {
-            updateList(KEY_CATEGORY,KEY_CATEGORY_TAG_LIST,KEY_TODAY_TASKS);
+            updateList(KEY_CATEGORY, KEY_CATEGORY_TAG_LIST, KEY_TODAY_TASKS, KEY_TASKS_CATEGORY);
         }
 
     }
@@ -56,8 +58,8 @@ public class UIDataUtil {
     public static void updateList(String... keys) {
         for (String key :
                 keys) {
+            if (!adapters.containsKey(key)) continue;
             RecyclerView.Adapter adapter = adapters.get(key);
-
             switch (key) {
                 case KEY_TODAY_TASKS:
                     ((TaskListRecyclerViewAdapter) adapter).setAllDatas(ListUtil.getTodayTaskList());
@@ -66,7 +68,10 @@ public class UIDataUtil {
                     ((CategoryListRecyclerViewAdapter) adapter).setAllDatas(ListUtil.getTagInCategoryList());
                     break;
                 case KEY_CATEGORY:
-//                    ((NavigationRecyclerViewAdapter)adapter)
+                    ((NavigationRecyclerViewAdapter) adapter).setAllDatas(ListUtil.getCategoryList());
+                    break;
+                case KEY_TASKS_CATEGORY:
+                    ((TasksInCategoryRecyclerViewAdapter) adapter).setAllDatas(ListUtil.getTicList(((TasksInCategoryRecyclerViewAdapter) adapter).getCategory()));
                     break;
             }
         }
@@ -143,5 +148,10 @@ public class UIDataUtil {
     public static void insertCategory(String name) {
         NavigationRecyclerViewAdapter adapter = (NavigationRecyclerViewAdapter) adapters.get(KEY_CATEGORY);
         adapter.add(name);
+    }
+
+    public static void remove(String key) {
+        if (adapters.containsKey(key))
+            adapters.remove(key);
     }
 }

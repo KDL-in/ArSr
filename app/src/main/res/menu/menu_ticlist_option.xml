@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_ticlist_deleteCategory"
+        android:icon="@drawable/icon_delete"
+        android:title="删除分类"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/item_ticlist_addTag"
+        android:icon="@drawable/icon_add"
+        android:title="添加标签"
+        app:showAsAction="ifRoom|withText"></item>
+</menu>

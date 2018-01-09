@@ -92,7 +92,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                     return;
                 }
                 final String tagName = category + "_" + realTagName;
-                final String taskName = category + "_" + realTaskName + "_" + number;
+                final String taskName = category + "_" + realTagName+"-"+realTaskName + "_" + number;
                 ToastUtil.makeSnackbar(v, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
@@ -107,7 +107,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                                 ToastUtil.makeToast("添加失败：任务已存在");
                                 return;
                             }
-                            UIDataUtil.updateList(UIDataUtil.KEY_TODAY_TASKS);
+                            UIDataUtil.updateUIData(UIDataUtil.TYPE_TASK_CHANGED);
                         }
                         AddTaskBottomDialog.this.dismiss();//关闭
                     }

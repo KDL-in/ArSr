@@ -134,12 +134,12 @@ public class ListUtil {
      */
     public static TasksInCategoryRecyclerViewAdapter getTICListAdapter(Context context, String categoryName) {
         List<RecyclerViewData> ticList = getTicList(categoryName);
-
-        TasksInCategoryRecyclerViewAdapter adapter = new TasksInCategoryRecyclerViewAdapter(context,ticList);
+        TasksInCategoryRecyclerViewAdapter adapter = new TasksInCategoryRecyclerViewAdapter(context, ticList,categoryName);
+        UIDataUtil.add(UIDataUtil.KEY_TASKS_CATEGORY,adapter);
         return adapter;
     }
 
-    private static List<RecyclerViewData> getTicList(String categoryName) {
+    public static List<RecyclerViewData> getTicList(String categoryName) {
         //group
         List<String> group = getTagNameGroup(categoryName);
         //child
@@ -172,12 +172,7 @@ public class ListUtil {
      */
     public static List<String> getCategoryList() {
         List<Category> list = DBUtil.categoryDAO.getList();
-        List<String>nameList = new ArrayList<>();
-        for (Category category :
-                list) {
-            nameList.add(category.getName());
-        }
-        return nameList;
+        return getGroup(list);
     }
 
     public static NavigationRecyclerViewAdapter getCategoryAdapter() {

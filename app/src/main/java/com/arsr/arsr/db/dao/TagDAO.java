@@ -140,5 +140,17 @@ public class TagDAO extends DAO<Tag> {
     public String getName(long tid) {
         return idToName.get(tid);
     }
+
+    public List<Tag> findRelatedItem(long cid) {
+        List<Tag> rList = new ArrayList<>();
+        for (Tag t :
+                list) {
+            if (t == null) continue;
+            if (t.getCid() == cid) {
+                rList.add(t);
+            }
+        }
+        return rList;
+    }
 }
 

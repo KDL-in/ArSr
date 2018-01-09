@@ -178,6 +178,7 @@ public class TaskDAO extends DAO<Task> {
         List<Task>relatedList = new ArrayList<>();
         for (Task t :
                 list) {
+            if (t==null)continue;
             if (t.getTid() == tid) {
                 relatedList.add(t);
             }
