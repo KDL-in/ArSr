@@ -27,6 +27,6 @@ public class OnTicListClickListener implements OnRecyclerViewListener.OnItemClic
 
     @Override
     public void onChildItemClick(int position, int groupPosition, int childPosition, View view) {
-        TaskActivity.actionStart(adapter.getChildData(groupPosition,position));
+        TaskActivity.actionStart(adapter.getChildData(groupPosition,childPosition));
     }
 }

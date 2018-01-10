@@ -154,6 +154,7 @@ public class MainActivity extends BasicActivity {
         taskDAO.insert("List_1",4,0,-2,-2,"kaoyan_Word");
         taskDAO.insert("List_2",2,0,-2,-2,"kaoyan_Word");
         taskDAO.insert("List_3",2,0,-2,-2,"kaoyan_Word");
+        taskDAO.insert("List_4",4,10,1,0,"kaoyan_Word");
         categoryDAO.display();
         tagDAO.display();
         taskDAO.display();

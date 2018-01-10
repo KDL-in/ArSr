@@ -28,6 +28,7 @@ public class IOUtil {
     private static final String RECALL_DATES_DIR;//同上
     private static final String POINTS_IN_TIME_DIR;//同上
 
+    private static final String RECALL_RECORDS_DIR;
     public static final int FLAG_FEEL_BAD =-1;//微调标志
     public static final int FLAG_FEEL_GOOD =1;//同上
     private static Storage mStorage;//Io操作对象
@@ -41,6 +42,7 @@ public class IOUtil {
         RECALL_DATES_DIR = getDirPath(new String[]{FILES_DIR, "recall_dates"});
         ASSIST_DATES_DIR = getDirPath(new String[]{FILES_DIR, "assist_dates"});
         POINTS_IN_TIME_DIR = getDirPath(new String[]{FILES_DIR, "points_in_time"});
+        RECALL_RECORDS_DIR = getDirPath(new String[]{FILES_DIR, "recall_records"});
         init();
         recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
         recordEditor = recordPref.edit();
@@ -77,68 +79,6 @@ public class IOUtil {
         }
         return dates;
     }
-
-/*    *//**
-     * 设置某标签recall周期
-     *
-     * @param category    分类
-     * @param tag         标签
-     * @param pointInTime 周期数组字符串
-     *//*
-    public static void setRepetitionTimes(String category, String tag, String pointInTime) {
-        mStorage.createFile(getFilePath(DIR_POINT_IN_TIME, category, tag), pointInTime);
-    }
-
-    public static void setRepetitionTimes(String pointInTime) {
-        mStorage.createFile(getFilePath(DEFAULT_FILE_PONIT_IN_TIME, "", ""), pointInTime);
-    }
-
-    public static int[] getRepetitionTimes(String category, String tag) {
-        String content = mStorage.readTextFile(getFilePath(FILE_IN_POINT_TIME, category, tag));
-        int[] arr = stringToIntegers(content);
-        return arr;
-    }
-
-    public static int[] getRepetitionTimes() {
-        String content = mStorage.readTextFile(getFilePath(DEFAULT_FILE_PONIT_IN_TIME, "", ""));
-        int[] arr = stringToIntegers(content);
-        return arr;
-    }*/
-/*
-    *//**
-     * 调整recall时间
-     *
-     * @param category
-     * @param tag
-     * @param index    第几次的时间点，下标从0开始
-     * @param days     调整为days天
-     *//*
-    public static void adjustRepetitionTime(String category, String tag, int index, int days) {
-        int repetitionTime[] = getRepetitionTimes(category, tag);
-        repetitionTime[index] = days;
-        setRepetitionTimes(category, tag, integersToString(repetitionTime));
-    }
-
-    public static void adjustRepetitionTime(int index, int days) {
-        int repetitionTime[] = getRepetitionTimes();
-        repetitionTime[index] = days;
-        setRepetitionTimes(integersToString(repetitionTime));
-    }
-
-    */
-
-    /**
-     * 还原recall时间点
-     *//*
-    public static void resetRepetitionTimes(String category, String tag) {
-        setRepetitionTimes(category, tag, DEFAULT_REPETITION_TIMES);
-
-    }
-
-    public static void resetRepetitionTimes() {
-        setRepetitionTimes(DEFAULT_REPETITION_TIMES);
-
-    }*/
 
 
 
@@ -350,5 +290,22 @@ public class IOUtil {
         String filePath = getFilePath(path, DBUtil.getSubstringName(name, '_'));
         String content = mStorage.readTextFile(filePath);
         return content.split(" ");
+    }
+
+    /**
+     * 获取assist时间点
+     */
+    public static int[] getPointsInTimeOfAssist() {
+        return ASSIST_POINT_IN_TIME;
+    }
+
+    /**
+     *  获取过去某天的recall记录
+     * @param date 过去某天的日期，字符串，YYYY-MM-dd
+     */
+    public static void getPastRecallRecord(String date) {
+        String filePath = getFilePath(RECALL_RECORDS_DIR, date);
+        String content = mStorage.readTextFile(filePath);
+        //todo 解析
     }
 }

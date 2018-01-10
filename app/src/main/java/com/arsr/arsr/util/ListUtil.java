@@ -124,10 +124,7 @@ public class ListUtil {
         return group;
     }
 
-    public static TaskListRecyclerViewAdapter getTaskListAt(Context context, int day) {//todo
-        //todo 获取某天的任务
-        return getTodayTaskListAdapter(context);
-    }
+
 
     /**
      * 任务分类管理列表
@@ -179,5 +176,26 @@ public class ListUtil {
         NavigationRecyclerViewAdapter adapter = new NavigationRecyclerViewAdapter(ListUtil.getCategoryList());
         UIDataUtil.add(UIDataUtil.KEY_CATEGORY,adapter);
         return adapter;
+    }
+
+    /**
+     * 从所给的task数据构造adapter，分类-任务列表
+     */
+    public static TaskListRecyclerViewAdapter getListAdapterWith(Context context,List<Task> tasks) {
+        TaskListRecyclerViewAdapter adapter = new TaskListRecyclerViewAdapter(context, getTaskListWith(tasks));
+        return adapter;
+    }
+
+    /**
+     * 从所给task数据构造列表
+     */
+    private static List<RecyclerViewData> getTaskListWith(List<Task> tasks) {
+        if (tasks==null)tasks=new ArrayList<>();
+        List<String> group = getCategoryNameGroup();
+        List<List<String>> children = getChildren(tasks, group);
+        for (int i = 0; i < group.size(); i++) {//去掉没子项的
+            if (children.get(i).isEmpty()) children.set(i, null);
+        }
+        return getList(group,children,true);
     }
 }

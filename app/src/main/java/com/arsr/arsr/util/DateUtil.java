@@ -75,9 +75,16 @@ public class DateUtil {
         return calendarDay;
     }
 
-
-
-
+    /**
+     * 返回过n天之后的日期字符串
+     *
+     * @param n n天之后
+     */
+    public static String getDateStringAfterToday(int n) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, n);
+        return dateToString(calendar.getTime());
+    }
 }
 /*public class DateUtil {
     static final long MILLISECOND_OF_ONE_DAY = 1000 * 60 * 60 * 24;
