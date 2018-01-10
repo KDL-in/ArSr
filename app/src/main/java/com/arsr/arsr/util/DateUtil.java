@@ -72,18 +72,21 @@ public class DateUtil {
      * @return 今天date
      */
     public static Date getToDay() {
+        Calendar c = getCalendar();
+        return c.getTime();
+    }
+
+    public static Calendar getCalendar() {
         Calendar c = getInstance();
         c.setTime(new Date());
         c.set(HOUR, 0);
         c.set(MINUTE, 0);
         c.set(SECOND, 0);
         c.set(MILLISECOND, 0);
-        return c.getTime();
+        c.add(Calendar.DAY_OF_MONTH,6);
+        return c;
     }
 
-    public static CalendarDay getCalendarDay() {
-        return calendarDay;
-    }
 
     /**
      * 返回过n天之后的日期字符串
@@ -91,13 +94,13 @@ public class DateUtil {
      * @param n n天之后
      */
     public static String getDateStringAfterToday(int n) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = getCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, n);
         return dateToString(calendar.getTime());
     }
 
     public static String getDateStringBeforeToday(int n) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = getCalendar();
         calendar.add(Calendar.DAY_OF_MONTH, -n);
         return dateToString(calendar.getTime());
     }
@@ -131,6 +134,11 @@ public class DateUtil {
     public static String dateToString(CalendarDay date) {
         Date date1 = date.getDate();
         return dateToString(date1);
+    }
+
+    public static CalendarDay getCalendarDayToday() {
+        Date date = getToDay();
+        return CalendarDay.from(date);
     }
 }
 /*public class DateUtil {

@@ -53,16 +53,22 @@ public class DBUtil {
      */
     public static void updateData() {
         //获取更新标志（sp）
-        CalendarDay lastDate = IOUtil.getUpdateRecord();
-        CalendarDay today = CalendarDay.today();
-        if (lastDate.equals(today)) {//今天未执行
-            String str = DateUtil.dateToString(today);
+        CalendarDay lastReco = IOUtil.getUpdateRecord();
+        CalendarDay lastExec = IOUtil.getLastExec();
+        CalendarDay today = DateUtil.getCalendarDayToday();
+        LogUtil.d(lastReco.toString());
+        LogUtil.d(lastExec.toString());
+        LogUtil.d(today.toString());
+        if (!lastReco.equals(lastExec)&&!lastExec.equals(today)) {//最后执行时间就和最后记录更新时间不匹配
+                                                                //且最后执行时间不为今天
+            String str = DateUtil.dateToString(lastExec);
+//            String str = DateUtil.getDateStringAfterToday(0);
             LogUtil.d("if (!lastDate.equals(today))");
             List<Task> list = DBUtil.taskDAO.getList();
             //检测是否所有任务都执行完
             for (Task t :
                     list) {
-                if (t.getDayToRecall()==0||t.getDayToAssist()==0)return;
+                if (t.getDayToRecall() == 0 || t.getDayToAssist() == 0) return;
             }
             LogUtil.d("IOUtil.clearAdjustRecords();");
             //清空操作记录
@@ -88,15 +94,15 @@ public class DBUtil {
                     //保存记录
                     IOUtil.saveRecallRecord(str, t);
                 }
-                if (t.getDayToRecall()!=-1)t.setDayToRecall(t.getDayToRecall()-1);
-                if (t.getDayToAssist()!=-2)t.setDayToAssist(t.getDayToAssist()-1);
+                if (t.getDayToRecall() != -1) t.setDayToRecall(t.getDayToRecall() - 1);
+                if (t.getDayToAssist() != -2) t.setDayToAssist(t.getDayToAssist() - 1);
                 //更新
                 DBUtil.taskDAO.update(t);
             }
             IOUtil.setUpdateRecord(str);
-                    categoryDAO.display();
-        tagDAO.display();
-        taskDAO.display();
+            categoryDAO.display();
+            tagDAO.display();
+            taskDAO.display();
         }
     }
 
@@ -139,7 +145,7 @@ public class DBUtil {
      * @return 任务名
      */
     public static String getSubstringName(String str, char separator) {
-        return str.substring(str.indexOf(separator)+1);
+        return str.substring(str.indexOf(separator) + 1);
     }
 
     /**
@@ -166,6 +172,7 @@ public class DBUtil {
 
     /**
      * taskDAO为每一个分类维护一个最大编号
+     *
      * @param tag
      * @return
      */

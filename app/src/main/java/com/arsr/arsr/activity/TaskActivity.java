@@ -73,12 +73,12 @@ public class TaskActivity extends BasicActivity {
 //        calendarView.setShowOtherDates(MaterialCalendarView.SHOW_DEFAULTS);
         initDatas(name);
         //-设置范围
-        Calendar minCal = Calendar.getInstance();
+        Calendar minCal = DateUtil.getCalendar();
         minCal.add(Calendar.MONTH, -2);
         Calendar maxCal = Calendar.getInstance();
         maxCal.add(Calendar.MONTH, 1);
         calendarView.state().edit().setMinimumDate(minCal).setMaximumDate(maxCal).commit();
-        calendarView.setSelectedDate(Calendar.getInstance().getTime());
+        calendarView.setSelectedDate(DateUtil.getCalendar().getTime());
         //-添加装饰
         calendarView.addDecorators(new PastDaySelectorDecorator(),new RecallDayDecorator(),new TodaySelectorDecorator(),new NextRecallDecorator());
         //-监听
@@ -134,7 +134,7 @@ public class TaskActivity extends BasicActivity {
         Task task = DBUtil.taskDAO.get(name);
         if (task.getDayToRecall() == -1) {
             int timeInPoint[] = IOUtil.getPointsInTimeOf(DBUtil.tagDAO.get(task.getTid()));
-            nextDay = timeInPoint[task.getTimes() + 1];
+            nextDay = timeInPoint[task.getTimes()];
         } else {
             nextDay = task.getDayToRecall();
         }
@@ -170,7 +170,7 @@ public class TaskActivity extends BasicActivity {
         }
     }
 
-    private CalendarDay today = CalendarDay.today();//今天
+    private CalendarDay today = DateUtil.getCalendarDayToday();//今天
     /**
      * 禁止过去的选择
      */
@@ -209,7 +209,7 @@ public class TaskActivity extends BasicActivity {
         CalendarDay day;
 
         public NextRecallDecorator() {
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = DateUtil.getCalendar();
             calendar.add(Calendar.DAY_OF_MONTH, nextDay);
             day = CalendarDay.from(calendar);
         }

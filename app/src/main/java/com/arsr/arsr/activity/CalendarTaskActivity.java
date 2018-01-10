@@ -58,9 +58,9 @@ public class CalendarTaskActivity extends BasicActivity {
         collapsingToolbarLayout.setTitleEnabled(false);
         //日历相关
         MaterialCalendarView calendarView = findViewById(R.id.calendarView_week);
-        CalendarDay today = CalendarDay.today();
+        CalendarDay today = DateUtil.getCalendarDayToday();
         //-设置范围(前后十五天）
-        showListAt(CalendarDay.today());
+        showListAt(DateUtil.getCalendarDayToday());
         Calendar maxCal = Calendar.getInstance();
         maxCal.add(Calendar.DAY_OF_MONTH, 15);
         Calendar minCal = Calendar.getInstance();
@@ -216,7 +216,7 @@ public class CalendarTaskActivity extends BasicActivity {
         String date = DateUtil.dateToString(day.getDate());
         TaskListRecyclerViewAdapter adapter = ListUtil.getListAdapterWith(CalendarTaskActivity.this,dateToTasks.get(date));
         FragmentTaskList fragment = FragmentTaskList.newInstance(adapter);
-        if (day.equals(CalendarDay.today())) {
+        if (day.equals(DateUtil.getCalendarDayToday())) {
             //添加监听
             fragment.setOnItemLongClickListener(new OnTaskListLongClickListener(adapter));
         }
@@ -240,7 +240,7 @@ public class CalendarTaskActivity extends BasicActivity {
     private class TodaySelectorDecorator implements DayViewDecorator {
         @Override
         public boolean shouldDecorate(CalendarDay day) {
-            return day.equals(CalendarDay.today());
+            return day.equals(DateUtil.getCalendarDayToday());
         }
 
         @Override

@@ -58,16 +58,16 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
         //操作取消（回滚）
         if (!isFinish){//取消完成
             result.clearAnimation();
-            if (task.getDayToRecall()==-1) task.setDayToRecall(0);
-            else if(task.getDayToAssist()==-1) task.setDayToAssist(0);
-            //取消本地存储
-            IOUtil.cancelSaveRecallDate(task);
-            if (task.getDayToAssist() == -1) {
+            if (task.getDayToRecall()==-1) {
+                task.setDayToRecall(0);
+                IOUtil.cancelSaveRecallDate(task);//取消本地存储
+                //取消微调
+                Tag tag = DBUtil.getTag(task.getTid());
+                IOUtil.cancelAdjustPointInTimeOf(tag, task);
+            } else if (task.getDayToAssist() == -1) {
+                task.setDayToAssist(0);
                 IOUtil.cancelSaveAssistDate(task);
             }
-            //取消微调
-            Tag tag = DBUtil.getTag(task.getTid());
-            IOUtil.cancelAdjustPointInTimeOf(tag, task);
             //取消辅助recall
             if (task.getAssistTimes() == 0) {
                 task.setAssistTimes(-2);

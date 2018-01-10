@@ -40,6 +40,9 @@ public class IOUtil {
     private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
     private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
     private static Map<Long,int[]> pit; //pointsInTime缓存数组
+    private static SharedPreferences execPref;
+    private static SharedPreferences.Editor execEditor;
+
     static {
         mStorage = new Storage(MyApplication.getContext());
         FILES_DIR = mStorage.getInternalFilesDirectory();
@@ -50,6 +53,8 @@ public class IOUtil {
         init();
         recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
         recordEditor = recordPref.edit();
+        execPref = MyApplication.getContext().getSharedPreferences("last_exec", Context.MODE_PRIVATE);
+        execEditor = execPref.edit();
         pit=new HashMap<>();
     }
 
@@ -121,7 +126,9 @@ public class IOUtil {
     public static void saveRecallDate(Task task) {
         String parentDirs[] = {RECALL_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
-        mStorage.appendFile(filePath, " "+ DateUtil.dateToString(DateUtil.getToDay()) );
+        String date = DateUtil.dateToString(DateUtil.getToDay());
+        setLastExec(date);
+        mStorage.appendFile(filePath, " "+ date );
 //        mStorage.createFile(filePath, " 2017-12-20 2017-12-22 2017-12-26 2018-01-01 2018-01-08" );
     }
 
@@ -145,7 +152,9 @@ public class IOUtil {
     public static void saveAssistDate(Task task) {
         String parentDirs[] = {ASSIST_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
-        mStorage.appendFile(filePath, " "+DateUtil.dateToString(DateUtil.getToDay()));
+        String date = DateUtil.dateToString(DateUtil.getToDay());
+        setLastExec(date);
+        mStorage.appendFile(filePath, " "+date);
 
     }
 
@@ -297,11 +306,25 @@ public class IOUtil {
         CalendarDay date = CalendarDay.from(DateUtil.stringToDate(dateStr));
         return date;
     }
-    public static void setUpdateRecord(String today) {
-        recordEditor.putString("update_record", today);
+
+    public static void setUpdateRecord(String date) {
+        recordEditor.putString("update_record", date);
         recordEditor.apply();
     }
+    /**
+     * 最后一次执行task的时间
+     * @return
+     */
+    public static CalendarDay getLastExec() {
+        String dateStr = execPref.getString("last_exec", "1970-01-01");
+        CalendarDay date = CalendarDay.from(DateUtil.stringToDate(dateStr));
+        return date;
+    }
 
+    public static void setLastExec(String date) {
+        execEditor.putString("last_exec", date);
+        execEditor.apply();
+    }
 
     /**
      * 获取id为tid的标签的时间点数组
