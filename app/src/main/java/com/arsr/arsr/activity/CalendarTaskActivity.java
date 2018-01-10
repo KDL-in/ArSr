@@ -20,6 +20,7 @@ import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -133,78 +134,12 @@ public class CalendarTaskActivity extends BasicActivity {
             }
         }
     }
-    /*private void initFutureData() {
-        List<Task> list = DBUtil.taskDAO.getList();
-        Map<String,List<String>>dateToTasks = new HashMap<>();
-        for (Task t :
-                list) {
-            if (t == null) continue;
-            Map<Long,int[]>pit = new HashMap<>();//时间点缓存
-            int rPit[],aPit[]= IOUtil.getPointsInTimeOfAssist();
-            if (pit.containsKey(t.getTid())) {
-                rPit = pit.get(t.getTid());
-            } else {
-                rPit = IOUtil.getPointsInTimeOf(DBUtil.tagDAO.get(t.getTid()));
-                pit.put(t.getTid(), rPit);
-            }
-            int times = t.getTimes();//第几次recall
-            int aTimes = t.getAssistTimes();
-            int lastA = 0, lastR = 0, lastT = 0;
-            boolean flag = t.getDayToAssist() != -2;
-            while (times <= 6) {//计算任务之后每一次的执行时间
-                //获取下一次执行时间nt
-                //-获得下一次recall时间rt
-                int rt,at=0,nt;
-                if (times == t.getTimes()) {//当前次数
-                    rt = t.getDayToRecall() == -1 ? 0 : t.getDayToRecall();
-                } else {
-                    rt = rPit[times-1] + lastR;
-                }
-                //-获得下一次assist时间at
-                if (flag) {
-                    if (aTimes == t.getAssistTimes()) {
-                        at = t.getDayToAssist() == -1 ? 0 : t.getDayToAssist();
-                    } else {
-                        at = aPit[aTimes-1] + lastA;
-                    }
-                }
-                if (flag&&at < rt) {//取近的
-                    nt = at;
-                    lastA += at;
-                    aTimes++;
-                } else {
-                    nt = rt;
-                    times++;
-                    lastR += rt;
-                    flag = false;
-                }
-                String date = DateUtil.getDateStringAfterToday(nt);
-                if (dateToTasks.containsKey(date)) {
-                    List<String> tasksOfDate = dateToTasks.get(date);
-                    tasksOfDate.add(t.getName());
-                } else {
-                    List<String> tasksOfDate = new ArrayList<>();
-                    tasksOfDate.add(t.getName());
-                    dateToTasks.put(date, tasksOfDate);
-                }
-            }
-        }
-        //测试打印
-        for (String key :
-                dateToTasks.keySet()) {
-            List<String> list1 = dateToTasks.get(key);
-            LogUtil.d(key+"日需要执行"+list1.size());
-            for (String name :
-                    list1) {
-                LogUtil.d(name);
-            }
-        }
-    }*/
 
     private void initPastData() {
         for (int i = 1; i <= 15; i++) {
-            String date = DateUtil.getDateStringAfterToday(-i);
-            IOUtil.getPastRecallRecord(date);
+            String date = DateUtil.getDateStringBeforeToday(i);
+            List<Task> pastList=IOUtil.getPastRecallRecord(date);
+            dateToTasks.put(date, pastList);
         }
     }
 

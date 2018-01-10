@@ -290,8 +290,22 @@ public class IOUtil {
         recordEditor.clear();
         recordEditor.apply();
     }
+
+    /**
+     * 获得recall日期
+     */
     public static String[] getRecallDatesOf(String name) {
         String path = getDirPath(new String[]{RECALL_DATES_DIR, DBUtil.getSubstringCategory(name, '_')});
+        String filePath = getFilePath(path, DBUtil.getSubstringName(name, '_'));
+        String content = mStorage.readTextFile(filePath);
+        return content.split(" ");
+    }
+
+    /**
+     * 获得name的task的assist日期
+     */
+    public static String[] getAssistDatesOf(String name) {
+        String path = getDirPath(new String[]{ASSIST_DATES_DIR, DBUtil.getSubstringCategory(name, '_')});
         String filePath = getFilePath(path, DBUtil.getSubstringName(name, '_'));
         String content = mStorage.readTextFile(filePath);
         return content.split(" ");
@@ -383,11 +397,20 @@ public class IOUtil {
      *  获取过去某天的recall记录
      * @param date 过去某天的日期，字符串，YYYY-MM-dd
      */
-    public static void getPastRecallRecord(String date) {
+    public static List<Task> getPastRecallRecord(String date) {
         String filePath = getFilePath(RECALL_RECORDS_DIR, date);
         String content = mStorage.readTextFile(filePath);
-        //todo 解析
+
+        String taskNames[] = content.split(System.getProperty("line.separator"));
+        List<Task>tasks=new ArrayList<>();
+        for (String name :
+                taskNames) {
+            if (name.equals(""))continue;
+            tasks.add(DBUtil.taskDAO.get(name));
+        }
+        return tasks;
     }
+
 
 
 }

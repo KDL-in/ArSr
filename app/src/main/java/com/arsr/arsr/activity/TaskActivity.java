@@ -21,6 +21,7 @@ import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.IOUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.ToastUtil;
 import com.arsr.arsr.util.UIDataUtil;
 import com.bumptech.glide.Glide;
@@ -42,8 +43,10 @@ public class TaskActivity extends BasicActivity {
     public static CalendarDay lastDay = null;
     private MaterialCalendarView calendarView;
     //测试数据
-    private String datesOfRecall[] = {"2017-12-12", "2017-12-14", "2017-12-18", "2017-12-24", "2017-12-31", "2018-01-08"};
-    private HashSet<CalendarDay> sets;
+    private String datesOfRecall[];
+    private String datesOfAssist[];
+    private HashSet<CalendarDay> rSets;
+    private HashSet<CalendarDay> aSets;
     private  int nextDay = 0;
 
     @Override
@@ -80,7 +83,7 @@ public class TaskActivity extends BasicActivity {
         calendarView.state().edit().setMinimumDate(minCal).setMaximumDate(maxCal).commit();
         calendarView.setSelectedDate(DateUtil.getCalendar().getTime());
         //-添加装饰
-        calendarView.addDecorators(new PastDaySelectorDecorator(),new RecallDayDecorator(),new TodaySelectorDecorator(),new NextRecallDecorator());
+        calendarView.addDecorators(new PastDaySelectorDecorator(),new NextAssistDecorator(),new RecallDayDecorator(),new TodaySelectorDecorator(),new NextRecallDecorator());
         //-监听
         calendarView.setOnDateChangedListener(new OnDateDouSelectChangedListener(this));
         //浮动按钮的监听
@@ -125,11 +128,12 @@ public class TaskActivity extends BasicActivity {
     private void initDatas(String name) {
         //取出recall datesOfRecall
         datesOfRecall = IOUtil.getRecallDatesOf(name);
-        sets = new HashSet<>();
+        rSets = new HashSet<>();
         for (int i = 0; i < datesOfRecall.length; i++) {//转换数据
+            if (datesOfRecall[i].equals(""))continue;
             Date date = DateUtil.stringToDate(datesOfRecall[i]);
             CalendarDay day = CalendarDay.from(date);
-            sets.add(day);
+            rSets.add(day);
         }
         Task task = DBUtil.taskDAO.get(name);
         if (task.getDayToRecall() == -1) {
@@ -139,6 +143,16 @@ public class TaskActivity extends BasicActivity {
             nextDay = task.getDayToRecall();
         }
         //assist datas
+        datesOfAssist = IOUtil.getAssistDatesOf(name);
+        LogUtil.d(datesOfAssist.length+"");
+        aSets = new HashSet<>();
+        for (int i = 0; i < datesOfAssist.length; i++) {//转换数据
+            if (datesOfAssist[i].equals(""))continue;
+            Date date = DateUtil.stringToDate(datesOfAssist[i]);
+            CalendarDay day = CalendarDay.from(date);
+            aSets.add(day);
+        }
+
     }
 
     /**
@@ -158,18 +172,34 @@ public class TaskActivity extends BasicActivity {
 
         @Override
         public boolean shouldDecorate(CalendarDay day) {
-            return sets.contains(day);
+            return rSets.contains(day);
         }
 
         @Override
         public void decorate(DayViewFacade view) {
-            Drawable drawable = DrawableUtil.getDrawable(TaskActivity.this, R.drawable.calendar_mark);
+            Drawable drawable = DrawableUtil.getDrawable(TaskActivity.this, R.drawable.calendar_recallmark);
             DrawableUtil.tintDrawable(TaskActivity.this, drawable, R.color.colorPrimary);
             view.setBackgroundDrawable(drawable);
             view.setDaysDisabled(true);
         }
     }
+    /**
+     * assist日期的装饰
+     */
+    private class NextAssistDecorator implements DayViewDecorator {
+        @Override
+        public boolean shouldDecorate(CalendarDay day) {
+            return aSets.contains(day);
+        }
 
+        @Override
+        public void decorate(DayViewFacade view) {
+            Drawable drawable = DrawableUtil.getDrawable(TaskActivity.this, R.drawable.calendar_assistmark);
+            DrawableUtil.tintDrawable(TaskActivity.this, drawable, R.color.colorAssist);
+            view.setBackgroundDrawable(drawable);
+            view.setDaysDisabled(true);
+        }
+    }
     private CalendarDay today = DateUtil.getCalendarDayToday();//今天
     /**
      * 禁止过去的选择
@@ -224,7 +254,6 @@ public class TaskActivity extends BasicActivity {
             view.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_calendar_nextday));
         }
     }
-
 
 
 }
