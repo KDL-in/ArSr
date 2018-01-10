@@ -66,6 +66,7 @@ public class TaskDAO extends DAO<Task> {
                 "set name = \"" + task.getName() + "\",times=" + task.getTimes() + ",dayToRecall=" + task.getDayToRecall() + ",assistTimes=" + task.getAssistTimes() + ",dayToAssist=" + task.getDayToAssist() + "\n" +
                 "where id = " + task.getId();
         DBUtil.db.execSQL(sql);
+        updateCache(task);//更新缓存
         updateMaxNOf(task.getTid(), task.getName());//维护分类最大n
     }
 

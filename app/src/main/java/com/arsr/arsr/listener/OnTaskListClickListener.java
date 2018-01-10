@@ -60,7 +60,11 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
             result.clearAnimation();
             if (task.getDayToRecall()==-1) task.setDayToRecall(0);
             else if(task.getDayToAssist()==-1) task.setDayToAssist(0);
-            IOUtil.cancelSaveRecallDate(task);//取消本地存储
+            //取消本地存储
+            IOUtil.cancelSaveRecallDate(task);
+            if (task.getDayToAssist() == -1) {
+                IOUtil.cancelSaveAssistDate(task);
+            }
             //取消微调
             Tag tag = DBUtil.getTag(task.getTid());
             IOUtil.cancelAdjustPointInTimeOf(tag, task);
@@ -77,7 +81,6 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
             task.setDayToRecall(-1);
             DBUtil.updateTask(task);//改数据库
             IOUtil.saveRecallDate(task);//改本地存储
-            //todo 这个事做了之后，就应该把reset辅助位
         } else if (task.getDayToAssist() == 0) {//辅助执行时间点
             task.setDayToAssist(-1);
             DBUtil.updateTask(task);

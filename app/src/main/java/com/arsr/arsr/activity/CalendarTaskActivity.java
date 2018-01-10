@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Task;
-import com.arsr.arsr.db.dao.DAO;
 import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
@@ -36,6 +35,7 @@ import java.util.Map;
 
 /**
  * 按日历查看任务列表
+ * todo 任务推迟和提前 待做
  */
 public class CalendarTaskActivity extends BasicActivity {
 
@@ -98,14 +98,8 @@ public class CalendarTaskActivity extends BasicActivity {
         for (Task t :
                 list) {
             if (t == null) continue;
-            Map<Long,int[]>pit = new HashMap<>();//时间点缓存
             int rPit[],aPit[]= IOUtil.getPointsInTimeOfAssist();
-            if (pit.containsKey(t.getTid())) {
-                rPit = pit.get(t.getTid());
-            } else {
-                rPit = IOUtil.getPointsInTimeOf(DBUtil.tagDAO.get(t.getTid()));
-                pit.put(t.getTid(), rPit);
-            }
+            rPit = IOUtil.getPointsInTimeOf(t.getTid());
             //recall
             List<Integer>nts =new ArrayList<>();
             int cur = t.getDayToRecall() == -1 ? 0 : t.getDayToRecall();

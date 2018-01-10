@@ -75,7 +75,9 @@ public abstract class DAO<T extends Entity> {
             String name = idToName.get(id);
             list.set(idx, null);
             removeMap(name, id, idx);
-        } else {//添加的情况
+        } else if (idToIdx.containsKey(t.getId())){//更新的情况
+            list.set(idToIdx.get(t.getId()), t);
+        } else{//添加的情况
             list.add(t);
             buildMap(t.getName(),t.getId(),list.size()-1);
         }

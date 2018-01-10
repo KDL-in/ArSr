@@ -1,15 +1,25 @@
 package com.arsr.arsr.util;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.SystemClock;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 
+import com.arsr.arsr.MyApplication;
+import com.arsr.arsr.UpdateNextDayTasksService;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MILLISECOND;
@@ -84,6 +94,43 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_MONTH, n);
         return dateToString(calendar.getTime());
+    }
+
+    public static String getDateStringBeforeToday(int n) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -n);
+        return dateToString(calendar.getTime());
+    }
+
+    public static void setRepeatingTask(AppCompatActivity context, int hour, int minute, Class<UpdateNextDayTasksService> tClass) {
+        Calendar calendar = Calendar.getInstance();
+        long systemTime = System.currentTimeMillis();
+        calendar.setTimeInMillis(systemTime);
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        long selectTime = calendar.getTimeInMillis();
+        if (systemTime > selectTime) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        LogUtil.d("开始"+getTimeStr(systemTime));
+        Intent intent = new Intent(context,tClass);
+        PendingIntent pendingIntent = PendingIntent.getService(context,0,intent,0);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),MILLISECOND_OF_ONE_DAY,pendingIntent);
+    }
+
+    public static String getTimeStr(long time) {
+        SimpleDateFormat   formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
+        Date curDate =  new Date(time);
+        return formatter.format(curDate);
+    }
+
+    public static String dateToString(CalendarDay date) {
+        Date date1 = date.getDate();
+        return dateToString(date1);
     }
 }
 /*public class DateUtil {

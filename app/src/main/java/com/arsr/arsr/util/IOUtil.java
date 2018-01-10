@@ -6,13 +6,16 @@ import android.content.SharedPreferences;
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.snatik.storage.Storage;
 
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件存取工具
@@ -36,6 +39,7 @@ public class IOUtil {
     private static SharedPreferences.Editor recordEditor;//同上
     private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
     private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
+    private static Map<Long,int[]> pit; //pointsInTime缓存数组
     static {
         mStorage = new Storage(MyApplication.getContext());
         FILES_DIR = mStorage.getInternalFilesDirectory();
@@ -46,6 +50,7 @@ public class IOUtil {
         init();
         recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
         recordEditor = recordPref.edit();
+        pit=new HashMap<>();
     }
 
     private static void init() {
@@ -130,6 +135,13 @@ public class IOUtil {
         int lastIndex = content.lastIndexOf(' ');
         mStorage.createFile(filePath, content.substring(0, lastIndex));
     }
+    public static void cancelSaveAssistDate(Task task) {
+        String parentDirs[] = {ASSIST_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
+        String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
+        String content = mStorage.readTextFile(filePath);
+        int lastIndex = content.lastIndexOf(' ');
+        mStorage.createFile(filePath, content.substring(0, lastIndex));
+    }
     public static void saveAssistDate(Task task) {
         String parentDirs[] = {ASSIST_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
@@ -161,25 +173,7 @@ public class IOUtil {
     }
 
 
-    /**
-     * 获取标签tag的recall时间点,tag为null时默认获取总的recall时间点
-     *
-     * @param tag 标签
-     * @return 时间点字符串
-     */
-    public static int[] getPointsInTimeOf(Tag tag) {
-        String content = "";
-        String filePath = "";
-        if (tag == null) {
-            filePath = getFilePath(POINTS_IN_TIME_DIR, "total");
-        } else {
-            String category = DBUtil.getSubstringCategory(tag.getName(), '_');
-            String name = tag.getName();
-            filePath=getFilePath(getDirPath(new String[]{POINTS_IN_TIME_DIR, category}), name);
-        }
-        content = mStorage.readTextFile(filePath);
-        return stringToIntegers(content);
-    }
+
 
     /**
      * 设置tag的recall时间，默认设置为等于总体的recall时间
@@ -248,7 +242,6 @@ public class IOUtil {
 
     /**
      * 通过shardPreferences保存微调记录，以便于回滚
-     * todo 记录只保留一天，需要在凌晨清空
      *
      * @param id task的id作为key
      * @param flagFeel 上调或下调
@@ -284,7 +277,10 @@ public class IOUtil {
         if (feelFlag!=0)removeAdjustRecord(task.getId());
     }
 
-
+    public static void clearAdjustRecords() {
+        recordEditor.clear();
+        recordEditor.apply();
+    }
     public static String[] getRecallDatesOf(String name) {
         String path = getDirPath(new String[]{RECALL_DATES_DIR, DBUtil.getSubstringCategory(name, '_')});
         String filePath = getFilePath(path, DBUtil.getSubstringName(name, '_'));
@@ -292,6 +288,54 @@ public class IOUtil {
         return content.split(" ");
     }
 
+
+
+
+
+    public static CalendarDay getUpdateRecord() {
+        String dateStr = recordPref.getString("update_record", "1970-01-01");
+        CalendarDay date = CalendarDay.from(DateUtil.stringToDate(dateStr));
+        return date;
+    }
+    public static void setUpdateRecord(String today) {
+        recordEditor.putString("update_record", today);
+        recordEditor.apply();
+    }
+
+
+    /**
+     * 获取id为tid的标签的时间点数组
+     */
+    public static int[] getPointsInTimeOf(long tid) {
+        int rPit[];
+        if (pit.containsKey(tid)) {
+            rPit = pit.get(tid);
+        } else {
+            rPit = IOUtil.getPointsInTimeOf(DBUtil.tagDAO.get(tid));
+            pit.put(tid, rPit);
+        }
+        return rPit;
+    }
+
+    /**
+     * 获取标签tag的recall时间点,tag为null时默认获取总的recall时间点
+     *
+     * @param tag 标签
+     * @return 时间点字符串
+     */
+    public static int[] getPointsInTimeOf(Tag tag) {
+        String content = "";
+        String filePath = "";
+        if (tag == null) {
+            filePath = getFilePath(POINTS_IN_TIME_DIR, "total");
+        } else {
+            String category = DBUtil.getSubstringCategory(tag.getName(), '_');
+            String name = tag.getName();
+            filePath=getFilePath(getDirPath(new String[]{POINTS_IN_TIME_DIR, category}), name);
+        }
+        content = mStorage.readTextFile(filePath);
+        return stringToIntegers(content);
+    }
     /**
      * 获取assist时间点
      */
@@ -299,6 +343,19 @@ public class IOUtil {
         return ASSIST_POINT_IN_TIME;
     }
 
+    /**
+     * 保存date天recall的完成情况
+     */
+    public static void saveRecallRecord(String date, Task t) {
+        String filePath = getFilePath(RECALL_RECORDS_DIR, date);
+        mStorage.appendFile(filePath,t.getName());
+        //删除十五天前记录
+        String dayBefore = DateUtil.getDateStringBeforeToday(16);
+        if (mStorage.isFileExist(RECALL_RECORDS_DIR + File.separator + dayBefore)){
+            mStorage.deleteFile(RECALL_RECORDS_DIR + File.separator + dayBefore);
+        }
+
+    }
     /**
      *  获取过去某天的recall记录
      * @param date 过去某天的日期，字符串，YYYY-MM-dd
@@ -308,4 +365,6 @@ public class IOUtil {
         String content = mStorage.readTextFile(filePath);
         //todo 解析
     }
+
+
 }

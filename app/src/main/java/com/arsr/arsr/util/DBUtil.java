@@ -1,6 +1,7 @@
 package com.arsr.arsr.util;
 
 
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.arsr.arsr.MyApplication;
@@ -12,8 +13,10 @@ import com.arsr.arsr.db.dao.CategoryDAO;
 import com.arsr.arsr.db.dao.TagDAO;
 import com.arsr.arsr.db.dao.TaskDAO;
 import com.arsr.arsr.db.DataBaseHelper;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import java.io.File;
+import java.util.List;
 
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
@@ -41,6 +44,60 @@ public class DBUtil {
         categoryDAO = new CategoryDAO();
         tagDAO = new TagDAO();
         taskDAO = new TaskDAO();
+        //数据更新
+        updateData();
+    }
+
+    /**
+     * 更新任务执行数据
+     */
+    public static void updateData() {
+        //获取更新标志（sp）
+        CalendarDay lastDate = IOUtil.getUpdateRecord();
+        CalendarDay today = CalendarDay.today();
+        if (lastDate.equals(today)) {//今天未执行
+            String str = DateUtil.dateToString(today);
+            LogUtil.d("if (!lastDate.equals(today))");
+            List<Task> list = DBUtil.taskDAO.getList();
+            //检测是否所有任务都执行完
+            for (Task t :
+                    list) {
+                if (t.getDayToRecall()==0||t.getDayToAssist()==0)return;
+            }
+            LogUtil.d("IOUtil.clearAdjustRecords();");
+            //清空操作记录
+            IOUtil.clearAdjustRecords();
+            for (Task t :
+                    list) {
+                boolean ifBeExec = false;
+                int rPit[] = IOUtil.getPointsInTimeOf(t.getTid()), aPit[] = IOUtil.getPointsInTimeOfAssist();
+                if (t.getDayToRecall() == -1 && t.getTimes() < 6) {
+                    t.setDayToRecall(rPit[t.getTimes()]);
+                    t.setTimes(t.getTimes() + 1);
+                    //辅助重置
+                    t.setDayToAssist(-2);
+                    t.setAssistTimes(-2);
+                    ifBeExec = true;
+                }
+                if (t.getDayToAssist() == -1 && t.getAssistTimes() < 4) {
+                    t.setDayToAssist(aPit[t.getAssistTimes()]);
+                    t.setAssistTimes(t.getAssistTimes() + 1);
+                    ifBeExec = true;
+                }
+                if (ifBeExec) {
+                    //保存记录
+                    IOUtil.saveRecallRecord(str, t);
+                }
+                if (t.getDayToRecall()!=-1)t.setDayToRecall(t.getDayToRecall()-1);
+                if (t.getDayToAssist()!=-2)t.setDayToAssist(t.getDayToAssist()-1);
+                //更新
+                DBUtil.taskDAO.update(t);
+            }
+            IOUtil.setUpdateRecord(str);
+                    categoryDAO.display();
+        tagDAO.display();
+        taskDAO.display();
+        }
     }
 
 

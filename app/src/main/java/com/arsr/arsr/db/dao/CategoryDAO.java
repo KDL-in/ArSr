@@ -82,5 +82,9 @@ public class CategoryDAO extends DAO<Category> {
         delete(selection, selectionArgs);
         updateCache(id, DBUtil.DELETED);
     }
+
+    public String getName(long cid) {
+        return idToName.get(cid);
+    }
 }
 

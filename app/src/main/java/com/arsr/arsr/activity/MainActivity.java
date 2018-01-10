@@ -1,5 +1,10 @@
 package com.arsr.arsr.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,11 +17,14 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.arsr.arsr.R;
+import com.arsr.arsr.UpdateNextDayTasksService;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.MainFragmentPagerAdapter;
@@ -34,7 +42,11 @@ import com.arsr.arsr.listener.OnNavigationItemClickListener;
 import com.arsr.arsr.listener.OnTaskListClickListener;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.ListUtil;
+import com.arsr.arsr.util.LogUtil;
+
+import java.util.Collections;
 
 
 public class MainActivity extends BasicActivity {
@@ -42,6 +54,8 @@ public class MainActivity extends BasicActivity {
 
     private MainFragmentPagerAdapter pagerAdapter;//碎片页面适配器
     private NavigationView navigationView;
+
+    private NavigationRecyclerViewAdapter navigationListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +83,7 @@ public class MainActivity extends BasicActivity {
         TaskListRecyclerViewAdapter taskAdapter = ListUtil.getTodayTaskListAdapter(MainActivity.this);
         FragmentTaskList fragmentTaskList = FragmentTaskList.newInstance(taskAdapter);//任务列表
         //-分类列表
-        CategoryListRecyclerViewAdapter categoryAdapter = ListUtil.getTagInCategoryAdapter(MainActivity.this);
+        final CategoryListRecyclerViewAdapter categoryAdapter = ListUtil.getTagInCategoryAdapter(MainActivity.this);
         ;
         FragmentTaskList fragmentCategoryList = FragmentTaskList.newInstance(categoryAdapter);
         //-设置监听
@@ -80,10 +94,10 @@ public class MainActivity extends BasicActivity {
         pagerAdapter.addFragment(fragmentTaskList);//添加碎片
         pagerAdapter.addFragment(fragmentCategoryList);
         ViewPager viewPager = findViewById(R.id.viewPager);//设置adapter
-        viewPager.addOnPageChangeListener(new OnMainPagerChangeListener(viewPager,MainActivity.this));//滑动监听
+        viewPager.addOnPageChangeListener(new OnMainPagerChangeListener(viewPager, MainActivity.this));//滑动监听
         viewPager.setAdapter(pagerAdapter);
         //-自定义tab
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        final TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -113,22 +127,51 @@ public class MainActivity extends BasicActivity {
         });
         //-navigationView上的列表
         RecyclerView recyclerView = findViewById(R.id.recyclerView_navigation);
-        NavigationRecyclerViewAdapter navigationListAdapter =ListUtil.getCategoryAdapter();
-        navigationListAdapter.setOnItemClickListener(new OnNavigationItemClickListener(MainActivity.this,navigationListAdapter));
+        navigationListAdapter = ListUtil.getCategoryAdapter();
+        navigationListAdapter.setOnItemClickListener(new OnNavigationItemClickListener(MainActivity.this, navigationListAdapter));
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(navigationListAdapter);
         //-底部添加按钮
-        View view = findViewById(R.id.nav_addCategory);
+        final View view = findViewById(R.id.nav_addCategory);
         view.setOnClickListener(new OnNavAddButtonListener(MainActivity.this));
+        //-上下滑动
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                int fromPosition = viewHolder.getAdapterPosition();
+                int toPosition = target.getAdapterPosition();
+                if (fromPosition < toPosition) {
+                    //分别把中间所有的item的位置重新交换
+                    for (int i = fromPosition; i < toPosition; i++) {
+                        navigationListAdapter.swap(i, i + 1);
+                    }
+                } else {
+                    for (int i = fromPosition; i > toPosition; i--) {
+                        navigationListAdapter.swap( i, i - 1);
+                    }
+                }
+                navigationListAdapter.notifyItemMoved(fromPosition, toPosition);
+                //返回true表示执行拖动
+                return true;
+            }
 
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        //定时任务
+        DateUtil.setRepeatingTask(this,17,36,UpdateNextDayTasksService.class);
     }
 
     /**
      * 写一些测试用代码
      */
     private void test() {
-        CategoryDAO categoryDAO =DBUtil.categoryDAO;
+        CategoryDAO categoryDAO = DBUtil.categoryDAO;
         TagDAO tagDAO = DBUtil.tagDAO;
         TaskDAO taskDAO = DBUtil.taskDAO;
         //category
@@ -137,38 +180,37 @@ public class MainActivity extends BasicActivity {
         categoryDAO.insert("kaoyan");
         categoryDAO.insert("计算机网络");
         //tag
-        tagDAO.insert("Word","List","CTE-6","单词");
-        tagDAO.insert("Reading2016","Text","CTE-6","长难句");
-        tagDAO.insert("Word","List","kaoyan",null);
-        tagDAO.insert("Chapter","Chapter","Math",null);
+        tagDAO.insert("Word", "List", "CTE-6", "单词");
+        tagDAO.insert("Reading2016", "Text", "CTE-6", "长难句");
+        tagDAO.insert("Word", "List", "kaoyan", null);
+        tagDAO.insert("Chapter", "Chapter", "Math", null);
         tagDAO.insert("Chapter", "C", "计算机网络", null);
         //task
         //values("CTE-6_List_1",4,0,-1,-1,1);
-        taskDAO.insert("List_1",5,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("List_2",3,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("List_3",2,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("List_4",1,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("List_5",2,0,-2,-2,"CTE-6_Word");
-        taskDAO.insert("C_1",3,0,-2,-2,"Math_Chapter");
-        taskDAO.insert("C_2",3,0,-2,-2,"Math_Chapter");
-        taskDAO.insert("List_1",4,0,-2,-2,"kaoyan_Word");
-        taskDAO.insert("List_2",2,0,-2,-2,"kaoyan_Word");
-        taskDAO.insert("List_3",2,0,-2,-2,"kaoyan_Word");
-        taskDAO.insert("List_4",4,10,1,0,"kaoyan_Word");
-        categoryDAO.display();
-        tagDAO.display();
-        taskDAO.display();
+        taskDAO.insert("List_1", 5, 0, -2, -2, "CTE-6_Word");
+        taskDAO.insert("List_2", 3, 0, -2, -2, "CTE-6_Word");
+        taskDAO.insert("List_3", 2, 0, -2, -2, "CTE-6_Word");
+        taskDAO.insert("List_4", 1, 0, -2, -2, "CTE-6_Word");
+        taskDAO.insert("List_5", 2, 0, -2, -2, "CTE-6_Word");
+        taskDAO.insert("C_1", 3, 0, -2, -2, "Math_Chapter");
+        taskDAO.insert("C_2", 3, 0, -2, -2, "Math_Chapter");
+        taskDAO.insert("List_1", 4, 0, -2, -2, "kaoyan_Word");
+        taskDAO.insert("List_2", 2, 0, -2, -2, "kaoyan_Word");
+        taskDAO.insert("List_3", 2, 0, -2, -2, "kaoyan_Word");
+        taskDAO.insert("List_4", 4, 10, 1, 0, "kaoyan_Word");
+//        categoryDAO.display();
+//        tagDAO.display();
+//        taskDAO.display();
         //更新
-        categoryDAO.display();
-        tagDAO.display();
-        taskDAO.display();
+//        categoryDAO.display();
+//        tagDAO.display();
+//        taskDAO.display();
         //删除
 //        categoryDAO.delete("CESHI");
 //        categoryDAO.display();
 //        categoryDAO.display();
 //        IOUtil.test();
     }
-
 
 
     /**

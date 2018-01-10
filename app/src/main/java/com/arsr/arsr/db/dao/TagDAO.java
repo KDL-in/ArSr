@@ -152,5 +152,10 @@ public class TagDAO extends DAO<Tag> {
         }
         return rList;
     }
+
+    public String getCategoryName(long tid) {
+        Tag tag = get(tid);
+        return DBUtil.categoryDAO.getName(tag.getCid());
+    }
 }
 

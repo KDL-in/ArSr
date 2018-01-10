@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.arsr.arsr.R;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,6 +64,10 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
     public void setAllDatas(List<String> allDatas) {
         this.mData = allDatas;
         notifyDataSetChanged();
+    }
+
+    public void swap(int i, int j) {
+        Collections.swap(mData,i,j);
     }
 
 
