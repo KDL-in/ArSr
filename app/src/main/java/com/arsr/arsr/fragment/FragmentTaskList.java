@@ -6,13 +6,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.arsr.arsr.R;
+import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.db.Task;
 import com.arsr.mexpandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
+
+import static com.arsr.mexpandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_CHILD;
 
 
 /**
@@ -24,6 +29,7 @@ public class FragmentTaskList extends Fragment {
     //listener
     private OnRecyclerViewListener.OnItemClickListener listener;
     private OnRecyclerViewListener.OnItemLongClickListener longListener;
+    private ItemTouchHelper.SimpleCallback simpleCallBack;
 
     public FragmentTaskList() {
         // Required empty public constructor
@@ -57,9 +63,17 @@ public class FragmentTaskList extends Fragment {
         adapter.setOnItemLongClickListener(longListener);
         listRecyclerView.setAdapter(adapter);
         listRecyclerView.setLayoutManager(layoutManager);
+        if (simpleCallBack != null) {
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallBack);
+            itemTouchHelper.attachToRecyclerView(listRecyclerView);
+        }
+
         return view;
     }
 
+    public void setTouchItemCallback(ItemTouchHelper.SimpleCallback callback) {
+        simpleCallBack = callback;
+    }
     public void setOnItemClickListener(OnRecyclerViewListener.OnItemClickListener listener) {
         this.listener = listener;
     }

@@ -87,4 +87,13 @@ public class Task extends Entity {
     }
 
 
+    public void deferOneDay(int n) {
+        if (dayToRecall==n) dayToRecall += 1;
+        else if(dayToAssist==n) dayToAssist += 1;
+    }
+
+    public void aheadOfOneDay(int n) {
+        if (dayToRecall==n) dayToRecall -= 1;
+        else if(dayToAssist==n) dayToAssist -= 1;
+    }
 }

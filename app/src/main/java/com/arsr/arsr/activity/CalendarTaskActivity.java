@@ -8,19 +8,21 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.arsr.arsr.R;
-import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.TasksInCalendarRecyclerViewAdapter;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.fragment.FragmentTaskList;
-import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.LogUtil;
+import com.arsr.arsr.util.ToastUtil;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -34,11 +36,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.arsr.mexpandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_CHILD;
+
 /**
  * 按日历查看任务列表
  * todo 任务推迟和提前 待做
  */
 public class CalendarTaskActivity extends BasicActivity {
+
+    private MaterialCalendarView calendarView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +64,7 @@ public class CalendarTaskActivity extends BasicActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitleEnabled(false);
         //日历相关
-        MaterialCalendarView calendarView = findViewById(R.id.calendarView_week);
+        calendarView = findViewById(R.id.calendarView_week);
         CalendarDay today = DateUtil.getCalendarDayToday();
         //-设置范围(前后十五天）
         showListAt(DateUtil.getCalendarDayToday());
@@ -75,9 +81,12 @@ public class CalendarTaskActivity extends BasicActivity {
             }
         });
         calendarView.setDateSelected(today, true);
+        calendarView.setCurrentDate(today, true);
 
 
     }
+
+    private Map<String, Task> isSwipedable;
 
     /**
      * 初始化前后15天的任务数据
@@ -88,21 +97,28 @@ public class CalendarTaskActivity extends BasicActivity {
         initPastData();
         //初始化今天
         dateToTasks.put(DateUtil.getDateStringAfterToday(0), DBUtil.taskDAO.getTodayList());
+        List<Task> today = dateToTasks.get(DateUtil.getDateStringAfterToday(0));
+        isSwipedable = new HashMap<>();
+        for (Task t :
+                today) {
+            isSwipedable.put(t.getName(), t);
+        }
         //初始化未来15天
         initFutureData();
 
     }
 
     private Map<String, List<Task>> dateToTasks;
-    private void initFutureData(){
+
+    private void initFutureData() {
         List<Task> list = DBUtil.taskDAO.getList();
         for (Task t :
                 list) {
             if (t == null) continue;
-            int rPit[],aPit[]= IOUtil.getPointsInTimeOfAssist();
+            int rPit[], aPit[] = IOUtil.getPointsInTimeOfAssist();
             rPit = IOUtil.getPointsInTimeOf(t.getTid());
             //recall
-            List<Integer>nts =new ArrayList<>();
+            List<Integer> nts = new ArrayList<>();
             int cur = t.getDayToRecall() == -1 ? 0 : t.getDayToRecall();
             nts.add(cur);
             for (int i = t.getTimes(); i < rPit.length; i++) {
@@ -113,15 +129,15 @@ public class CalendarTaskActivity extends BasicActivity {
             if (t.getDayToAssist() != -2) {
                 int flag = nts.get(0) == 0 ? nts.get(1) : nts.get(0);
                 cur = t.getDayToAssist() == -1 ? 0 : t.getDayToAssist();
-                if (cur==0&&nts.get(0)!=0)nts.add(cur);
-                for (int i = t.getAssistTimes(); i <aPit.length ; i++) {
+                if (cur == 0 && nts.get(0) != 0) nts.add(cur);
+                for (int i = t.getAssistTimes(); i < aPit.length; i++) {
                     cur += aPit[i];
-                    if (cur<flag) nts.add(cur);
+                    if (cur < flag) nts.add(cur);
                 }
             }
 
             for (int i : nts) {
-                if (i==0)continue;
+                if (i == 0) continue;
                 String date = DateUtil.getDateStringAfterToday(i);
                 if (dateToTasks.containsKey(date)) {
                     List<Task> tasksOfDate = dateToTasks.get(date);
@@ -138,25 +154,92 @@ public class CalendarTaskActivity extends BasicActivity {
     private void initPastData() {
         for (int i = 1; i <= 15; i++) {
             String date = DateUtil.getDateStringBeforeToday(i);
-            List<Task> pastList=IOUtil.getPastRecallRecord(date);
+            List<Task> pastList = IOUtil.getPastRecallRecord(date);
             dateToTasks.put(date, pastList);
         }
     }
+    private TasksInCalendarRecyclerViewAdapter adapter;
 
     /**
      * 显示某一天的列表
+     *
      * @param day
      */
     private void showListAt(CalendarDay day) {
         String date = DateUtil.dateToString(day.getDate());
-        TaskListRecyclerViewAdapter adapter = ListUtil.getListAdapterWith(CalendarTaskActivity.this,dateToTasks.get(date));
+        adapter = ListUtil.getListAdapterWith(CalendarTaskActivity.this, dateToTasks.get(date));
+        adapter.setCurTask(isSwipedable);
         FragmentTaskList fragment = FragmentTaskList.newInstance(adapter);
-        if (day.equals(DateUtil.getCalendarDayToday())) {
-            //添加监听
-            fragment.setOnItemLongClickListener(new OnTaskListLongClickListener(adapter));
-        }
+        //滑动推迟
+        fragment.setTouchItemCallback(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                adapter.notifyDataSetChanged();
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                TasksInCalendarRecyclerViewAdapter.ViewHolder holder = (TasksInCalendarRecyclerViewAdapter.ViewHolder) viewHolder;
+
+                if (holder.getItemViewType() != VIEW_TYPE_CHILD) return;
+                String taskName = holder.getRealTaskName();
+                if (isSwipedable.containsKey(taskName)) {
+                    Task task = isSwipedable.get(taskName);
+                    CalendarDay selDay = calendarView.getSelectedDate();
+                    CalendarDay curDay = DateUtil.getCalendarDayToday();
+                    int n = DateUtil.countDaysBetween(curDay, selDay);
+                    if (task.getDayToRecall() == n || task.getDayToAssist() == n) {
+                        if (direction == ItemTouchHelper.RIGHT && selDay.isBefore(calendarView.getMaximumDate())) {
+                            if (moveTo(task, n, 1)) {//更新前后30天缓存
+                                task.deferOneDay(n);
+                                ToastUtil.makeToast("推迟一天");
+                                DBUtil.taskDAO.update(task);//更新数据库
+                                adapter.removeChild(holder.getAdapterPosition());
+                            }
+
+                        } else if (direction == ItemTouchHelper.LEFT && selDay.isAfter(curDay)) {
+                            if (moveTo(task, n, -1)) {
+                                task.aheadOfOneDay(n);
+                                ToastUtil.makeToast("提前一天");
+                                DBUtil.taskDAO.update(task);//更新数据库
+                                adapter.removeChild(holder.getAdapterPosition());
+                            }
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+        });
+
+
         loadFragment(fragment);
+/**/
+
     }
+
+    /**
+     * 移动任务到临近日，成功返回true失败返回false
+     */
+    private boolean moveTo(Task task, int n, int i) {
+        String cur = DateUtil.getDateStringAfterToday(n);
+        String next = DateUtil.getDateStringAfterToday(i+n);
+        List<Task> curList = dateToTasks.get(cur);
+        List<Task> nextList = dateToTasks.get(next);
+        if (nextList==null){//如果为空
+            nextList = new ArrayList<>();
+            dateToTasks.put(next, nextList);
+        }
+        if (nextList.contains(task)){
+            ToastUtil.makeToast("距离该任务下一次执行时间为1");
+            return false;
+        }
+        nextList.add(task);
+        curList.remove(task);
+        return true;
+    }
+
 
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -169,6 +252,7 @@ public class CalendarTaskActivity extends BasicActivity {
         Intent intent = new Intent(context, CalendarTaskActivity.class);
         context.startActivity(intent);
     }
+
     /**
      * 当前日期的装饰
      */
@@ -180,7 +264,7 @@ public class CalendarTaskActivity extends BasicActivity {
 
         @Override
         public void decorate(DayViewFacade view) {
-            view.addSpan(new DotSpan(7,DrawableUtil.getColor(CalendarTaskActivity.this,R.color.colorAccent)));
+            view.addSpan(new DotSpan(7, DrawableUtil.getColor(CalendarTaskActivity.this, R.color.colorAccent)));
         }
     }
 }

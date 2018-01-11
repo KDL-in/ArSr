@@ -5,6 +5,7 @@ import android.content.Context;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.adapter.NavigationRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
+import com.arsr.arsr.adapter.TasksInCalendarRecyclerViewAdapter;
 import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
@@ -181,8 +182,8 @@ public class ListUtil {
     /**
      * 从所给的task数据构造adapter，分类-任务列表
      */
-    public static TaskListRecyclerViewAdapter getListAdapterWith(Context context,List<Task> tasks) {
-        TaskListRecyclerViewAdapter adapter = new TaskListRecyclerViewAdapter(context, getTaskListWith(tasks));
+    public static TasksInCalendarRecyclerViewAdapter getListAdapterWith(Context context,List<Task> tasks) {
+        TasksInCalendarRecyclerViewAdapter adapter = new TasksInCalendarRecyclerViewAdapter(context, getTaskListWith(tasks));
         return adapter;
     }
 

@@ -31,7 +31,7 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
 //    compile 'com.drawthink:expandable-recyclerview:0.0.3'
-    compile 'com.github.KDL-in:ExpandableRecyclerView:0.0.3.1'
+    compile 'com.github.KDL-in:ExpandableRecyclerView:0.0.3.2'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.xw.repo:bubbleseekbar:3.12-lite'

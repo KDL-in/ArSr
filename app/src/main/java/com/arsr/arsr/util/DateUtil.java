@@ -140,6 +140,13 @@ public class DateUtil {
         Date date = getToDay();
         return CalendarDay.from(date);
     }
+
+
+
+    public static int countDaysBetween(CalendarDay curDay, CalendarDay selDay) {
+        long sub = selDay.getDate().getTime() - curDay.getDate().getTime();
+        return (int) (sub/MILLISECOND_OF_ONE_DAY);
+    }
 }
 /*public class DateUtil {
     static final long MILLISECOND_OF_ONE_DAY = 1000 * 60 * 60 * 24;

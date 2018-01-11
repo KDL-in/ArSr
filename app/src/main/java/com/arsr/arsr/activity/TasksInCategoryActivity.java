@@ -146,7 +146,8 @@ public class TasksInCategoryActivity extends BasicActivity {
         //-监听
         FragmentTaskList fragment = FragmentTaskList.newInstance(adapter);
         fragment.setOnItemClickListener(new OnTicListClickListener(this, adapter));
-        fragment.setOnItemLongClickListener(new OnTicListLongClickListener(this,adapter));
+        fragment.setOnItemLongClickListener(new OnTicListLongClickListener(this, adapter));
+
         loadFragment(fragment);
     }
 
