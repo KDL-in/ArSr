@@ -47,6 +47,7 @@ public abstract class DAO<T extends Entity> {
      * @return id
      */
     public void delete(String selection, String[] selectionArgs) {
+        LogUtil.e("delete",selection,selectionArgs[0]);
         DBUtil.db.delete(tClass.getSimpleName(),selection, selectionArgs);
     }
     /**
@@ -54,6 +55,7 @@ public abstract class DAO<T extends Entity> {
      * @param values 插入值
      */
     public long insert(ContentValues values){
+        LogUtil.e("insert",values.toString());
         long id = DBUtil.db.insert(tClass.getSimpleName(), null, values);
         return id;
     }

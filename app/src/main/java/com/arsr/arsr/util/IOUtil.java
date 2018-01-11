@@ -2,6 +2,7 @@ package com.arsr.arsr.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Environment;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.db.Tag;
@@ -30,19 +31,19 @@ public class IOUtil {
     private static final String FILES_DIR;//同上
     private static final String RECALL_DATES_DIR;//同上
     private static final String POINTS_IN_TIME_DIR;//同上
-
     private static final String RECALL_RECORDS_DIR;
-    public static final int FLAG_FEEL_BAD =-1;//微调标志
-    public static final int FLAG_FEEL_GOOD =1;//同上
+    public static final int FLAG_FEEL_BAD = -1;//微调标志
+    public static final int FLAG_FEEL_GOOD = 1;//同上
     private static Storage mStorage;//Io操作对象
     private static SharedPreferences recordPref;//spref操作对象
     private static SharedPreferences.Editor recordEditor;//同上
     private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
     private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
-    private static Map<Long,int[]> pit; //pointsInTime缓存数组
+    private static Map<Long, int[]> pit; //pointsInTime缓存数组
     private static SharedPreferences execPref;
-    private static SharedPreferences.Editor execEditor;
 
+    private static SharedPreferences.Editor execEditor;
+    public static boolean ifOutputLog = false;
     static {
         mStorage = new Storage(MyApplication.getContext());
         FILES_DIR = mStorage.getInternalFilesDirectory();
@@ -55,7 +56,7 @@ public class IOUtil {
         recordEditor = recordPref.edit();
         execPref = MyApplication.getContext().getSharedPreferences("last_exec", Context.MODE_PRIVATE);
         execEditor = execPref.edit();
-        pit=new HashMap<>();
+        pit = new HashMap<>();
     }
 
     private static void init() {
@@ -91,7 +92,6 @@ public class IOUtil {
     }
 
 
-
     //=========================================================================
 
     /**
@@ -121,6 +121,7 @@ public class IOUtil {
 
     /**
      * 保存更新task的时间点
+     *
      * @param task 欲保存的task
      */
     public static void saveRecallDate(Task task) {
@@ -128,7 +129,7 @@ public class IOUtil {
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
         String date = DateUtil.dateToString(DateUtil.getToDay());
         setLastExec(date);
-        mStorage.appendFile(filePath, " "+ date );
+        mStorage.appendFile(filePath, " " + date);
 //        mStorage.createFile(filePath, " 2017-12-20 2017-12-22 2017-12-26 2018-01-01 2018-01-08" );
     }
 
@@ -142,6 +143,7 @@ public class IOUtil {
         int lastIndex = content.lastIndexOf(' ');
         mStorage.createFile(filePath, content.substring(0, lastIndex));
     }
+
     public static void cancelSaveAssistDate(Task task) {
         String parentDirs[] = {ASSIST_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
@@ -149,12 +151,13 @@ public class IOUtil {
         int lastIndex = content.lastIndexOf(' ');
         mStorage.createFile(filePath, content.substring(0, lastIndex));
     }
+
     public static void saveAssistDate(Task task) {
         String parentDirs[] = {ASSIST_DATES_DIR, DBUtil.getSubstringCategory(task.getName(), '_')};
         String filePath = getFilePath(getDirPath(parentDirs), DBUtil.getSubstringName(task.getName(), '_'));
         String date = DateUtil.dateToString(DateUtil.getToDay());
         setLastExec(date);
-        mStorage.appendFile(filePath, " "+date);
+        mStorage.appendFile(filePath, " " + date);
 
     }
 
@@ -182,14 +185,12 @@ public class IOUtil {
     }
 
 
-
-
     /**
      * 设置tag的recall时间，默认设置为等于总体的recall时间
      *
      * @param tag  标签
      * @param args 时间点参数，为""时代表默认设置,格式是
-     *                 1 2 3 4 5 6（次的recall需要时间）
+     *             1 2 3 4 5 6（次的recall需要时间）
      */
     public static void setPointInTimeOf(Tag tag, String args) {
         String category = DBUtil.getSubstringCategory(tag.getName(), '_');
@@ -198,6 +199,7 @@ public class IOUtil {
         if (args.equals("")) {
             mStorage.createFile(filePath, integersToString(getPointsInTimeOf(null)));
         } else {
+            LogUtil.e("pointInTime Of "+tag.getName(),args);
             mStorage.createFile(filePath, args);
         }
     }
@@ -226,6 +228,7 @@ public class IOUtil {
         }
         return str.substring(0, str.length() - 1);
     }
+
     public static void test() {
 //        mStorage.createFile(FILES_DIR + File.separator + "test", "1");
 //        mStorage.createFile(FILES_DIR + File.separator + "test", "2");
@@ -233,17 +236,18 @@ public class IOUtil {
 
     /**
      * 微调tag某次recall时间点
-     * @param tag 标签
-     * @param task 任务
+     *
+     * @param tag      标签
+     * @param task     任务
      * @param flagFeel recall效果好坏，对于常量-1,+1
      */
     public static void adjustPointInTimeOf(Tag tag, Task task, int flagFeel) {
-        int []args = getPointsInTimeOf(tag);
+        int[] args = getPointsInTimeOf(tag);
         int idx = task.getTimes() - 1;
-        if (idx==-1)return;//任务开始的时候第0次
+        if (idx == -1) return;//任务开始的时候第0次
         if (args[idx] + flagFeel <= UPPER_BOUND[idx] && args[idx] + flagFeel >= LOWER_BOUND[idx]) {
-            args[task.getTimes()-1] += flagFeel;
-            setPointInTimeOf(tag,integersToString(args));
+            args[task.getTimes() - 1] += flagFeel;
+            setPointInTimeOf(tag, integersToString(args));
             //保存微调记录
             saveAdjustRecord(task.getId(), flagFeel);
         }
@@ -252,7 +256,7 @@ public class IOUtil {
     /**
      * 通过shardPreferences保存微调记录，以便于回滚
      *
-     * @param id task的id作为key
+     * @param id       task的id作为key
      * @param flagFeel 上调或下调
      */
     private static void saveAdjustRecord(long id, int flagFeel) {
@@ -264,8 +268,9 @@ public class IOUtil {
      * 获得某id的操作记录
      */
     private static int getAdjustRecord(long id) {
-        return recordPref.getInt(id+"",0);
+        return recordPref.getInt(id + "", 0);
     }
+
     /**
      * 删除记录
      */
@@ -273,17 +278,18 @@ public class IOUtil {
         recordEditor.remove(id + "");
         recordEditor.apply();
     }
+
     /**
      * 取消最后一次微调
      */
     public static void cancelAdjustPointInTimeOf(Tag tag, Task task) {
-        if (task.getTimes()==0)return;
-        int []args = getPointsInTimeOf(tag);
+        if (task.getTimes() == 0) return;
+        int[] args = getPointsInTimeOf(tag);
         int feelFlag = getAdjustRecord(task.getId());
-        args[task.getTimes()-1] -= feelFlag;
-        setPointInTimeOf(tag,integersToString(args));
+        args[task.getTimes() - 1] -= feelFlag;
+        setPointInTimeOf(tag, integersToString(args));
         //删除记录
-        if (feelFlag!=0)removeAdjustRecord(task.getId());
+        if (feelFlag != 0) removeAdjustRecord(task.getId());
     }
 
     public static void clearAdjustRecords() {
@@ -312,9 +318,6 @@ public class IOUtil {
     }
 
 
-
-
-
     public static CalendarDay getUpdateRecord() {
         String dateStr = recordPref.getString("update_record", "1970-01-01");
         CalendarDay date = CalendarDay.from(DateUtil.stringToDate(dateStr));
@@ -325,8 +328,10 @@ public class IOUtil {
         recordEditor.putString("update_record", date);
         recordEditor.apply();
     }
+
     /**
      * 最后一次执行task的时间
+     *
      * @return
      */
     public static CalendarDay getLastExec() {
@@ -368,11 +373,12 @@ public class IOUtil {
         } else {
             String category = DBUtil.getSubstringCategory(tag.getName(), '_');
             String name = tag.getName();
-            filePath=getFilePath(getDirPath(new String[]{POINTS_IN_TIME_DIR, category}), name);
+            filePath = getFilePath(getDirPath(new String[]{POINTS_IN_TIME_DIR, category}), name);
         }
         content = mStorage.readTextFile(filePath);
         return stringToIntegers(content);
     }
+
     /**
      * 获取assist时间点
      */
@@ -385,16 +391,18 @@ public class IOUtil {
      */
     public static void saveRecallRecord(String date, Task t) {
         String filePath = getFilePath(RECALL_RECORDS_DIR, date);
-        mStorage.appendFile(filePath,t.getName());
+        mStorage.appendFile(filePath, t.getName());
         //删除十五天前记录
         String dayBefore = DateUtil.getDateStringBeforeToday(16);
-        if (mStorage.isFileExist(RECALL_RECORDS_DIR + File.separator + dayBefore)){
+        if (mStorage.isFileExist(RECALL_RECORDS_DIR + File.separator + dayBefore)) {
             mStorage.deleteFile(RECALL_RECORDS_DIR + File.separator + dayBefore);
         }
 
     }
+
     /**
-     *  获取过去某天的recall记录
+     * 获取过去某天的recall记录
+     *
      * @param date 过去某天的日期，字符串，YYYY-MM-dd
      */
     public static List<Task> getPastRecallRecord(String date) {
@@ -402,15 +410,38 @@ public class IOUtil {
         String content = mStorage.readTextFile(filePath);
 
         String taskNames[] = content.split(System.getProperty("line.separator"));
-        List<Task>tasks=new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
         for (String name :
                 taskNames) {
-            if (name.equals(""))continue;
+            if (name.equals("")) continue;
             tasks.add(DBUtil.taskDAO.get(name));
         }
         return tasks;
     }
 
+    private static String log_file_path = "";
+
+    public static void outputLog(String tag, String msg) {
+        if (log_file_path.equals("")) {
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+                String path = getDirPath(new String[]{Environment.getExternalStorageDirectory().getAbsolutePath(), "arsr_log"});
+                log_file_path = getFilePath(path, DateUtil.getDateStringAfterToday(0));
+            }
+        } else {
+            mStorage.appendFile(log_file_path,"========"+tag+"=========");
+            mStorage.appendFile(log_file_path,msg);
+        }
+
+    }
 
 
+    public static String readLogFromFile() {
+        String s;
+        s = mStorage.readTextFile(log_file_path);
+        return s;
+    }
+
+    public static void clearLog() {
+        mStorage.createFile(log_file_path, "");
+    }
 }

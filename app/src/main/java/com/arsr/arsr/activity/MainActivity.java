@@ -241,6 +241,7 @@ public class MainActivity extends BasicActivity {
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.settings:
+                SettingActivity.startAction(this);
                 break;
             default:
                 break;
