@@ -11,9 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.arsr.arsr.R;
-
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
+import com.arsr.mexpandablerecyclerview.adapter.BaseRecyclerViewAdapter;
+import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
 
 /**
@@ -21,7 +20,7 @@ import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
  */
 public class FragmentTaskList extends Fragment {
 
-    private  BaseRecyclerViewAdapter adapter;
+    private BaseRecyclerViewAdapter adapter;
     //listener
     private OnRecyclerViewListener.OnItemClickListener listener;
     private OnRecyclerViewListener.OnItemLongClickListener longListener;

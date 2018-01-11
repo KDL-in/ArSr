@@ -5,8 +5,8 @@ import android.view.View;
 import com.arsr.arsr.activity.TaskActivity;
 import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
+import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
-import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
 
 /**
  * Created by KundaLin on 18/1/9.

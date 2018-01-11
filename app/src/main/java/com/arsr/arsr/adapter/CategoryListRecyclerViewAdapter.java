@@ -9,14 +9,13 @@ import android.widget.TextView;
 
 import com.arsr.arsr.R;
 import com.arsr.arsr.listener.OnCategoryAddButtonListener;
+import com.arsr.mexpandablerecyclerview.adapter.BaseRecyclerViewAdapter;
+import com.arsr.mexpandablerecyclerview.bean.RecyclerViewData;
+import com.arsr.mexpandablerecyclerview.holder.BaseViewHolder;
 
 import java.util.List;
 
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.bean.RecyclerViewData;
-import drawthink.expandablerecyclerview.holder.BaseViewHolder;
-
-import static drawthink.expandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_PARENT;
+import static com.arsr.mexpandablerecyclerview.holder.BaseViewHolder.VIEW_TYPE_PARENT;
 
 /**
  * Created by KundaLin on 17/12/26.

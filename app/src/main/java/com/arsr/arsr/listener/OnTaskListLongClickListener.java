@@ -8,8 +8,8 @@ import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Task;
+import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
-import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
 
 /**
  * taskList 长按打开独立界面

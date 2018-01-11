@@ -9,15 +9,16 @@ import android.widget.TextView;
 import com.arsr.arsr.R;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ToastUtil;
+import com.arsr.mexpandablerecyclerview.adapter.BaseRecyclerViewAdapter;
+import com.arsr.mexpandablerecyclerview.bean.RecyclerViewData;
+import com.arsr.mexpandablerecyclerview.holder.BaseViewHolder;
 import com.xw.repo.BubbleSeekBar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.bean.RecyclerViewData;
-import drawthink.expandablerecyclerview.holder.BaseViewHolder;
+
 
 /**
  * 分类管理界面adapter

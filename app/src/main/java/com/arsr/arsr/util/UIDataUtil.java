@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 
 /**
  * 界面数据操作工具

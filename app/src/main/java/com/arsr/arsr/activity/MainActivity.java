@@ -165,7 +165,7 @@ public class MainActivity extends BasicActivity {
         });
         itemTouchHelper.attachToRecyclerView(recyclerView);
         //定时任务
-        DateUtil.setRepeatingTask(this, 17, 36, UpdateNextDayTasksService.class);
+        DateUtil.setRepeatingTask(this, 10, 36, UpdateNextDayTasksService.class);
         //启动时间更新
         IOUtil.setLastExec(DateUtil.dateToString(DateUtil.getToDay()));
     }

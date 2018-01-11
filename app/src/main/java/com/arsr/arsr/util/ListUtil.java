@@ -9,13 +9,13 @@ import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 import com.arsr.arsr.db.Category;
 import com.arsr.arsr.db.Entity;
 import com.arsr.arsr.db.Task;
+import com.arsr.mexpandablerecyclerview.bean.RecyclerViewData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
 /**
  * 将数据库数据生成可以给界面使用的列表适配器

@@ -15,9 +15,8 @@ import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.AnimationUtils;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.IOUtil;
+import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
-import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
-import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
 
 /**
  * Created by KundaLin on 18/1/2.
