@@ -92,7 +92,7 @@ public class TasksInCalendarRecyclerViewAdapter extends BaseRecyclerViewAdapter<
     @Override
     public void onBindChildpHolder(ViewHolder holder, int groupPos, int childPos, int position, String childData) {
         Task task = getTask(groupPos, childPos);
-        if (task.getDayToRecall() == -1 || task.getDayToAssist() == -1||!curTask.containsKey(task.getName())) {
+        if (task.getDayToRecall() == -1 || task.getDayToAssist() == -1) {
             holder.view.setTag(true);
             holder.childTextView.setSelected(true);
             holder.childIconImg.setSelected(true);
@@ -113,10 +113,6 @@ public class TasksInCalendarRecyclerViewAdapter extends BaseRecyclerViewAdapter<
     }
 
 
-    private Map<String, Task> curTask;//标志今日任务
-    public void setCurTask(Map<String, Task> curTask) {
-        this.curTask = curTask;
-    }
 
     public class ViewHolder extends BaseViewHolder {
         public View view;

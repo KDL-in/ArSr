@@ -1,5 +1,6 @@
 package com.arsr.arsr.costumview;
 
+import android.annotation.SuppressLint;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import me.shaohui.bottomdialog.BaseBottomDialog;
 
+@SuppressLint("ValidFragment")
 public class AddTaskBottomDialog extends BaseBottomDialog {
     private final int BIG_N = 100000;
     private ImageView tagImg;
@@ -34,9 +36,11 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
     private static List<List<String>> children;
     private String lastInput = "";
     private String UIData = "";
+    private View fabView;
 
-
-    public AddTaskBottomDialog() {
+    @SuppressLint("ValidFragment")
+    public AddTaskBottomDialog(View fabView) {
+        this.fabView = fabView;
     }
 
 
@@ -93,7 +97,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                 }
                 final String tagName = category + "_" + realTagName;
                 final String taskName = category + "_" + realTagName+"-"+realTaskName + "_" + number;
-                ToastUtil.makeSnackbar(v, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
+                ToastUtil.makeSnackbar(fabView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
 

@@ -83,7 +83,7 @@ public class DateUtil {
         c.set(MINUTE, 0);
         c.set(SECOND, 0);
         c.set(MILLISECOND, 0);
-        c.add(Calendar.DAY_OF_MONTH,6);
+        c.add(Calendar.DAY_OF_MONTH,0);
         return c;
     }
 

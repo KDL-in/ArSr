@@ -1,6 +1,7 @@
 package com.arsr.arsr.listener;
 
 import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -14,16 +15,18 @@ import com.arsr.arsr.costumview.AddTaskBottomDialog;
 public class OnFabClickListener implements View.OnClickListener {
     private static Context context;
     private AddTaskBottomDialog dialog;
+    private View fabView;
 
 
-    public OnFabClickListener(Context context) {
+    public OnFabClickListener(Context context, View fabView) {
         this.context = context;
+        this.fabView = fabView;
     }
 
     @Override
     public void onClick(View v) {
         //dialog布局弹出
-        dialog = new AddTaskBottomDialog();
+        dialog = new AddTaskBottomDialog(fabView);
         dialog.show(((AppCompatActivity) context).getSupportFragmentManager());
     }
 }

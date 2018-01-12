@@ -75,7 +75,7 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
                                 }).show();
                         break;
                     case R.id.item_ticlist_addTask:
-                        AddTaskBottomDialog dialog = new AddTaskBottomDialog();
+                        AddTaskBottomDialog dialog = new AddTaskBottomDialog(view);
                         dialog.show(context.getSupportFragmentManager());
                         dialog.setData(adapter.getGroupData(groupPosition));
                         break;

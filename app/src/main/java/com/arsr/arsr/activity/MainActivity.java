@@ -77,7 +77,7 @@ public class MainActivity extends BasicActivity {
         }
         //浮动按钮
         FloatingActionButton fab = findViewById(R.id.fab_mainUI);
-        fab.setOnClickListener(new OnFabClickListener(MainActivity.this));
+        fab.setOnClickListener(new OnFabClickListener(MainActivity.this,fab));
         //主界面两个子页面初始化
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         //-任务列表

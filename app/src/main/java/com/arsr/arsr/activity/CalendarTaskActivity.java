@@ -168,7 +168,6 @@ public class CalendarTaskActivity extends BasicActivity {
     private void showListAt(CalendarDay day) {
         String date = DateUtil.dateToString(day.getDate());
         adapter = ListUtil.getListAdapterWith(CalendarTaskActivity.this, dateToTasks.get(date));
-        adapter.setCurTask(isSwipedable);
         FragmentTaskList fragment = FragmentTaskList.newInstance(adapter);
         //滑动推迟
         fragment.setTouchItemCallback(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {

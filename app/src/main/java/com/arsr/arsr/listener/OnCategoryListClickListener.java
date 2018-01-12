@@ -5,7 +5,6 @@ import android.view.View;
 import com.arsr.arsr.activity.MainActivity;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
 import com.arsr.arsr.costumview.AddTaskBottomDialog;
-import com.arsr.arsr.db.Tag;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
 
@@ -29,7 +28,7 @@ public class OnCategoryListClickListener implements OnRecyclerViewListener.OnIte
 
     @Override
     public void onChildItemClick(int position, int groupPosition, int childPosition, View view) {
-        AddTaskBottomDialog dialog = new AddTaskBottomDialog();
+        AddTaskBottomDialog dialog = new AddTaskBottomDialog(view);
         dialog.show(context.getSupportFragmentManager());
         dialog.setData(adapter.getChildData(groupPosition,childPosition));
     }
