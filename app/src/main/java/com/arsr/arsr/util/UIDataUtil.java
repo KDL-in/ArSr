@@ -145,12 +145,86 @@ public class UIDataUtil {
     }
 
     public static void insertCategory(String name) {
-        NavigationRecyclerViewAdapter adapter = (NavigationRecyclerViewAdapter) adapters.get(KEY_CATEGORY);
-        adapter.add(name);
+
     }
 
     public static void remove(String key) {
         if (adapters.containsKey(key))
             adapters.remove(key);
+    }
+
+    /**
+     * 向当前列表中插入新数据
+     * recyclerView数据操控，不操作数据库
+     * @param key       插入列表的key
+     * @param groupName 插入的所属组名
+     * @param childName 插入的child名
+     * @return groupName的位置
+     */
+    public static int insertChildAtFirst(String key, String groupName, String childName) {
+        RecyclerView.Adapter adapter = adapters.get(key);
+        if (adapter==null) return -1;
+        switch (key) {
+            case KEY_CATEGORY_TAG_LIST:
+                CategoryListRecyclerViewAdapter cAdapter = (CategoryListRecyclerViewAdapter) adapter;
+                int position = cAdapter.getPosition(groupName);
+                return cAdapter.insertChild(position+1, childName);
+            case KEY_TODAY_TASKS:
+                TaskListRecyclerViewAdapter tAdapter = (TaskListRecyclerViewAdapter) adapter;
+                position = tAdapter.getAdapterPosition(groupName);
+                return tAdapter.insertChild(position + 1, childName);
+            case KEY_TASKS_CATEGORY:
+                TasksInCategoryRecyclerViewAdapter ticAdapter = (TasksInCategoryRecyclerViewAdapter) adapter;
+                position = ticAdapter.getAdapterPosition(groupName);
+                return ticAdapter.insertChild(position + 1, childName);
+        }
+        return -1;
+    }
+
+    /**
+     * 删除position处的数据
+     * recyclerView数据操控，不操作数据库
+     * @param key 列表对应key
+     * @param position adapter位置
+     */
+    public static String delete(String key, int position) {
+        RecyclerView.Adapter adapter = adapters.get(key);
+        if (adapter==null) return null;
+        switch (key) {
+            case KEY_CATEGORY_TAG_LIST:
+                CategoryListRecyclerViewAdapter cAdapter = (CategoryListRecyclerViewAdapter) adapter;
+                return cAdapter.delete(position);
+            case KEY_TODAY_TASKS:
+                TaskListRecyclerViewAdapter tAdapter = (TaskListRecyclerViewAdapter) adapter;
+                return tAdapter.delete(position);
+            case KEY_TASKS_CATEGORY:
+                TasksInCategoryRecyclerViewAdapter ticAdapter = (TasksInCategoryRecyclerViewAdapter) adapter;
+                return ticAdapter.delete(position);
+            case KEY_CATEGORY:
+                NavigationRecyclerViewAdapter categoryAdapter = (NavigationRecyclerViewAdapter) adapters.get(KEY_CATEGORY);
+                categoryAdapter.remove(position);
+        }
+
+        return null;
+    }
+
+    /**
+     * 在position处插入name
+     */
+    public static void insert(String key, int position, String name) {
+        RecyclerView.Adapter adapter = adapters.get(key);
+        switch (key) {
+            case KEY_CATEGORY_TAG_LIST:
+                CategoryListRecyclerViewAdapter cAdapter = (CategoryListRecyclerViewAdapter) adapter;
+                cAdapter.insertChild(position,name);
+                break;
+            case KEY_TASKS_CATEGORY:
+                TasksInCategoryRecyclerViewAdapter ticAdapter = (TasksInCategoryRecyclerViewAdapter) adapter;
+                ticAdapter.insertChild(position, name);
+                break;
+            case KEY_CATEGORY:
+                NavigationRecyclerViewAdapter categoryAdapter = (NavigationRecyclerViewAdapter) adapters.get(KEY_CATEGORY);
+                categoryAdapter.add(name);
+        }
     }
 }

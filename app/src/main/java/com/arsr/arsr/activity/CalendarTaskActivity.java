@@ -8,6 +8,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -106,6 +107,14 @@ public class CalendarTaskActivity extends BasicActivity {
         //初始化未来15天
         initFutureData();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+//        super.onBackPressed();
     }
 
     private Map<String, List<Task>> dateToTasks;
@@ -247,9 +256,9 @@ public class CalendarTaskActivity extends BasicActivity {
         transaction.commit();
     }
 
-    public static void startAction(Context context) {
+    public static void startAction(AppCompatActivity context) {
         Intent intent = new Intent(context, CalendarTaskActivity.class);
-        context.startActivity(intent);
+        context.startActivityForResult(intent,1);
     }
 
     /**

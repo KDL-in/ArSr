@@ -110,9 +110,28 @@ public class TasksInCategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter<
     public String getGroupData(int groupPosition) {
         return (String) mData.get(groupPosition).getGroupData();
     }
+    /**
+     * 删除position处的元素
+     */
+    public String delete(int position) {
+        int gp = getGroupPosition(position);
+        int cp = getChildPosition(gp,position);
+        mData.get(gp).getGroupItem().getChildDatas().remove(cp);
+
+        return notifyChildRemoved(position);
+    }
+    public int insertChild(int position, String childName) {
+        int gp = getGroupPosition(position-1);
+        mData.get(gp).getGroupItem().getChildDatas().add(0,childName);
+        return notifyChildInserted(position,childName);
+    }
 
     public String getCategory() {
         return category;
+    }
+
+    public int getAdapterPosition(String groupName) {
+        return getGroupAdapterPosition(groupName);
     }
 
     class MyViewHold extends BaseViewHolder {

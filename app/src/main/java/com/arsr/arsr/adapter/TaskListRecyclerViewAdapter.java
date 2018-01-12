@@ -108,7 +108,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
     @Override
     public void onBindChildpHolder(VHTaskListRecyclerView holder, int groupPos, int childPos, int position, String childData) {
         Task task = getTask(groupPos, childPos);
-        if (task.getDayToRecall() == -1 || task.getDayToAssist() == -1) {
+        if (task!=null&&(task.getDayToRecall() == -1 || task.getDayToAssist() == -1)) {
             holder.view.setTag(true);
             holder.childTextView.setSelected(true);
             holder.childIconImg.setSelected(true);
@@ -116,14 +116,13 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
             holder.childTextView.setSelected(false);
             holder.childIconImg.setSelected(false);
         }
-        holder.childTextView.setText(DBUtil.getSubstringName(childData, ' '));
-        holder.childCategory.setText(DBUtil.getSubstringCategory(childData, ' '));
+        holder.childTextView.setText(DBUtil.getSubstringName((String) mData.get(groupPos).getChild(childPos),' '));
+        holder.childCategory.setText((String) mData.get(groupPos).getGroupData());
 
     }
 
 
     public Task getTask(int groupPosition, int childPosition) {
-
         return DBUtil.taskDAO.get(DBUtil.packing((String)mData.get(groupPosition).getChild(childPosition)));
     }
 
@@ -131,6 +130,25 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
         return DBUtil.getCategory((String) mData.get(groupPosition).getGroupData());
     }
 
+    public int getAdapterPosition(String groupName) {
+        return getGroupAdapterPosition(groupName);
+    }
+
+    public int insertChild(int position, String childName) {
+        int gp = getGroupPosition(position);
+        mData.get(gp).getGroupItem().getChildDatas().add(0,childName);
+        return notifyChildInserted(position,childName);
+    }
+    /**
+     * 删除position处的元素
+     */
+    public String delete(int position) {
+        int gp = getGroupPosition(position);
+        int cp = getChildPosition(gp,position);
+        mData.get(gp).getGroupItem().getChildDatas().remove(cp);
+
+        return notifyChildRemoved(position);
+    }
 
     /**
      * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType

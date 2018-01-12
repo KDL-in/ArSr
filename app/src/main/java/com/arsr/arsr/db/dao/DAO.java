@@ -34,32 +34,36 @@ public abstract class DAO<T extends Entity> {
     public DAO(Class<T> tClass) {
         this.tClass = tClass;
         nameToIndex = new HashMap<>();
-        idToName=new HashMap<>();
+        idToName = new HashMap<>();
         nameToId = new HashMap<>();
-        idToIdx =new HashMap<>();
+        idToIdx = new HashMap<>();
         loadCache();
     }
 
     /**
      * 删除
-     * @param selection where条件
+     *
+     * @param selection     where条件
      * @param selectionArgs ？替换
      * @return id
      */
     public void delete(String selection, String[] selectionArgs) {
-        LogUtil.e("delete",selection,selectionArgs[0]);
-        DBUtil.db.delete(tClass.getSimpleName(),selection, selectionArgs);
+        LogUtil.e("delete", selection, selectionArgs[0]);
+        DBUtil.db.delete(tClass.getSimpleName(), selection, selectionArgs);
     }
+
     /**
      * 插入数据
+     *
      * @param values 插入值
      */
-    public long insert(ContentValues values){
-        LogUtil.e("insert",values.toString());
+    public long insert(ContentValues values) {
+        LogUtil.e("insert", values.toString());
         long id = DBUtil.db.insert(tClass.getSimpleName(), null, values);
         return id;
     }
-    public Cursor findAll()  {
+
+    public Cursor findAll() {
         Cursor cursor = DBUtil.db.query(tClass.getSimpleName(), null, null, null, null, null, "updateTime asc");
         return cursor;
     }
@@ -67,6 +71,7 @@ public abstract class DAO<T extends Entity> {
     /**
      * ===============================================================
      * 更新缓存
+     *
      * @param t 更新实体
      */
     public void updateCache(T t) {
@@ -77,44 +82,48 @@ public abstract class DAO<T extends Entity> {
             String name = idToName.get(id);
             list.set(idx, null);
             removeMap(name, id, idx);
-        } else if (idToIdx.containsKey(t.getId())){//更新的情况
+        } else if (idToIdx.containsKey(t.getId())) {//更新的情况
             list.set(idToIdx.get(t.getId()), t);
-        } else{//添加的情况
+        } else {//添加的情况
             list.add(t);
-            buildMap(t.getName(),t.getId(),list.size()-1);
+            buildMap(t.getName(), t.getId(), list.size() - 1);
         }
     }
+
     /**
      * ===============================================================
      * 初始化缓存
      */
-    public  void loadCache() {
+    public void loadCache() {
         Cursor cursor = findAll();
         list = readCursor(cursor);
         for (int i = 0; i < list.size(); i++) {
             T e = list.get(i);
-            buildMap(e.getName(),e.getId(),i);
+            buildMap(e.getName(), e.getId(), i);
         }
     }
+
     /**
      * 建立映射关系
      */
-    public  void buildMap(String name, long id, int idx) {
-        nameToId.put( name,id);
+    public void buildMap(String name, long id, int idx) {
+        nameToId.put(name, id);
         idToName.put(id, name);
         nameToIndex.put(name, idx);
         idToIdx.put(id, idx);
     }
 
-    /**、
+    /**
+     * 、
      * 删除映射
      */
-    private  void removeMap(String name, long id, int idx) {
+    private void removeMap(String name, long id, int idx) {
         nameToId.remove(name);
         idToName.remove(id);
         nameToIndex.remove(name);
         idToIdx.remove(id);
     }
+
     /**
      * 取得name的id
      *
@@ -137,7 +146,7 @@ public abstract class DAO<T extends Entity> {
      * 输出数据库中内容
      */
     public void display() {
-        LogUtil.d("In "+tClass.getSimpleName());
+        LogUtil.d("In " + tClass.getSimpleName());
         for (T e :
                 list) {
             if (e != null)
@@ -148,7 +157,7 @@ public abstract class DAO<T extends Entity> {
 
     public List<T> getList() {
         List<T> r = new ArrayList<>();
-        for (int i = list.size()-1; i >=0; i--) {
+        for (int i = list.size() - 1; i >= 0; i--) {
             r.add(list.get(i));
         }
         return r;
@@ -156,14 +165,19 @@ public abstract class DAO<T extends Entity> {
 
     /**
      * 获取某个实体
+     *
      * @param name 实体名字
      * @return 实体对象
      */
-    public T get(String name){
-        return list.get(nameToIndex.get(name));
+    public T get(String name) {
+        if (nameToIndex.containsKey(name))
+            return list.get(nameToIndex.get(name));
+        return null;
     }
+
     /**
      * 获取某个实体
+     *
      * @param id 实体id
      * @return 实体对象
      */
@@ -175,20 +189,23 @@ public abstract class DAO<T extends Entity> {
      * 插入某个实体
      */
     public abstract long insert(T t);
+
     /**
      * 删除id的实体
+     *
      * @param id 实体id
      */
-    public  void delete(long id){
+    public void delete(long id) {
         String selection = "id=?";
-        String selectionArgs[] = {id+""};
+        String selectionArgs[] = {id + ""};
         delete(selection, selectionArgs);
         //更新缓存
-        updateCache(id,DBUtil.DELETED);
+        updateCache(id, DBUtil.DELETED);
     }
-/*    *//**
+/*    */
+
+    /**
      * 删除名为name的实体
-     *
      *//*
 
     public  void delete(String name) {
@@ -199,7 +216,6 @@ public abstract class DAO<T extends Entity> {
         long id = getId(name);
         updateCache(id,DBUtil.DELETED);
     }*/
-
     abstract void updateCache(long id, String flag);
     /**
      * 更新

@@ -18,6 +18,7 @@ import com.arsr.arsr.R;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.ToastUtil;
 import com.arsr.arsr.util.UIDataUtil;
 
@@ -35,12 +36,12 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
     private static List<String> group;
     private static List<List<String>> children;
     private String lastInput = "";
-    private String UIData = "";
-    private View fabView;
-
+    private String groupTagName = "";
+    private View itemView;
+    private int groupPosition;
     @SuppressLint("ValidFragment")
-    public AddTaskBottomDialog(View fabView) {
-        this.fabView = fabView;
+    public AddTaskBottomDialog(View itemView) {
+        this.itemView = itemView;
     }
 
 
@@ -49,7 +50,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
     public int getLayoutRes() {
         return R.layout.dialog_addtask;
     }
-
+    private int position;
     @Override
     public void bindView(final View view) {
         //初始化
@@ -96,8 +97,47 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                     return;
                 }
                 final String tagName = category + "_" + realTagName;
-                final String taskName = category + "_" + realTagName+"-"+realTaskName + "_" + number;
-                ToastUtil.makeSnackbar(fabView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
+                final String taskName = category + "_" + realTagName + "-" + realTaskName + "_" + number;
+                if (groupTagName.equals("")) {
+                    position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_TODAY_TASKS, category, category + " " + realTagName + "-" + realTaskName + " " + number);
+                } else {//在分类管理界面被重用，所以要额外处理
+                    position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_TASKS_CATEGORY, groupTagName, category + " " + realTagName + "-" + realTaskName + " " + number);
+                    LogUtil.d(position+"");
+                }
+                ToastUtil.makeSnackbar(itemView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
+                    @Override
+                    public void onUndoClick() {
+
+                        if (groupTagName.equals("")) {
+                            UIDataUtil.delete(UIDataUtil.KEY_TODAY_TASKS, position);
+                        } else {//在分类管理界面被重用，所以要额外处理
+                            UIDataUtil.delete(UIDataUtil.KEY_TASKS_CATEGORY,position);
+                        }
+                    }
+
+                    @Override
+                    public void onDismissed(int event) {
+                        if (event != BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION) {
+                            long id = DBUtil.taskDAO.insert(taskName, tagName);
+                            if (id == -1) {
+                                ToastUtil.makeToast("添加失败：任务已存在");
+                                if (groupTagName.equals("")) {
+                                    UIDataUtil.delete(UIDataUtil.KEY_TODAY_TASKS, position);
+                                } else {
+                                    UIDataUtil.delete(UIDataUtil.KEY_TASKS_CATEGORY, position);
+                                }
+                                return;
+                            }
+                            UIDataUtil.updateUIData(UIDataUtil.TYPE_TASK_CHANGED);
+                        }
+                    }
+
+                    @Override
+                    public void onShown() {
+                        AddTaskBottomDialog.this.dismiss();//关闭
+                    }
+                });
+                /*         ToastUtil.makeSnackbar(itemView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
 
@@ -120,20 +160,20 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                     public void onShown() {
                         view.setVisibility(View.INVISIBLE);
                     }
-                });
+                });*/
 
             }
         });
-        if (!UIData.equals("")) {//如果有设置数据
-            autoInput(UIData.replaceAll("_"," "));
-            UIData = "";
+        if (!groupTagName.equals("")) {//如果有设置数据
+            autoInput(groupTagName.replaceAll("_"," "));
+//            groupTagName = "";
         }
 
 
     }
 
     public void setData(String tagName) {
-        UIData = tagName;
+        groupTagName = tagName;
     }
 
 

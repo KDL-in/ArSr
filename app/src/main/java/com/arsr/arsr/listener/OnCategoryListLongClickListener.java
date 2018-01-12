@@ -37,16 +37,7 @@ public class OnCategoryListLongClickListener implements OnRecyclerViewListener.O
     }
 
     @Override
-    public void onChildItemLongClick(int position, final int groupPosition, final int childPosition, final View view) {
-  /*      new AlertDialog.Builder(context)
-                .setTitle("删除标签?")
-                .setNegativeButton("取消", null)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).show();*/
+    public void onChildItemLongClick(final int position, final int groupPosition, final int childPosition, final View view) {
         //长按弹出菜单
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.getMenuInflater().inflate(R.menu.popup_taglist_menu, popupMenu.getMenu());
@@ -62,17 +53,16 @@ public class OnCategoryListLongClickListener implements OnRecyclerViewListener.O
                             //确定删除监听
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                view.setVisibility(View.INVISIBLE);
+                                final String name =UIDataUtil.delete(UIDataUtil.KEY_CATEGORY_TAG_LIST,position);
                                 ToastUtil.makeSnackbar(view, "确定删除所有子任务？", "恢复标签", new ToastUtil.OnSnackbarListener() {
                                     @Override
                                     public void onUndoClick() {
-                                        view.setVisibility(View.VISIBLE);
+                                        UIDataUtil.insert(UIDataUtil.KEY_CATEGORY_TAG_LIST,position, name);
                                     }
 
                                     @Override
                                     public void onDismissed(int event) {
                                         if (event== BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION)return;
-                                        String name = adapter.getChildData(groupPosition, childPosition);
                                         DBUtil.tagDAO.delete(name.replaceAll(" ", "_"));
                                         UIDataUtil.updateUIData(UIDataUtil.TYPE_TAG_CHANGED);
                                     }

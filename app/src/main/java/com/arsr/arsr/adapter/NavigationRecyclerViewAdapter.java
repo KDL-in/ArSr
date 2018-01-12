@@ -57,8 +57,8 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
     }
 
     public void add(String name) {
-        mData.add(name);
-        notifyItemInserted(mData.size());
+        mData.add(0,name);
+        notifyItemInserted(0);
     }
 
     public void setAllDatas(List<String> allDatas) {
@@ -68,6 +68,11 @@ public class NavigationRecyclerViewAdapter extends RecyclerView.Adapter<Navigati
 
     public void swap(int i, int j) {
         Collections.swap(mData,i,j);
+    }
+
+    public void remove(int position) {
+        mData.remove(0);
+        notifyItemRemoved(0);
     }
 
 

@@ -12,6 +12,7 @@ import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 import com.arsr.arsr.costumview.AddTaskBottomDialog;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.ToastUtil;
 import com.arsr.arsr.util.UIDataUtil;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
@@ -31,7 +32,7 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
     }
 
     @Override
-    public void onGroupItemLongClick(int position, final int groupPosition, final View view) {
+    public void onGroupItemLongClick(final int position, final int groupPosition, final View view) {
         //长按弹出菜单
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.getMenuInflater().inflate(R.menu.popup_ticlist_itemmenu, popupMenu.getMenu());
@@ -76,8 +77,8 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
                         break;
                     case R.id.item_ticlist_addTask:
                         AddTaskBottomDialog dialog = new AddTaskBottomDialog(view);
-                        dialog.show(context.getSupportFragmentManager());
                         dialog.setData(adapter.getGroupData(groupPosition));
+                        dialog.show(context.getSupportFragmentManager());
                         break;
                 }
 
@@ -89,7 +90,7 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
     }
 
     @Override
-    public void onChildItemLongClick(int position, final int groupPosition, final int childPosition, final View view) {
+    public void onChildItemLongClick(final int position, final int groupPosition, final int childPosition, final View view) {
         //长按弹出菜单
         PopupMenu popupMenu = new PopupMenu(context, view);
         popupMenu.getMenuInflater().inflate(R.menu.popup_taglist_menu, popupMenu.getMenu());
@@ -105,17 +106,16 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
                             //确定删除监听
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                view.setVisibility(View.INVISIBLE);
+                                final String name = UIDataUtil.delete(UIDataUtil.KEY_TASKS_CATEGORY, position);
                                 ToastUtil.makeSnackbar(view, "确定删除任务？", "恢复任务", new ToastUtil.OnSnackbarListener() {
                                     @Override
                                     public void onUndoClick() {
-                                        view.setVisibility(View.VISIBLE);
+                                        UIDataUtil.insert(UIDataUtil.KEY_TASKS_CATEGORY,position,name);
                                     }
 
                                     @Override
                                     public void onDismissed(int event) {
                                         if (event== BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_ACTION)return;
-                                        String name = adapter.getChildData(groupPosition, childPosition);
                                         DBUtil.taskDAO.delete(name);
                                         UIDataUtil.updateUIData(UIDataUtil.TYPE_TASK_CHANGED);
                                     }

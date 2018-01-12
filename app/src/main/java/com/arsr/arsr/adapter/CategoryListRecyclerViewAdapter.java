@@ -91,6 +91,27 @@ public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<Str
         mData = allDatas;
     }
 
+    public int getPosition(String groupName) {
+        return getGroupAdapterPosition(groupName);
+    }
+
+    public int insertChild(int position, String childName) {
+        int gp = getGroupPosition(position);
+        mData.get(gp).getGroupItem().getChildDatas().add(0,childName);
+        return notifyChildInserted(position,childName);
+    }
+
+    /**
+     * 删除position处的元素
+     */
+    public String delete(int position) {
+        int gp = getGroupPosition(position);
+        int cp = getChildPosition(gp,position);
+        mData.get(gp).getGroupItem().getChildDatas().remove(cp);
+
+        return notifyChildRemoved(position);
+    }
+
     /**
      * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType
      * Created by KundaLin on 17/12/22.

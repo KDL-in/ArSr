@@ -59,6 +59,18 @@ public class MainActivity extends BasicActivity {
     private NavigationRecyclerViewAdapter navigationListAdapter;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1: //日历界面关闭
+                if (resultCode == RESULT_OK) {
+                    navigationView.setCheckedItem(R.id.nav_today);
+                }
+                break;
+
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -77,7 +89,7 @@ public class MainActivity extends BasicActivity {
         }
         //浮动按钮
         FloatingActionButton fab = findViewById(R.id.fab_mainUI);
-        fab.setOnClickListener(new OnFabClickListener(MainActivity.this,fab));
+        fab.setOnClickListener(new OnFabClickListener(MainActivity.this, fab));
         //主界面两个子页面初始化
         pagerAdapter = new MainFragmentPagerAdapter(getSupportFragmentManager(), this);
         //-任务列表
@@ -120,6 +132,8 @@ public class MainActivity extends BasicActivity {
                     case R.id.nav_calendar:
                         CalendarTaskActivity.startAction(MainActivity.this);
 //                        navigationView.getMenu().performIdentifierAction(R.id.nav_today, 0);
+//                        navigationView.getMenu().getItem(0).setChecked(true);
+//                        navigationView.setCheckedItem(R.id.nav_today);
                         drawerLayout.closeDrawers();
                         break;
                 }
@@ -149,7 +163,7 @@ public class MainActivity extends BasicActivity {
                     }
                 } else {
                     for (int i = fromPosition; i > toPosition; i--) {
-                        navigationListAdapter.swap( i, i - 1);
+                        navigationListAdapter.swap(i, i - 1);
                     }
                 }
                 navigationListAdapter.notifyItemMoved(fromPosition, toPosition);

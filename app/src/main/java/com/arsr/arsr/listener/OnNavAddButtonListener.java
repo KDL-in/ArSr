@@ -40,10 +40,11 @@ public class OnNavAddButtonListener implements View.OnClickListener {
                     ToastUtil.makeToast("输入不能为空");
                     return;
                 }
+                UIDataUtil.insert(UIDataUtil.KEY_CATEGORY, 0, name);
                 ToastUtil.makeSnackbar(v, "确认添加分类" + name, "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
-
+                        UIDataUtil.delete(UIDataUtil.KEY_CATEGORY, 0);
                     }
 
                     @Override
@@ -54,7 +55,6 @@ public class OnNavAddButtonListener implements View.OnClickListener {
                                 ToastUtil.makeToast("添加失败,不能重复");
                                 return;
                             }
-                            UIDataUtil.insertCategory(name);
                             UIDataUtil.updateUIData(UIDataUtil.TYPE_CATEGORY_CHANGE);
                         }
                     }

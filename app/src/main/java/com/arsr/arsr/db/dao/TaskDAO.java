@@ -212,6 +212,8 @@ public class TaskDAO extends DAO<Task> {
     }
 
     public int quaryTimes(String name) {
-        return list.get(nameToIndex.get(name)).getTimes();
+        if (nameToIndex.containsKey(name))
+            return list.get(nameToIndex.get(name)).getTimes();
+        return 0;
     }
 }

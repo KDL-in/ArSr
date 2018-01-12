@@ -109,7 +109,7 @@ public class TasksInCalendarRecyclerViewAdapter extends BaseRecyclerViewAdapter<
         int gp = getGroupPosition(position);
         int cp = getChildPosition(gp,position);
         mData.get(gp).removeChild(cp);
-        notifyRemoved(position);
+        notifyChildRemoved(position);
     }
 
 
