@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 
 import com.arsr.arsr.MyApplication;
+import com.arsr.arsr.R;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -344,6 +345,14 @@ public class IOUtil {
         execEditor.putString("last_exec", date);
         execEditor.apply();
     }
+    public static void setTheme(int theme) {
+        execEditor.putInt("theme", theme);
+        execEditor.apply();
+    }
+
+    public static int getTheme() {
+        return execPref.getInt("theme", R.style.AppTheme);
+    }
 
     /**
      * 获取id为tid的标签的时间点数组
@@ -444,4 +453,6 @@ public class IOUtil {
     public static void clearLog() {
         mStorage.createFile(log_file_path, "");
     }
+
+
 }

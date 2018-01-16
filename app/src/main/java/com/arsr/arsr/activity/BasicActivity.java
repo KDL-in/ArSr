@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.arsr.arsr.R;
+import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.LogUtil;
 
 /**
@@ -22,7 +24,8 @@ public class BasicActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        setTheme(DrawableUtil.themeId);
+        super.onCreate(savedInstanceState);;
         LogUtil.v("CurrentActivity",getClass().getSimpleName());
         ActivityCollector.addActivity(this);
     }

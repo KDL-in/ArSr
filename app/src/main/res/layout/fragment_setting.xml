@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout_mainUI"
+        android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        app:title="设置"
+        android:fitsSystemWindows="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_scrollFlags="scroll"
+        app:popupTheme="@style/Theme.AppCompat.Light" />
+    </android.support.design.widget.AppBarLayout>
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="主题更换"
+            android:layout_marginLeft="8dp"
+            android:textSize="18sp"
+            android:textColor="?attr/colorPrimary"/>
+
+        <ImageView
+            android:id="@+id/img_theme"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="?colorPrimary"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:layout_centerVertical="true"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgBtn_blue"
+            android:src="@color/colorPrimary"
+            style="@style/imgbtn_themeselect" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgBtn_red"
+            android:layout_toRightOf="@+id/imgBtn_blue"
+            android:src="@color/colorPrimary_theme2"
+            style="@style/imgbtn_themeselect" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/separator" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="其他"
+        android:layout_marginLeft="8dp"
+        android:textSize="18sp"
+        android:textColor="?attr/colorPrimary"/>
+    <Button
+        android:background="@null"
+        android:id="@+id/btn_setting_debug"
+        android:textSize="18sp"
+        android:text="调试"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:background="@null"
+        android:id="@+id/btn_setting_about"
+        android:textSize="18sp"
+        android:text="关于"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:id="@+id/frameLayout_settingUI_debugReplace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

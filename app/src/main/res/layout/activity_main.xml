@@ -13,6 +13,7 @@
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout_mainUI"
+            android:background="?attr/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -93,7 +94,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_add"
-                android:tint="@color/colorPrimary"
+                android:tint="?attr/colorPrimary"
                 android:layout_marginLeft="16dp" />
 
             <TextView
@@ -102,7 +103,7 @@
                 android:layout_marginStart="72dp"
                 android:text="添加分类"
                 android:textSize="14sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="?attr/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

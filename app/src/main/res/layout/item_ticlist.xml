@@ -16,14 +16,14 @@
             android:src="@drawable/icon_task"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="30dp"
-            android:tint="@color/colorPrimary"
+            android:tint="?attr/colorPrimary"
             android:layout_width="25dp"
             android:layout_height="match_parent" />
         <TextView
             android:id="@+id/tv_ticList_childTittle"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:textColor="@color/colorPrimary"
+            android:textColor="?attr/colorPrimary"
             android:textSize="14sp"
             android:text="List 1"
             android:layout_marginLeft="20dp"
@@ -38,8 +38,8 @@
         app:bsb_max="6"
         app:bsb_min="0"
         app:bsb_progress="4"
-        app:bsb_second_track_color="@color/colorPrimary"
+        app:bsb_second_track_color="?attr/colorPrimary"
         app:bsb_track_color="@color/background"
-        app:bsb_thumb_color="@color/colorPrimary"
+        app:bsb_thumb_color="?attr/colorPrimary"
         />
 </LinearLayout>

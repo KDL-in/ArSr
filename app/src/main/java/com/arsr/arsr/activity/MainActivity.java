@@ -182,8 +182,7 @@ public class MainActivity extends BasicActivity {
         DateUtil.setRepeatingTask(this, 10, 36, UpdateNextDayTasksService.class);
         //启动时间更新
         IOUtil.setLastExec(DateUtil.dateToString(DateUtil.getToDay()));
-        //主题颜色
-        setTheme(R.style.RedTheme);
+
     }
 
     /**

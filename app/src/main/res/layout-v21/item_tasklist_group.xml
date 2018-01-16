@@ -12,7 +12,7 @@
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="2dp"
     app:cardElevation="0.3dp"
-    app:colorControlHighlight="@color/colorPrimary">
+    app:colorControlHighlight="?attr/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:src="@drawable/icon_list"
-            android:tint="@color/colorPrimary" />
+            android:tint="?attr/colorPrimary" />
 
         <TextView
             android:id="@+id/tv_taskList_groupTitle"

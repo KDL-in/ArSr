@@ -8,13 +8,13 @@ import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+import android.util.TypedValue;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
-import com.arsr.arsr.activity.MainActivity;
+import com.arsr.arsr.util.DrawableUtil;
 
 /**
  * viewpager的滑动监听，标题改变，颜色渐变等等
@@ -30,8 +30,11 @@ public class OnMainPagerChangeListener implements ViewPager.OnPageChangeListener
     private Context context;
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
-    private final int PAGE_COLOR_ONE = ContextCompat.getColor(MyApplication.getContext(), R.color.colorPrimary);
-    private final int PAGE_COLOR_TWO = ContextCompat.getColor(MyApplication.getContext(), R.color.colorAssist);
+
+    private int PAGE_COLOR_ONE;
+    //    private final int PAGE_COLOR_ONE = ContextCompat.getColor(MyApplication.getContext(), R.attr.colorPrimary);
+    private int PAGE_COLOR_TWO;
+    //    private final int PAGE_COLOR_TWO = ContextCompat.getColor(MyApplication.getContext(), R.color.colorAssist);
     private Window window;
 
     public OnMainPagerChangeListener(ViewPager viewPager, Context context) {
@@ -41,7 +44,12 @@ public class OnMainPagerChangeListener implements ViewPager.OnPageChangeListener
         window = ((AppCompatActivity) context).getWindow();
         //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //getColorFromAttr
+        PAGE_COLOR_ONE = DrawableUtil.getColorFromAttr(context,R.attr.colorPrimary);
+        PAGE_COLOR_TWO = DrawableUtil.getColorFromAttr(context, R.attr.colorAssist);
     }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

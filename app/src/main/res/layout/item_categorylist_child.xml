@@ -11,14 +11,14 @@
         android:src="@drawable/icon_tag"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="30dp"
-        android:tint="@color/colorPrimary"
+        android:tint="?attr/colorPrimary"
         android:layout_width="20dp"
         android:layout_height="20dp" />
     <TextView
         android:id="@+id/tv_categoryList_childTittle"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:textColor="@color/colorPrimary"
+        android:textColor="?attr/colorPrimary"
         android:textSize="14sp"
         android:text="单词"
         android:layout_marginLeft="20dp"

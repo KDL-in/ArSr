@@ -45,8 +45,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            app:mcv_selectionColor="@color/colorPrimary"
-            app:mcv_arrowColor="@color/colorPrimary"
+            app:mcv_selectionColor="?attr/colorPrimary"
+            app:mcv_arrowColor="?attr/colorPrimary"
             android:id="@+id/calendarView_month"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
