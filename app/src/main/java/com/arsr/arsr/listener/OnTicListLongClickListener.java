@@ -12,7 +12,6 @@ import com.arsr.arsr.activity.TasksInCategoryActivity;
 import com.arsr.arsr.adapter.TasksInCategoryRecyclerViewAdapter;
 import com.arsr.arsr.costumview.AddTaskBottomDialog;
 import com.arsr.arsr.util.DBUtil;
-import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.ToastUtil;
 import com.arsr.arsr.util.UIDataUtil;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
@@ -76,7 +75,7 @@ public class OnTicListLongClickListener implements OnRecyclerViewListener.OnItem
                                 }).show();
                         break;
                     case R.id.item_ticlist_addTask:
-                        AddTaskBottomDialog dialog = new AddTaskBottomDialog(view);
+                        AddTaskBottomDialog dialog = new AddTaskBottomDialog(context, view);
                         dialog.setData(adapter.getGroupData(groupPosition));
                         dialog.show(context.getSupportFragmentManager());
                         break;

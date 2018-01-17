@@ -11,7 +11,9 @@ import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
 import com.arsr.arsr.util.AnimationUtil;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.IOUtil;
+import com.arsr.arsr.util.LogUtil;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
 
 
@@ -20,6 +22,7 @@ import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
  */
 
 public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemClickListener {
+
     TaskListRecyclerViewAdapter adapter;
 
     public OnTaskListClickListener(TaskListRecyclerViewAdapter listAdapter) {
@@ -47,14 +50,14 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
         view.setTag(isFinish);
         nameTv.setSelected(isFinish);
         taskIco.setSelected(isFinish);//颜色改变end
-        if (task.getDayToRecall()==0) {//辅助recall下不显示效果选择面板
+        if (task.getDayToRecall() == 0) {//辅助recall下不显示效果选择面板
             AnimationUtil.showAndHiddenAnimation(result, AnimationUtil.AnimationState.STATE_SHOW, 100);
             AnimationUtil.showAndHiddenAnimation(result, AnimationUtil.AnimationState.STATE_HIDDEN, 4000);
         }
         //操作取消（回滚）
-        if (!isFinish){//取消完成
+        if (!isFinish) {//取消完成
             result.clearAnimation();
-            if (task.getDayToRecall()==-1) {
+            if (task.getDayToRecall() == -1) {
                 task.setDayToRecall(0);
                 IOUtil.cancelSaveRecallDate(task);//取消本地存储
                 //取消微调

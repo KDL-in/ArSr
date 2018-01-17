@@ -150,6 +150,7 @@ public class TaskListRecyclerViewAdapter extends BaseRecyclerViewAdapter<String,
         return notifyChildRemoved(position);
     }
 
+
     /**
      * 每一个类别名和任务公用的一个viewHolder，具体区分使用viewType
      * Created by KundaLin on 17/12/22.

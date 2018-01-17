@@ -9,6 +9,7 @@ import android.view.animation.Animation.AnimationListener;
  * 动画工具
  */
 public class AnimationUtil {
+
     public enum AnimationState{
         STATE_SHOW,
         STATE_HIDDEN

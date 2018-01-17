@@ -135,6 +135,9 @@ public class DBUtil {
      */
     public static void updateTask(Task task) {
         taskDAO.update(task);
+        //更新最后一次执行时间
+        LogUtil.d("更新最后一次执行时间");
+        IOUtil.setLastExec(DateUtil.dateToString(DateUtil.getToDay()));
     }
 
     /**

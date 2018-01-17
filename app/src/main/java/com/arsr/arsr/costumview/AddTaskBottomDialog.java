@@ -1,7 +1,7 @@
 package com.arsr.arsr.costumview;
 
 import android.annotation.SuppressLint;
-import android.support.design.widget.BaseTransientBottomBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
+import com.arsr.arsr.activity.MainActivity;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.ListUtil;
@@ -39,9 +40,13 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
     private String groupTagName = "";
     private View itemView;
     private int groupPosition;
+    private AppCompatActivity context;
+
+
     @SuppressLint("ValidFragment")
-    public AddTaskBottomDialog(View itemView) {
+    public AddTaskBottomDialog(AppCompatActivity context, View itemView) {
         this.itemView = itemView;
+        this.context = context;
     }
 
 
@@ -97,14 +102,42 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                     return;
                 }
                 final String tagName = category + "_" + realTagName;
+
                 final String taskName = category + "_" + realTagName + "-" + realTaskName + "_" + number;
+                long id = DBUtil.taskDAO.insert(taskName, tagName);
+                if (id == -1) {
+                    ToastUtil.makeToast("添加失败：任务已存在");
+                    AddTaskBottomDialog.this.dismiss();
+                    return;
+                }
                 if (groupTagName.equals("")) {
                     position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_TODAY_TASKS, category, category + " " + realTagName + "-" + realTaskName + " " + number);
+                    LogUtil.d(position+"");
                 } else {//在分类管理界面被重用，所以要额外处理
                     position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_TASKS_CATEGORY, groupTagName, category + " " + realTagName + "-" + realTaskName + " " + number);
                     LogUtil.d(position+"");
                 }
-                ToastUtil.makeSnackbar(itemView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
+                //启动更新数据
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }finally {
+                            ((AppCompatActivity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    UIDataUtil.updateUIData(UIDataUtil.TYPE_TASK_CHANGED);
+                                }
+                            });
+                        }
+
+                    }
+                }).start();
+                AddTaskBottomDialog.this.dismiss();
+              /*  ToastUtil.makeSnackbar(itemView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
 
@@ -136,7 +169,7 @@ public class AddTaskBottomDialog extends BaseBottomDialog {
                     public void onShown() {
                         AddTaskBottomDialog.this.dismiss();//关闭
                     }
-                });
+                });*/
                 /*         ToastUtil.makeSnackbar(itemView, "添加新任务" + taskName + "?", "撤销添加", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {

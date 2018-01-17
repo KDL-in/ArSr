@@ -28,7 +28,7 @@ public class OnCategoryListClickListener implements OnRecyclerViewListener.OnIte
 
     @Override
     public void onChildItemClick(int position, int groupPosition, int childPosition, View view) {
-        AddTaskBottomDialog dialog = new AddTaskBottomDialog(view);
+        AddTaskBottomDialog dialog = new AddTaskBottomDialog(context,view);
         dialog.show(context.getSupportFragmentManager());
         dialog.setData(adapter.getChildData(groupPosition,childPosition));
     }

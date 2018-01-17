@@ -59,8 +59,14 @@ public class OnCategoryAddButtonListener implements View.OnClickListener {
                 }
                 final String category = categoryTv.getText().toString();
                 //显示
-                final int position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_CATEGORY_TAG_LIST, category, category + " " + name);
-                //确认
+                long id = DBUtil.tagDAO.insert(name, prefix, category, note);
+                if (id == -1) {
+                    ToastUtil.makeToast("添加失败，标签已存在");
+                    return;
+                }
+                int position = UIDataUtil.insertChildAtFirst(UIDataUtil.KEY_CATEGORY_TAG_LIST, category, category + " " + name);
+
+                /*//确认
                 ToastUtil.makeSnackbar(parent, "确定插入标签" + name, "撤销插入", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
@@ -85,7 +91,7 @@ public class OnCategoryAddButtonListener implements View.OnClickListener {
                     public void onShown() {
 
                     }
-                });
+                });*/
 /*                ToastUtil.makeSnackbar(parent, "确定插入标签" + name, "撤销插入", new ToastUtil.OnSnackbarListener() {
                     @Override
                     public void onUndoClick() {
