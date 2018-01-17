@@ -27,6 +27,7 @@ import com.arsr.arsr.fragment.FragmentTaskList;
 import com.arsr.arsr.listener.OnTicListClickListener;
 import com.arsr.arsr.listener.OnTicListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
+import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.LogUtil;
 import com.arsr.arsr.util.ToastUtil;
@@ -140,7 +141,7 @@ public class TasksInCategoryActivity extends BasicActivity {
         collapsingToolbarLayout.setTitle(categoryName+"任务进度");
         //设置图片
         ImageView imageView = findViewById(R.id.img_ticUI_bg);
-        Glide.with(this).load(R.drawable.task_background).into(imageView);
+        DrawableUtil.setImg(this,imageView);
         //初始化列表
         TasksInCategoryRecyclerViewAdapter adapter = ListUtil.getTICListAdapter(this, categoryName);
         //-监听

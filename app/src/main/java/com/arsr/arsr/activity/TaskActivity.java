@@ -48,6 +48,7 @@ public class TaskActivity extends BasicActivity {
     private HashSet<CalendarDay> rSets;
     private HashSet<CalendarDay> aSets;
     private  int nextDay = 0;
+    private ImageView bgImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,9 @@ public class TaskActivity extends BasicActivity {
         CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsingToolbarLayout);
         collapsingToolbarLayout.setTitle(DBUtil.getSubstringName(name, '_').replaceAll("_", " "));
         //设置图片
-        ImageView imageView = findViewById(R.id.img_taskUI_bg);
-        Glide.with(this).load(R.drawable.task_background).into(imageView);
+        bgImg = findViewById(R.id.img_taskUI_bg);
+        DrawableUtil.setImg(this,bgImg);
+
         //日历相关
         calendarView = findViewById(R.id.calendarView_month);
         calendarView.setShowOtherDates(MaterialCalendarView.SHOW_ALL);

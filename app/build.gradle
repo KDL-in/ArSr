@@ -38,6 +38,7 @@ dependencies {
     compile 'com.snatik:storage:2.1.0'
     compile 'org.litepal.android:core:1.6.1'
     compile 'me.shaohui:bottomdialog:1.1.9'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.1'
 
 
 }

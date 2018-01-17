@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.arsr.arsr.R;
@@ -28,6 +30,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
     private CircleImageView blueBtn;
     private CircleImageView redBtn;
     private TextView debugBtn,aboutBtn;
+    private SwitchCompat switchCompat;
     public SettingFragment() {
         // Required empty public constructor
     }
@@ -48,6 +51,17 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         redBtn.setOnClickListener(this);
         debugBtn.setOnClickListener(this);
         aboutBtn.setOnClickListener(this);
+        switchCompat.setChecked(DrawableUtil.isOpenBingPic);
+        switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    DrawableUtil.openBingPic(context);
+                } else {
+                    DrawableUtil.closeBingPic();
+                }
+            }
+        });
         return view;
     }
 
@@ -56,6 +70,7 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
         redBtn = view.findViewById(R.id.imgBtn_red);
         debugBtn = view.findViewById(R.id.btn_setting_debug);
         aboutBtn = view.findViewById(R.id.btn_setting_about);
+        switchCompat = view.findViewById(R.id.switch_setting_bing);
     }
 
     @Override

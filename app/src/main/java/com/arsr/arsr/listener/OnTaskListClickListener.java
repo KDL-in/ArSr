@@ -1,9 +1,6 @@
 package com.arsr.arsr.listener;
 
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -12,7 +9,7 @@ import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.TaskListRecyclerViewAdapter;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
-import com.arsr.arsr.util.AnimationUtils;
+import com.arsr.arsr.util.AnimationUtil;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.IOUtil;
 import com.arsr.mexpandablerecyclerview.listener.OnRecyclerViewListener;
@@ -51,8 +48,8 @@ public class OnTaskListClickListener implements OnRecyclerViewListener.OnItemCli
         nameTv.setSelected(isFinish);
         taskIco.setSelected(isFinish);//颜色改变end
         if (task.getDayToRecall()==0) {//辅助recall下不显示效果选择面板
-            AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_SHOW, 100);
-            AnimationUtils.showAndHiddenAnimation(result, AnimationUtils.AnimationState.STATE_HIDDEN, 4000);
+            AnimationUtil.showAndHiddenAnimation(result, AnimationUtil.AnimationState.STATE_SHOW, 100);
+            AnimationUtil.showAndHiddenAnimation(result, AnimationUtil.AnimationState.STATE_HIDDEN, 4000);
         }
         //操作取消（回滚）
         if (!isFinish){//取消完成

@@ -41,9 +41,9 @@ public class IOUtil {
     private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
     private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
     private static Map<Long, int[]> pit; //pointsInTime缓存数组
-    private static SharedPreferences execPref;
+    private static SharedPreferences configPref;
 
-    private static SharedPreferences.Editor execEditor;
+    private static SharedPreferences.Editor configEditor;
     public static boolean ifOutputLog = false;
     static {
         mStorage = new Storage(MyApplication.getContext());
@@ -55,8 +55,8 @@ public class IOUtil {
         init();
         recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
         recordEditor = recordPref.edit();
-        execPref = MyApplication.getContext().getSharedPreferences("last_exec", Context.MODE_PRIVATE);
-        execEditor = execPref.edit();
+        configPref = MyApplication.getContext().getSharedPreferences("last_exec", Context.MODE_PRIVATE);
+        configEditor = configPref.edit();
         pit = new HashMap<>();
     }
 
@@ -336,22 +336,38 @@ public class IOUtil {
      * @return
      */
     public static CalendarDay getLastExec() {
-        String dateStr = execPref.getString("last_exec", "1970-01-01");
+        String dateStr = configPref.getString("last_exec", "1970-01-01");
         CalendarDay date = CalendarDay.from(DateUtil.stringToDate(dateStr));
         return date;
     }
 
     public static void setLastExec(String date) {
-        execEditor.putString("last_exec", date);
-        execEditor.apply();
+        configEditor.putString("last_exec", date);
+        configEditor.apply();
     }
     public static void setTheme(int theme) {
-        execEditor.putInt("theme", theme);
-        execEditor.apply();
+        configEditor.putInt("theme", theme);
+        configEditor.apply();
+    }
+
+    public static void setBingSwitch(boolean b) {
+        configEditor.putBoolean("bing_switch", b);
+        configEditor.apply();
+    }
+
+    public static boolean getBingSwitch() {
+        return configPref.getBoolean("bing_switch", false);
+    }
+    public static void setBingPicUrl(String url) {
+        configEditor.putString("bing_pic_url", url);
+        configEditor.apply();
+    }
+    public static String getBingPicUrl() {
+        return configPref.getString("bing_pic_url", null);
     }
 
     public static int getTheme() {
-        return execPref.getInt("theme", R.style.AppTheme);
+        return configPref.getInt("theme", R.style.AppTheme);
     }
 
     /**
@@ -453,6 +469,7 @@ public class IOUtil {
     public static void clearLog() {
         mStorage.createFile(log_file_path, "");
     }
+
 
 
 }

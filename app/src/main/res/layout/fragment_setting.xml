@@ -34,7 +34,7 @@
             android:gravity="center"
             android:text="主题更换"
             android:layout_marginLeft="8dp"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="?attr/colorPrimary"/>
 
         <ImageView
@@ -66,7 +66,32 @@
             style="@style/imgbtn_themeselect" />
 
     </RelativeLayout>
+    <include layout="@layout/separator" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="48dp">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:text="Bing 每日一图"
+            android:layout_marginLeft="8dp"
+            android:textSize="16sp"
+            android:textColor="?attr/colorPrimary"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_setting_bing"
+            android:layout_width="wrap_content"
+            app:switchMinWidth="42dp"
+            android:drawableTint="?attr/colorPrimary"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:layout_alignParentRight="true"
+            />
+
+    </RelativeLayout>
     <include layout="@layout/separator" />
     <TextView
         android:layout_width="wrap_content"
@@ -74,7 +99,7 @@
         android:gravity="center"
         android:text="其他"
         android:layout_marginLeft="8dp"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="?attr/colorPrimary"/>
     <TextView
         android:id="@+id/btn_setting_debug"
