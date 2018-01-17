@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
 import com.arsr.arsr.adapter.TasksInCalendarRecyclerViewAdapter;
 import com.arsr.arsr.db.Task;
@@ -272,7 +273,7 @@ public class CalendarTaskActivity extends BasicActivity {
 
         @Override
         public void decorate(DayViewFacade view) {
-            view.addSpan(new DotSpan(7, DrawableUtil.getColor(CalendarTaskActivity.this, R.color.colorAccent)));
+            view.addSpan(new DotSpan(7, DrawableUtil.getColorFromAttr(MyApplication.getContext(),R.attr.colorAccent)));
         }
     }
 }

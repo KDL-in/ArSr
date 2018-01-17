@@ -21,8 +21,8 @@
         <item>#fc756b</item>
     </array>
 
-    <color name="colorPrimary_theme2">#FFFF8A65</color>
+    <color name="colorPrimary_theme2">#ffaa8f</color>
     <color name="colorAssist_theme2">#FFB28FCE</color>
-    <color name="colorAccent_theme2">#ff6b30</color>
+    <color name="colorAccent_theme2">#b25ff1</color>
 
 </resources>

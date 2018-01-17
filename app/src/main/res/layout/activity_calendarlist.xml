@@ -34,7 +34,7 @@
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
                 android:layout_marginBottom="5dp"
-                app:mcv_selectionColor="@color/select_day"
+                app:mcv_selectionColor="?attr/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:mcv_arrowColor="#fff"

@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
 import com.arsr.arsr.UpdateNextDayTasksService;
 import com.arsr.arsr.adapter.CategoryListRecyclerViewAdapter;
@@ -43,6 +44,7 @@ import com.arsr.arsr.listener.OnTaskListClickListener;
 import com.arsr.arsr.listener.OnTaskListLongClickListener;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.DateUtil;
+import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.LogUtil;
@@ -183,6 +185,20 @@ public class MainActivity extends BasicActivity {
         //启动时间更新
         IOUtil.setLastExec(DateUtil.dateToString(DateUtil.getToDay()));
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (DrawableUtil.themeChanged) {
+            MainActivity.startAction();
+            DrawableUtil.themeChanged = false;
+        }
+    }
+
+    private static void startAction() {
+        Intent intent = new Intent(MyApplication.getContext(), MainActivity.class);
+        MyApplication.getContext().startActivity(intent);
     }
 
     /**

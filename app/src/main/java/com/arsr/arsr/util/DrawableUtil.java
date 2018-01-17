@@ -17,6 +17,7 @@ import com.arsr.arsr.activity.BasicActivity;
 
 public class DrawableUtil {
     public static int themeId=IOUtil.getTheme();
+    public static boolean themeChanged=false;
 
     /**
      * drawable上色方案
@@ -56,5 +57,6 @@ public class DrawableUtil {
     public static void setTheme(int theme) {
         IOUtil.setTheme(theme);
         themeId = theme;
+        themeChanged = true;
     }
 }

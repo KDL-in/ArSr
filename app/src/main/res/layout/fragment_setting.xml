@@ -76,21 +76,17 @@
         android:layout_marginLeft="8dp"
         android:textSize="18sp"
         android:textColor="?attr/colorPrimary"/>
-    <Button
-        android:background="@null"
+    <TextView
         android:id="@+id/btn_setting_debug"
-        android:textSize="18sp"
         android:text="调试"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/tv_setting_btn" />
 
-    <Button
+    <TextView
         android:background="@null"
         android:id="@+id/btn_setting_about"
         android:textSize="18sp"
         android:text="关于"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/tv_setting_btn"/>
     <FrameLayout
         android:id="@+id/frameLayout_settingUI_debugReplace"
         android:layout_width="match_parent"
