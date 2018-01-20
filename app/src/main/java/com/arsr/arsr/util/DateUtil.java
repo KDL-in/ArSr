@@ -78,6 +78,7 @@ public class DateUtil {
 
     public static Calendar getCalendar() {
         Calendar c = getInstance();
+        c.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         c.setTime(new Date());
         c.set(HOUR, 0);
         c.set(MINUTE, 0);

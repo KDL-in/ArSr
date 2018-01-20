@@ -40,7 +40,7 @@
             android:visibility="invisible"
             android:id="@+id/linearLayout_tasklist_result"
             android:layout_width="wrap_content"
-            android:layout_marginRight="36dp"
+            android:layout_marginRight="28dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_height="wrap_content"

@@ -10,6 +10,7 @@ import com.arsr.arsr.activity.MainActivity;
 import com.arsr.arsr.util.DBUtil;
 import com.arsr.arsr.util.DateUtil;
 import com.arsr.arsr.util.LogUtil;
+import com.arsr.arsr.util.UIDataUtil;
 
 public class UpdateNextDayTasksService extends Service {
     public UpdateNextDayTasksService() {
@@ -18,6 +19,7 @@ public class UpdateNextDayTasksService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LogUtil.d("启动"+ DateUtil.getTimeStr(System.currentTimeMillis()));
+        DBUtil.updateData();
         Intent i = new Intent(MyApplication.getContext(), MainActivity.class);
         MyApplication.getContext().startActivity(i);
         return super.onStartCommand(intent, flags, startId);

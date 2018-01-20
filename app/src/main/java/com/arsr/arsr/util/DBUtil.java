@@ -99,6 +99,7 @@ public class DBUtil {
                 DBUtil.taskDAO.update(t);
             }
             IOUtil.setUpdateRecord(str);
+            UIDataUtil.updateUIData(UIDataUtil.TYPE_CATEGORY_CHANGE);
             categoryDAO.display();
             tagDAO.display();
             taskDAO.display();

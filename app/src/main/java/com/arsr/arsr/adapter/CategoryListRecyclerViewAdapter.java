@@ -96,7 +96,7 @@ public class CategoryListRecyclerViewAdapter extends BaseRecyclerViewAdapter<Str
     }
 
     public int insertChild(int position, String childName) {
-        int gp = getGroupPosition(position);
+        int gp = getGroupPosition(position-1);
         mData.get(gp).getGroupItem().getChildDatas().add(0,childName);
         return notifyChildInserted(position,childName);
     }

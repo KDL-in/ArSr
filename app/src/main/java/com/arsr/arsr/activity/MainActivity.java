@@ -1,14 +1,20 @@
 package com.arsr.arsr.activity;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +54,7 @@ import com.arsr.arsr.util.DrawableUtil;
 import com.arsr.arsr.util.IOUtil;
 import com.arsr.arsr.util.ListUtil;
 import com.arsr.arsr.util.LogUtil;
+import com.arsr.arsr.util.ToastUtil;
 
 import java.util.Collections;
 
@@ -200,10 +207,19 @@ public class MainActivity extends BasicActivity {
         MyApplication.getContext().startActivity(intent);
     }
 
+
     /**
      * 写一些测试用代码
      */
+
     private void test() {
+        //复制删除
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//        }
+////        IOUtil.backup();
+//        IOUtil.recovery();
+/*
         CategoryDAO categoryDAO = DBUtil.categoryDAO;
         TagDAO tagDAO = DBUtil.tagDAO;
         TaskDAO taskDAO = DBUtil.taskDAO;
@@ -243,6 +259,7 @@ public class MainActivity extends BasicActivity {
 //        categoryDAO.display();
 //        categoryDAO.display();
 //        IOUtil.test();
+*/
     }
 
 

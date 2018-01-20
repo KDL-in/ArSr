@@ -28,6 +28,9 @@ import com.arsr.arsr.R;
 import com.arsr.arsr.fragment.DebugFragment;
 import com.arsr.arsr.fragment.SettingFragment;
 import com.arsr.arsr.util.DrawableUtil;
+import com.arsr.arsr.util.IOUtil;
+import com.arsr.arsr.util.LogUtil;
+import com.arsr.arsr.util.ToastUtil;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,6 +60,31 @@ public class SettingActivity extends BasicActivity {
         transaction.commit();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        LogUtil.d("request");
+        switch (requestCode) {
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    ToastUtil.makeToast("备份申请成功");
+                    LogUtil.d("2");
+                    IOUtil.backup();
+                } else {
+                    ToastUtil.makeToast("失败，没有权限");
+                }
+                break;
+
+            case 3:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    ToastUtil.makeToast("还原申请成功");
+                    IOUtil.recovery();
+                } else {
+                    ToastUtil.makeToast("失败，没有权限");
+                }
+                break;
+
+        }
+    }
     public static void startAction(Context context) {
         Intent intent = new Intent(context, SettingActivity.class);
         context.startActivity(intent);

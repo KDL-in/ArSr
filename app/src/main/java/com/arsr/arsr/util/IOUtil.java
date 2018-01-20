@@ -2,16 +2,21 @@ package com.arsr.arsr.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
+import android.text.format.DateUtils;
 
 import com.arsr.arsr.MyApplication;
 import com.arsr.arsr.R;
+import com.arsr.arsr.activity.ActivityCollector;
 import com.arsr.arsr.db.Tag;
 import com.arsr.arsr.db.Task;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.snatik.storage.Storage;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +38,9 @@ public class IOUtil {
     private static final String RECALL_DATES_DIR;//同上
     private static final String POINTS_IN_TIME_DIR;//同上
     private static final String RECALL_RECORDS_DIR;
+    private static final String EXTERNAL_STORAGE_DIR;
+    private static final String BACKUP_DIR;
+    private static final String DATA_DIR;
     public static final int FLAG_FEEL_BAD = -1;//微调标志
     public static final int FLAG_FEEL_GOOD = 1;//同上
     private static Storage mStorage;//Io操作对象
@@ -41,10 +49,11 @@ public class IOUtil {
     private static final int[] UPPER_BOUND = {1, 2, 5, 8, 16, 16};//微调边界
     private static final int[] LOWER_BOUND = {1, 2, 2, 3, 4, 4};//同上
     private static Map<Long, int[]> pit; //pointsInTime缓存数组
-    private static SharedPreferences configPref;
 
+    private static SharedPreferences configPref;
     private static SharedPreferences.Editor configEditor;
     public static boolean ifOutputLog = false;
+
     static {
         mStorage = new Storage(MyApplication.getContext());
         FILES_DIR = mStorage.getInternalFilesDirectory();
@@ -52,6 +61,9 @@ public class IOUtil {
         ASSIST_DATES_DIR = getDirPath(new String[]{FILES_DIR, "assist_dates"});
         POINTS_IN_TIME_DIR = getDirPath(new String[]{FILES_DIR, "points_in_time"});
         RECALL_RECORDS_DIR = getDirPath(new String[]{FILES_DIR, "recall_records"});
+        EXTERNAL_STORAGE_DIR = mStorage.getExternalStorageDirectory();
+        BACKUP_DIR = getDirPath(new String[]{EXTERNAL_STORAGE_DIR, "backup"});
+        DATA_DIR = new File(FILES_DIR).getParentFile().getAbsolutePath();
         init();
         recordPref = MyApplication.getContext().getSharedPreferences("adjust_records", Context.MODE_PRIVATE);
         recordEditor = recordPref.edit();
@@ -470,6 +482,50 @@ public class IOUtil {
         mStorage.createFile(log_file_path, "");
     }
 
+    private static String backup_dir = "";
 
+    /**
+     * 备份数据
+     */
+    public static void backup() {
+        if (mStorage.isDirectoryExists(BACKUP_DIR)) mStorage.deleteDirectory(BACKUP_DIR);
+        copyDirectory(DATA_DIR,BACKUP_DIR);
+    }
 
+    /**
+     * 还原数据
+     */
+    public static void recovery() {
+        if (mStorage.isDirectoryExists(DATA_DIR)) mStorage.deleteDirectory(DATA_DIR);
+        copyDirectory(BACKUP_DIR,DATA_DIR);
+        ActivityCollector.finishAll();
+    }
+    /**
+     * 复制整个文件夹内容
+     */
+    public static void copyDirectory(String sourceDir, String targetDir) {
+        // 新建目标目录
+        (new File(targetDir)).mkdirs();
+        // 获取源文件夹当前下的文件或目录
+        File[] file = (new File(sourceDir)).listFiles();
+        for (int i = 0; i < file.length; i++) {
+            if (file[i].isFile()) {
+                // 源文件
+                File sourceFile=file[i];
+                // 目标文件
+                File targetFile=new
+                        File(new File(targetDir).getAbsolutePath()
+                        +File.separator+file[i].getName());
+                mStorage.copy(sourceFile.getAbsolutePath(),targetFile.getAbsolutePath());
+            }
+            if (file[i].isDirectory()) {
+                // 准备复制的源文件夹
+                String dir1=sourceDir + File.separator + file[i].getName();
+                // 准备复制的目标文件夹
+                String dir2=targetDir + File.separator+ file[i].getName();
+                copyDirectory(dir1, dir2);
+            }
+        }
+    }
 }
+
